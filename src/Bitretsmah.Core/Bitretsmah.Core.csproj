@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileWarehouse.cs" />
-    <Compile Include="Interfaces\IFileStore.cs" />
+    <Compile Include="Interfaces\IDateTimeService.cs" />
+    <Compile Include="Interfaces\ILocalFilesService.cs" />
+    <Compile Include="Interfaces\IRemoteFileStore.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

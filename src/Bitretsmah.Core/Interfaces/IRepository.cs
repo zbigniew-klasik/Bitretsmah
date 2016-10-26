@@ -1,6 +1,6 @@
 ﻿namespace Bitretsmah.Core.Interfaces
 {
-    public interface IFileStore
+    public interface IRepository
     {
     }
 }
