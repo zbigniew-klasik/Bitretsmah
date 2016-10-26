@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Bitretsmah.Core.Tests")]
+[assembly: AssemblyTitle("Bitretsmah.Data.LiteDB")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Bitretsmah.Core.Tests")]
+[assembly: AssemblyProduct("Bitretsmah.Data.LiteDB")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("99ccc000-4ddb-496c-a1f0-8f4963631696")]
+[assembly: Guid("bab4f562-472c-4f29-93ca-3d5a9b914301")]
 
 // Version information for an assembly consists of the following four values:
 //

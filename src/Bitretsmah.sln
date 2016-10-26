@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Data.Mega", "Bit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Core.Tests", "Bitretsmah.Core.Tests\Bitretsmah.Core.Tests.csproj", "{99CCC000-4DDB-496C-A1F0-8F4963631696}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Data.LiteDB", "Bitretsmah.Data.LiteDB\Bitretsmah.Data.LiteDB.csproj", "{BAB4F562-472C-4F29-93CA-3D5A9B914301}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{99CCC000-4DDB-496C-A1F0-8F4963631696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99CCC000-4DDB-496C-A1F0-8F4963631696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99CCC000-4DDB-496C-A1F0-8F4963631696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAB4F562-472C-4F29-93CA-3D5A9B914301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAB4F562-472C-4F29-93CA-3D5A9B914301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAB4F562-472C-4F29-93CA-3D5A9B914301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAB4F562-472C-4F29-93CA-3D5A9B914301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
