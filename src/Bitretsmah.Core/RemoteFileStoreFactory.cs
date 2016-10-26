@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Core
 {
-    class FileWarehouse
+    public class RemoteFileStoreFactory
     {
     }
 }

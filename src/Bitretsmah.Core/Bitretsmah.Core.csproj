@@ -40,7 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileWarehouse.cs" />
+    <Compile Include="AccountConfigurator.cs" />
+    <Compile Include="BackupEngine.cs" />
+    <Compile Include="DirectoryConfigurator.cs" />
+    <Compile Include="RemoteFileWarehouse.cs" />
     <Compile Include="Interfaces\IDateTimeService.cs" />
     <Compile Include="Interfaces\ILocalFilesService.cs" />
     <Compile Include="Interfaces\IRemoteFileStore.cs" />
@@ -51,6 +54,7 @@
     <Compile Include="Models\Quota.cs" />
     <Compile Include="Models\RemoteId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteFileStoreFactory.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
