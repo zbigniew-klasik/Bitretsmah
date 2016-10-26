@@ -7,8 +7,8 @@
     <ProjectGuid>{93673E96-B642-4EE4-A513-5ACEB0B288FC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bitretsmah.Data.Files</RootNamespace>
-    <AssemblyName>Bitretsmah.Data.Files</AssemblyName>
+    <RootNamespace>Bitretsmah.Data.Mega</RootNamespace>
+    <AssemblyName>Bitretsmah.Data.Mega</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

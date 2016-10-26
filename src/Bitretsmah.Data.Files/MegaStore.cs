@@ -1,8 +1,8 @@
 ﻿using Bitretsmah.Core.Interfaces;
 
-namespace Bitretsmah.Data.Files
+namespace Bitretsmah.Data.Mega
 {
-    public class MegaStore : IFileStore
+    public class MegaStore : IRemoteFileStore
     {
     }
 }

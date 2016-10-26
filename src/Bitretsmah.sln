@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Core", "Bitretsmah.Core\Bitretsmah.Core.csproj", "{5162931A-BDE0-4C66-86EE-4C16E22C8B3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Data.Files", "Bitretsmah.Data.Files\Bitretsmah.Data.Files.csproj", "{93673E96-B642-4EE4-A513-5ACEB0B288FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Data.Mega", "Bitretsmah.Data.Files\Bitretsmah.Data.Mega.csproj", "{93673E96-B642-4EE4-A513-5ACEB0B288FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitretsmah.Core.Tests", "Bitretsmah.Core.Tests\Bitretsmah.Core.Tests.csproj", "{99CCC000-4DDB-496C-A1F0-8F4963631696}"
 EndProject

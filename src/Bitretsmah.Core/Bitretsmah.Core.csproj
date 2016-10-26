@@ -45,6 +45,11 @@
     <Compile Include="Interfaces\ILocalFilesService.cs" />
     <Compile Include="Interfaces\IRemoteFileStore.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Directory.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\Quota.cs" />
+    <Compile Include="Models\RemoteId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
