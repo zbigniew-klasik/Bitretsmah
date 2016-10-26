@@ -5,11 +5,26 @@ namespace Bitretsmah.Data.LiteDB.Internal
 {
     internal class Db : LiteDatabase
     {
-        public Db(string connectionString)
-            : base(connectionString)
+        private const string ConnecionString = @"bitretsmah.db";
+
+        static Db()
+        {
+            Configure();
+        }
+
+        public Db()
+            : base(ConnecionString)
         {
         }
 
-        public LiteCollection<Account> Accounts => this.GetCollection<Account>("accounts");
+        public LiteCollection<Account> Accounts => GetCollection<Account>("accounts");
+
+        public static void Configure()
+        {
+            using (var db = new Db())
+            {
+                db.Accounts.EnsureIndex(x => x.Credential.UserName, true);
+            }
+        }
     }
 }

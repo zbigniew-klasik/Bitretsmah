@@ -4,7 +4,7 @@
     {
         public static Db Create()
         {
-            return new Db(@"bitretsmah.db");
+            return new Db();
         }
     }
 }
