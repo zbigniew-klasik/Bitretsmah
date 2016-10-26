@@ -47,7 +47,7 @@
     <Compile Include="Interfaces\IDateTimeService.cs" />
     <Compile Include="Interfaces\ILocalFilesService.cs" />
     <Compile Include="Interfaces\IRemoteFileStore.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Directory.cs" />
     <Compile Include="Models\File.cs" />
