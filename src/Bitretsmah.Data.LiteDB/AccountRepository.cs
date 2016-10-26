@@ -1,6 +1,5 @@
 ﻿using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
-using LiteDB;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +12,9 @@ namespace Bitretsmah.Data.LiteDB
         {
             return Task.Run(() =>
             {
-                using (var db = new LiteDatabase(@"bitretsmah.db"))
+                using (var db = DbFactory.Create())
                 {
-                    var accounts = db.GetCollection<Account>("accounts");
+                    var accounts = db.GetCollection<Account>(CollectionNames.Accounts);
                     return accounts.FindAll().ToList();
                 }
             });
@@ -25,9 +24,9 @@ namespace Bitretsmah.Data.LiteDB
         {
             return Task.Run(() =>
             {
-                using (var db = new LiteDatabase(@"bitretsmah.db"))
+                using (var db = DbFactory.Create())
                 {
-                    var accounts = db.GetCollection<Account>("accounts");
+                    var accounts = db.GetCollection<Account>(CollectionNames.Accounts);
                     return accounts.FindOne(x => x.Credential.UserName.Equals(email));
                 }
             });
@@ -37,9 +36,9 @@ namespace Bitretsmah.Data.LiteDB
         {
             return Task.Run(() =>
             {
-                using (var db = new LiteDatabase(@"bitretsmah.db"))
+                using (var db = DbFactory.Create())
                 {
-                    var accounts = db.GetCollection<Account>("accounts");
+                    var accounts = db.GetCollection<Account>(CollectionNames.Accounts);
                     accounts.Insert(account);
                 }
             });
