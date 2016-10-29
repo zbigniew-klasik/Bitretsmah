@@ -7,7 +7,7 @@
     <ProjectGuid>{A50E6E85-EAEB-4A1B-9BA0-464E563CBE3B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>bitretsmah</RootNamespace>
+    <RootNamespace>Bitretsmah.UI.ConsoleApp</RootNamespace>
     <AssemblyName>bitretsmah</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleCommands.cs" />
+    <Compile Include="ConsoleCommandsHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
