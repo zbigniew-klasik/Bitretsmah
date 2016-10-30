@@ -1,6 +1,8 @@
 ﻿using Fclp;
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
@@ -26,7 +28,7 @@ namespace Bitretsmah.UI.ConsoleApp
             parser.Setup(x => x.SetAccount).As("set-account").WithDescription("Configures a storage account.");
             parser.Setup(x => x.SetDirectory).As("set-directory").WithDescription("Configures a directory to backup.");
             parser.Setup(x => x.Silent).As('s', "silent").WithDescription("Runs with the silent mode.");
-            parser.Setup(x => x.Force).As('F', "froced").WithDescription("Runs with the forced mode."); ;
+            parser.Setup(x => x.Force).As('F', "forced").WithDescription("Runs with the forced mode."); ;
 
             var result = parser.Parse(args);
 
@@ -48,15 +50,14 @@ namespace Bitretsmah.UI.ConsoleApp
 
         private void ShowHelp(string posibleCommands)
         {
-            Console.WriteLine("Bitretsmah help:");
+            Console.WriteLine("Bitretsmah usage:");
             Console.WriteLine(posibleCommands);
         }
 
         private void HandleVersionShow()
         {
             if (!_commands.ShowVersion) return;
-
-            Console.WriteLine("HandleVersionShow");
+            Console.WriteLine($"Bitretsmah version: {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}");
         }
 
         private void HandleAccountSet()
