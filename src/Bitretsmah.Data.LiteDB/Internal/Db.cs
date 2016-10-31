@@ -1,5 +1,6 @@
 ﻿using Bitretsmah.Core.Models;
 using LiteDB;
+using System.Net;
 
 namespace Bitretsmah.Data.LiteDB.Internal
 {
@@ -17,14 +18,17 @@ namespace Bitretsmah.Data.LiteDB.Internal
         {
         }
 
-        public LiteCollection<Account> Accounts => GetCollection<Account>("accounts");
+        public const string AccountsCollectionName = "accounts";
 
-        public static void Configure()
+        public LiteCollection<Account> Accounts => GetCollection<Account>(AccountsCollectionName);
+
+        private static void Configure()
         {
-            using (var db = new Db())
-            {
-                db.Accounts.EnsureIndex(x => x.Credential.UserName, true);
-            }
+            BsonMapper.Global.Entity<NetworkCredential>()
+                .Index(x => x.UserName, true)
+                .Field(x => x.Password, "Password")
+                .Ignore(x => x.SecurePassword)
+                .Ignore(x => x.Domain);
         }
     }
 }

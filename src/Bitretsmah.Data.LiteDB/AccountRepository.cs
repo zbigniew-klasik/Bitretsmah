@@ -1,9 +1,10 @@
 ﻿using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
+using Bitretsmah.Data.LiteDB.Internal;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Bitretsmah.Data.LiteDB.Internal;
 
 namespace Bitretsmah.Data.LiteDB
 {
@@ -20,24 +21,23 @@ namespace Bitretsmah.Data.LiteDB
             });
         }
 
-        public Task<Account> GetByEmail(string email)
+        public Task AddOrUpdate(NetworkCredential credential)
         {
             return Task.Run(() =>
             {
                 using (var db = DbFactory.Create())
                 {
-                    return db.Accounts.FindOne(x => x.Credential.UserName.Equals(email));
-                }
-            });
-        }
+                    var existingAccount = db.Accounts.FindOne(x => x.Credential.UserName.Equals(credential.UserName));
 
-        public Task AddAccount(Account account)
-        {
-            return Task.Run(() =>
-            {
-                using (var db = DbFactory.Create())
-                {
-                    return db.Accounts.Insert(account);
+                    if (existingAccount == null)
+                    {
+                        db.Accounts.Insert(new Account { Credential = credential });
+                    }
+                    else
+                    {
+                        existingAccount.Credential = credential;
+                        db.Accounts.Update(existingAccount);
+                    }
                 }
             });
         }

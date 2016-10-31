@@ -1,5 +1,6 @@
 ﻿using Bitretsmah.Core.Models;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
@@ -8,8 +9,6 @@ namespace Bitretsmah.Core.Interfaces
     {
         Task<List<Account>> GetAll();
 
-        Task<Account> GetByEmail(string email);
-
-        Task AddAccount(Account account);
+        Task AddOrUpdate(NetworkCredential credential);
     }
 }

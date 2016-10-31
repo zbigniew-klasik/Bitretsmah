@@ -24,8 +24,8 @@ namespace Bitretsmah.Core
 
         public async Task SetCredential(NetworkCredential credential)
         {
-            await _accountRepository.AddAccount(new Account { Credential = credential });
-            // toto: or update
+            await _accountRepository.AddOrUpdate(credential);
+
             // todo: test if this account works
         }
 
