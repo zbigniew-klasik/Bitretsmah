@@ -2,7 +2,7 @@
 
 namespace Bitretsmah.UI.ConsoleApp
 {
-    public class ConsoleCommands
+    public class ConsoleArguments
     {
         public bool ShowVersion { get; set; }
         public bool ShowInfo { get; set; }

@@ -47,8 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleCommands.cs" />
-    <Compile Include="ConsoleCommandsHandler.cs" />
+    <Compile Include="ConsoleArguments.cs" />
+    <Compile Include="ConsoleService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Bitretsmah.Core;
+using Bitretsmah.Data.LiteDB;
+using System;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
@@ -9,8 +11,8 @@ namespace Bitretsmah.UI.ConsoleApp
             //args = new string[] { "-i" };
             //args = new string[] { "--set-account", "zbik@ttt.pl" };
 
-            var handler = new ConsoleCommandsHandler();
-            handler.Handle(args);
+            var service = new ConsoleService(new AccountService(new AccountRepository()));
+            service.HandleArguments(args);
 
             Console.WriteLine("Bitretsmah finished!");
             Console.ReadKey();

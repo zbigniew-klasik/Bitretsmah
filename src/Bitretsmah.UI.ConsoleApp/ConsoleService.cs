@@ -1,20 +1,28 @@
 ﻿using Bitretsmah.Core;
-using Bitretsmah.Data.LiteDB;
 using Fclp;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Security;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
-    public class ConsoleCommandsHandler
+    public interface IConsoleService
     {
-        private ConsoleCommands _commands;
+        void HandleArguments(string[] args);
+    }
 
-        public void Handle(string[] args)
+    public class ConsoleService : IConsoleService
+    {
+        private readonly IAccountService _accountService;
+        private ConsoleArguments _commands;
+
+        public ConsoleService(IAccountService accountService)
+        {
+            _accountService = accountService;
+        }
+
+        public void HandleArguments(string[] args)
         {
             if (!ParseArguments(args)) return;
 
@@ -26,7 +34,7 @@ namespace Bitretsmah.UI.ConsoleApp
 
         private bool ParseArguments(string[] args)
         {
-            var parser = new FluentCommandLineParser<ConsoleCommands>();
+            var parser = new FluentCommandLineParser<ConsoleArguments>();
 
             parser.SetupHelp("h", "help").Callback(ShowHelp).UseForEmptyArgs();
             parser.Setup(x => x.ShowVersion).As('v', "version").WithDescription("Shows the version of that application.");
@@ -70,11 +78,9 @@ namespace Bitretsmah.UI.ConsoleApp
         {
             if (_commands.ShowInfo == false) return;
 
-            var configurator = new AccountConfigurator(new AccountRepository());
-
             try
             {
-                var accounts = configurator.GetAllAccounts().Result;
+                var accounts = _accountService.GetAll().Result;
                 accounts.ToList().ForEach(x => Console.WriteLine($"{x.Credential.UserName} {x.Quota.Used} {x.Quota.Total}"));
             }
             catch (Exception ex)
@@ -106,11 +112,9 @@ namespace Bitretsmah.UI.ConsoleApp
                 credential.SecurePassword = GetPassword();
             }
 
-            var configurator = new AccountConfigurator(new AccountRepository());
-
             try
             {
-                configurator.SetAccount(credential).Wait();
+                _accountService.SetCredential(credential).Wait();
                 Console.WriteLine($"Account '{credential.UserName}' has been configured successfully.");
             }
             catch (Exception ex)

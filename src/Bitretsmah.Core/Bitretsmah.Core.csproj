@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountConfigurator.cs" />
+    <Compile Include="AccountService.cs" />
     <Compile Include="BackupEngine.cs" />
     <Compile Include="DirectoryConfigurator.cs" />
     <Compile Include="RemoteFileWarehouse.cs" />

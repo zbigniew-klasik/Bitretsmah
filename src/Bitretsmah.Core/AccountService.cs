@@ -6,23 +6,30 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Core
 {
-    public class AccountConfigurator
+    public interface IAccountService
     {
-        private IAccountRepository _accountRepository;
+        Task SetCredential(NetworkCredential credential);
 
-        public AccountConfigurator(IAccountRepository accountRepository)
+        Task<IEnumerable<Account>> GetAll();
+    }
+
+    public class AccountService : IAccountService
+    {
+        private readonly IAccountRepository _accountRepository;
+
+        public AccountService(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
         }
 
-        public async Task SetAccount(NetworkCredential credential)
+        public async Task SetCredential(NetworkCredential credential)
         {
             await _accountRepository.AddAccount(new Account { Credential = credential });
             // toto: or update
             // todo: test if this account works
         }
 
-        public async Task<IEnumerable<Account>> GetAllAccounts()
+        public async Task<IEnumerable<Account>> GetAll()
         {
             return await _accountRepository.GetAll();
         }
