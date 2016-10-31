@@ -44,6 +44,9 @@
     <Compile Include="AccountService.cs" />
     <Compile Include="BackupEngine.cs" />
     <Compile Include="DirectoryConfigurator.cs" />
+    <Compile Include="Exceptions\BitretsmahException.cs" />
+    <Compile Include="Exceptions\InvalidCredentialException.cs" />
+    <Compile Include="Interfaces\ICredentialVerifier.cs" />
     <Compile Include="RemoteFileWarehouse.cs" />
     <Compile Include="Interfaces\IDateTimeService.cs" />
     <Compile Include="Interfaces\ILocalFilesService.cs" />

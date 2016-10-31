@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core.Interfaces;
+﻿using Bitretsmah.Core.Exceptions;
+using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using System.Collections.Generic;
 using System.Net;
@@ -16,22 +17,29 @@ namespace Bitretsmah.Core
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly ICredentialVerifier _credentialVerifier;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountService(IAccountRepository accountRepository, ICredentialVerifier credentialVerifier)
         {
             _accountRepository = accountRepository;
-        }
-
-        public async Task SetCredential(NetworkCredential credential)
-        {
-            await _accountRepository.AddOrUpdate(credential);
-
-            // todo: test if this account works
+            _credentialVerifier = credentialVerifier;
         }
 
         public async Task<IEnumerable<Account>> GetAll()
         {
             return await _accountRepository.GetAll();
+        }
+
+        public async Task SetCredential(NetworkCredential credential)
+        {
+            if (await _credentialVerifier.Verify(credential))
+            {
+                await _accountRepository.AddOrUpdate(credential);
+            }
+            else
+            {
+                throw new InvalidCredentialException();
+            }
         }
     }
 }

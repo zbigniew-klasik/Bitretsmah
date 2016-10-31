@@ -80,6 +80,7 @@
     <Compile Include="Integration\Data\LiteDB\AccountRepositoryShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ConsoleApp\ConsoleServiceShould\HandleArguments.cs" />
+    <Compile Include="Unit\Core\AccountServiceShould.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
