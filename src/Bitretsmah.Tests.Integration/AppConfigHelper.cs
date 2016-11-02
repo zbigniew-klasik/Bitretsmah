@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace Bitretsmah.Tests.Integration
 {
@@ -22,7 +23,12 @@ namespace Bitretsmah.Tests.Integration
             }
         }
 
-        public static string GetSetting(string key)
+        public static NetworkCredential GetTestMegaCredential()
+        {
+            return new NetworkCredential(GetSetting("TestMegaEmail"), GetSetting("TestMegaPassword"));
+        }
+
+        private static string GetSetting(string key)
         {
             if (_secretSettings.ContainsKey(key))
             {

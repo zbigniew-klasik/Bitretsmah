@@ -1,14 +1,25 @@
-﻿using System.Net;
+﻿using Bitretsmah.Core.Interfaces;
+using CG.Web.MegaApiClient;
+using System.Net;
 using System.Threading.Tasks;
-using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.Data.Mega
 {
     public class MegaCredentialVerifier : ICredentialVerifier
     {
-        public Task<bool> Verify(NetworkCredential credential)
+        public async Task<bool> Verify(NetworkCredential credential)
         {
-            return null;
+            try
+            {
+                var client = new MegaApiClient();
+                await client.LoginAsync(credential.UserName, credential.Password);
+                await client.LogoutAsync();
+                return true;
+            }
+            catch (ApiException)
+            {
+                return false;
+            }
         }
     }
 }
