@@ -1,11 +1,11 @@
-﻿using Bitretsmah.Core;
-using Fclp;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security;
+using Bitretsmah.Core;
+using Fclp;
 
 namespace Bitretsmah.UI.ConsoleApp
 {

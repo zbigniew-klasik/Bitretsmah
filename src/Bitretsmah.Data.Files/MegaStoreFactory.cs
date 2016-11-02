@@ -1,7 +1,7 @@
-﻿using Bitretsmah.Core;
-using Bitretsmah.Core.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Bitretsmah.Core;
+using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.Data.Mega
 {

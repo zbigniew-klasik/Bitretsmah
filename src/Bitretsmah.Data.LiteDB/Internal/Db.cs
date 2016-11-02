@@ -1,6 +1,6 @@
-﻿using Bitretsmah.Core.Models;
+﻿using System.Net;
+using Bitretsmah.Core.Models;
 using LiteDB;
-using System.Net;
 
 namespace Bitretsmah.Data.LiteDB.Internal
 {

@@ -1,6 +1,6 @@
-﻿using Bitretsmah.Core.Interfaces;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.Data.Mega
 {

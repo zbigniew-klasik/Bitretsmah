@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7AFF9DA1-2873-45C6-820E-C7C703ED2558}</ProjectGuid>
+    <ProjectGuid>{765078A9-185B-46DE-92C7-4354E8319FFC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bitretsmah.Tests</RootNamespace>
-    <AssemblyName>Bitretsmah.Tests</AssemblyName>
+    <RootNamespace>Bitretsmah.Tests.Unit</RootNamespace>
+    <AssemblyName>Bitretsmah.Tests.Unit</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -16,7 +16,6 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,10 +47,6 @@
       <HintPath>..\packages\FluentAssertions.4.16.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LiteDB, Version=2.0.2.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiteDB.2.0.2\lib\net35\LiteDB.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Moq, Version=4.5.23.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.23\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -77,36 +72,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Integration\Data\LiteDB\AccountRepositoryShould.cs" />
+    <Compile Include="Core\AccountServiceShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\ConsoleApp\ConsoleServiceShould\HandleArguments.cs" />
-    <Compile Include="Unit\Core\AccountServiceShould.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bitretsmah.Core\Bitretsmah.Core.csproj">
       <Project>{5162931a-bde0-4c66-86ee-4c16e22c8b3e}</Project>
       <Name>Bitretsmah.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Bitretsmah.Data.Files\Bitretsmah.Data.Mega.csproj">
-      <Project>{93673e96-b642-4ee4-a513-5aceb0b288fc}</Project>
-      <Name>Bitretsmah.Data.Mega</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Bitretsmah.Data.LiteDB\Bitretsmah.Data.LiteDB.csproj">
-      <Project>{bab4f562-472c-4f29-93ca-3d5a9b914301}</Project>
-      <Name>Bitretsmah.Data.LiteDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Bitretsmah.Data.System\Bitretsmah.Data.System.csproj">
-      <Project>{b854e89b-13ca-417c-a933-8732e67b13dc}</Project>
-      <Name>Bitretsmah.Data.System</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Bitretsmah.UI.ConsoleApp\Bitretsmah.UI.ConsoleApp.csproj">
-      <Project>{a50e6e85-eaeb-4a1b-9ba0-464e563cbe3b}</Project>
-      <Name>Bitretsmah.UI.ConsoleApp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

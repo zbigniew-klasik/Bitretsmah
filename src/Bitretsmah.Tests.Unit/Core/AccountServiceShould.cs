@@ -1,13 +1,13 @@
-﻿using Bitretsmah.Core;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using Bitretsmah.Core;
 using Bitretsmah.Core.Exceptions;
 using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Bitretsmah.Tests.Unit.Core
 {

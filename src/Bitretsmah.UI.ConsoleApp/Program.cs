@@ -1,7 +1,7 @@
-﻿using Bitretsmah.Core;
+﻿using System;
+using Bitretsmah.Core;
 using Bitretsmah.Data.LiteDB;
 using Bitretsmah.Data.Mega;
-using System;
 
 namespace Bitretsmah.UI.ConsoleApp
 {

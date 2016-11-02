@@ -1,9 +1,9 @@
-﻿using Bitretsmah.Core.Exceptions;
-using Bitretsmah.Core.Interfaces;
-using Bitretsmah.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Exceptions;
+using Bitretsmah.Core.Interfaces;
+using Bitretsmah.Core.Models;
 
 namespace Bitretsmah.Core
 {
