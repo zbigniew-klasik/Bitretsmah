@@ -85,6 +85,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Data\LiteDB\AccountRepositoryShould.cs" />
+    <Compile Include="Data\Mega\MegaStoreFactoryShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -11,5 +11,7 @@ namespace Bitretsmah.Data.Mega
         {
             _credentia = credential;
         }
+
+        public string UserName => _credentia.UserName;
     }
 }

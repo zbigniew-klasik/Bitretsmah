@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Bitretsmah.Core;
 using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.Data.Mega
 {
-    public class MegaStoreFactory
+    public class MegaStoreFactory : IRemoteFileStoreFactory
     {
         private readonly IAccountService _accountService;
 
@@ -14,7 +15,7 @@ namespace Bitretsmah.Data.Mega
             _accountService = accountService;
         }
 
-        public IList<IRemoteFileStore> GetAll()
+        public async Task<IList<IRemoteFileStore>> GetAll()
         {
             throw new NotImplementedException();
         }
