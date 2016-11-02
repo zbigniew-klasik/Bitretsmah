@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Bitretsmah.Core;
+﻿using Bitretsmah.Core;
 using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using Bitretsmah.Data.Mega;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using FluentAssertions;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Tests.Integration.Data.Mega
 {
@@ -39,12 +36,16 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
             _remoteFileStoreFactory = new MegaStoreFactory(_accountServiceMock.Object);
         }
 
-        public async Task GetAll()
+        [Test]
+        public async Task GetAllMegaStoresForConfiguredAccounts()
         {
-            var stores = await _remoteFileStoreFactory.GetAll();
+            var allMegaStores = await _remoteFileStoreFactory.GetAll();
 
-            stores.Count.Should().Be(2);
-            //stores[0]...
+            _accountServiceMock.Verify(x => x.GetAll(), Times.Once);
+
+            allMegaStores.Count.Should().Be(2);
+            (allMegaStores[0] as MegaStore).UserName.Should().Be(_credential1.UserName);
+            (allMegaStores[1] as MegaStore).UserName.Should().Be(_credential2.UserName);
         }
     }
 }

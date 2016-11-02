@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Bitretsmah.Core;
+﻿using Bitretsmah.Core;
 using Bitretsmah.Core.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Data.Mega
 {
@@ -17,7 +17,8 @@ namespace Bitretsmah.Data.Mega
 
         public async Task<IList<IRemoteFileStore>> GetAll()
         {
-            throw new NotImplementedException();
+            var accounts = await _accountService.GetAll();
+            return accounts.Select(x => new MegaStore(x.Credential) as IRemoteFileStore).ToList();
         }
     }
 }
