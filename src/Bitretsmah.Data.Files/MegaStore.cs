@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Bitretsmah.Core.Interfaces;
+﻿using Bitretsmah.Core.Interfaces;
+using System.Net;
 
 namespace Bitretsmah.Data.Mega
 {
@@ -12,6 +12,6 @@ namespace Bitretsmah.Data.Mega
             _credentia = credential;
         }
 
-        public string UserName => _credentia.UserName;
+        public string StoreId => _credentia.UserName;
     }
 }

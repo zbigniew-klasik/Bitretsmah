@@ -2,5 +2,6 @@
 {
     public interface IRemoteFileStore
     {
+        string StoreId { get; }
     }
 }

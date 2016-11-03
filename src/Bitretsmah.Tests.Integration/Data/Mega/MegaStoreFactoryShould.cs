@@ -44,8 +44,8 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
             _accountServiceMock.Verify(x => x.GetAll(), Times.Once);
 
             allMegaStores.Count.Should().Be(2);
-            (allMegaStores[0] as MegaStore).UserName.Should().Be(_credential1.UserName);
-            (allMegaStores[1] as MegaStore).UserName.Should().Be(_credential2.UserName);
+            allMegaStores[0].StoreId.Should().Be(_credential1.UserName);
+            allMegaStores[1].StoreId.Should().Be(_credential2.UserName);
         }
     }
 }
