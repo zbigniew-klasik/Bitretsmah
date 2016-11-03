@@ -48,6 +48,7 @@
     <Compile Include="Exceptions\InvalidCredentialException.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
+    <Compile Include="Models\StoreSelectionMethod.cs" />
     <Compile Include="RemoteFileWarehouse.cs" />
     <Compile Include="Interfaces\IDateTimeService.cs" />
     <Compile Include="Interfaces\ILocalFilesService.cs" />
