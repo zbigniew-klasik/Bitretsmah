@@ -2,11 +2,23 @@
 using Bitretsmah.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bitretsmah.Core
 {
-    public class RemoteFileWarehouse
+    public interface IRemoteFileWarehouse
+    {
+        StoreSelectionMethod StoreSelectionMethod { get; set; }
+
+        Task LoadStores();
+
+        Task<RemoteId> UploadFile(string localFilePath);
+
+        Task DownloadFile(RemoteId remoteFileId, string localFilePath);
+    }
+
+    public class RemoteFileWarehouse : IRemoteFileWarehouse
     {
         private readonly IAccountService _accountService;
         private readonly IRemoteFileStoreFactory _remoteFileStoreFactory;
@@ -21,24 +33,27 @@ namespace Bitretsmah.Core
 
         public StoreSelectionMethod StoreSelectionMethod { get; set; }
 
-        public async Task Initialize()
+        public async Task LoadStores()
         {
         }
 
-        public async Task<RemoteId> UploadFile(string sourceFilePath)
+        public async Task<RemoteId> UploadFile(string localFilePath)
         {
             var store = GetUploadStore();
             throw new NotImplementedException();
         }
 
-        public async Task DownloadFile(RemoteId sourceId, string destinationFilePath)
+        public async Task DownloadFile(RemoteId remoteFileId, string localFilePath)
         {
-            var store = GetDownloadStore(sourceId.StoreId);
+            var store = GetDownloadStore(remoteFileId.StoreId);
             throw new NotImplementedException();
         }
 
         private IRemoteFileStore GetDownloadStore(string storeId)
         {
+            var store = _remoteFileStores.SingleOrDefault(x => x.StoreId.Equals(storeId));
+            // throw
+
             return null;
         }
 
@@ -47,6 +62,7 @@ namespace Bitretsmah.Core
             switch (StoreSelectionMethod)
             {
                 case StoreSelectionMethod.WithLessFreeSpace:
+                    //var store = _remoteFileStores.OrderBy(x => x.Quota.Used).First();
                     return null;
 
                 case StoreSelectionMethod.WithMoreFreeSpace:
