@@ -22,7 +22,7 @@ namespace Bitretsmah.Core
     {
         private readonly IAccountService _accountService;
         private readonly IRemoteFileStoreFactory _remoteFileStoreFactory;
-        private readonly IList<IRemoteFileStore> _remoteFileStores;
+        protected readonly List<IRemoteFileStore> _remoteFileStores;
 
         public RemoteFileWarehouse(IAccountService accountService, IRemoteFileStoreFactory remoteFileStoreFactory)
         {
@@ -35,6 +35,9 @@ namespace Bitretsmah.Core
 
         public async Task LoadStores()
         {
+            var allStores = await _remoteFileStoreFactory.GetAll();
+            var newStores = allStores.Where(x => !_remoteFileStores.Any(y => y.StoreId.Equals(x.StoreId)));
+            _remoteFileStores.AddRange(newStores);
         }
 
         public async Task<RemoteId> UploadFile(string localFilePath)
