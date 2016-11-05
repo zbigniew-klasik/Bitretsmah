@@ -1,4 +1,5 @@
 ﻿using Bitretsmah.Core.Models;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
 {
@@ -7,5 +8,9 @@ namespace Bitretsmah.Core.Interfaces
         string StoreId { get; }
 
         Quota Quota { get; }
+
+        Task<RemoteId> UploadFile(string localFilePath);
+
+        Task DownloadFile(RemoteId remoteId, string localFilePath);
     }
 }

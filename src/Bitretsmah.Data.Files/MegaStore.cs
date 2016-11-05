@@ -1,6 +1,8 @@
 ﻿using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
+using System;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Data.Mega
 {
@@ -16,5 +18,15 @@ namespace Bitretsmah.Data.Mega
         public string StoreId => _credentia.UserName;
 
         public Quota Quota { get; private set; }
+
+        public Task<RemoteId> UploadFile(string localFilePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DownloadFile(RemoteId remoteId, string localFilePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

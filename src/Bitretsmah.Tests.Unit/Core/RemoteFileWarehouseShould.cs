@@ -38,48 +38,52 @@ namespace Bitretsmah.Tests.Unit.Core
             public Guid TestId { get; private set; }
             public string StoreId { get; }
             public Quota Quota { get; }
+
+            public Task<RemoteId> UploadFile(string localFilePath)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task DownloadFile(RemoteId remoteId, string localFilePath)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion PRIVATE TESTING CLASSES
 
         private Mock<IAccountService> _accountServiceMock;
         private Mock<IRemoteFileStoreFactory> _remoteFileStoreFactoryMock;
-        private IRemoteFileWarehouse _remoteFileWarehouse;
-        private List<IRemoteFileStore> _stores;
 
         [SetUp]
         public void SetUp()
         {
             _accountServiceMock = new Mock<IAccountService>();
-
-            _stores = new List<IRemoteFileStore>()
-            {
-                new TestStore("store1", new Quota(100, 15)),
-                new TestStore("store2", new Quota(100, 10)),
-                new TestStore("store3", new Quota(100, 0)),
-                new TestStore("store4", new Quota(100, 90)),
-                new TestStore("store5", new Quota(100, 60))
-            };
-
             _remoteFileStoreFactoryMock = new Mock<IRemoteFileStoreFactory>();
-            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(_stores);
-
-            _remoteFileWarehouse = new RemoteFileWarehouseWrapper(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
         }
 
         [Test]
         public async Task LoadStores()
         {
-            await _remoteFileWarehouse.LoadStores();
+            var stores = new List<IRemoteFileStore>()
+            {
+                new TestStore("store1", new Quota(100, 15)),
+                new TestStore("store2", new Quota(100, 10)),
+                new TestStore("store3", new Quota(100, 0)),
+            };
 
-            ((RemoteFileWarehouseWrapper)_remoteFileWarehouse)
-                .RemoteFileStores
-                .ShouldAllBeEquivalentTo(_stores);
+            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
+
+            var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            await remoteFileWarehouse.LoadStores();
+            remoteFileWarehouse.RemoteFileStores.ShouldAllBeEquivalentTo(stores);
         }
 
         [Test]
         public async Task LoadNewStores()
         {
+            var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+
             var oldStoreList = new List<IRemoteFileStore>()
             {
                 new TestStore("storeA", new Quota()),
@@ -88,7 +92,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(oldStoreList);
 
-            await _remoteFileWarehouse.LoadStores();
+            await remoteFileWarehouse.LoadStores();
 
             var newStoreList = new List<IRemoteFileStore>()
             {
@@ -99,7 +103,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(newStoreList);
 
-            await _remoteFileWarehouse.LoadStores();
+            await remoteFileWarehouse.LoadStores();
 
             var expectedStoreList = new List<IRemoteFileStore>();
             expectedStoreList.Add(oldStoreList[0]);
@@ -108,7 +112,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var expectedIds = expectedStoreList.Select(x => (x as TestStore).TestId).ToList();
 
-            var actualStoreList = ((RemoteFileWarehouseWrapper)_remoteFileWarehouse).RemoteFileStores;
+            var actualStoreList = remoteFileWarehouse.RemoteFileStores;
 
             var actualIds = actualStoreList.Select(x => (x as TestStore).TestId).ToList();
 
@@ -122,11 +126,33 @@ namespace Bitretsmah.Tests.Unit.Core
             throw new NotImplementedException();
         }
 
-        [Test]
-        public async Task DownloadFile()
+        [TestCase("store_3")]
+        [TestCase("store_5")]
+        [TestCase("store_8")]
+        public async Task DownloadFileFromCorrectStore(string storeId)
         {
-            await Task.FromResult(0);
-            throw new NotImplementedException();
+            var remoteId = new RemoteId(storeId, "test_node_id");
+            var stores = new List<IRemoteFileStore>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var storeMock = new Mock<IRemoteFileStore>();
+                storeMock.SetupGet(x => x.StoreId).Returns($"store_{i}");
+                storeMock.SetupGet(x => x.Quota).Returns(new Quota(50, 5 * i));
+                stores.Add(storeMock.Object);
+            }
+
+            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
+
+            var warehouse = new RemoteFileWarehouse(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            await warehouse.LoadStores();
+            await warehouse.DownloadFile(remoteId, "test_file_path");
+
+            Mock.Get(stores.Single(x => x.StoreId.Equals(storeId))).Verify(x => x.DownloadFile(remoteId, "test_file_path"), Times.Once);
+            stores.Where(x => !x.StoreId.Equals(remoteId.StoreId)).ToList().ForEach(x =>
+            {
+                Mock.Get(x).Verify(y => y.DownloadFile(It.IsAny<RemoteId>(), It.IsAny<string>()), Times.Never);
+            });
         }
     }
 }

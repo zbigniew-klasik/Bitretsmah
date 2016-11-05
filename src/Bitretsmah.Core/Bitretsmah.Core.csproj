@@ -46,6 +46,7 @@
     <Compile Include="DirectoryConfigurator.cs" />
     <Compile Include="Exceptions\BitretsmahException.cs" />
     <Compile Include="Exceptions\InvalidCredentialException.cs" />
+    <Compile Include="Exceptions\UnknownStoreException.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />

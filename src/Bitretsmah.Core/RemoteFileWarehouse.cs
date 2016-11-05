@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core.Interfaces;
+﻿using Bitretsmah.Core.Exceptions;
+using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -49,15 +50,14 @@ namespace Bitretsmah.Core
         public async Task DownloadFile(RemoteId remoteFileId, string localFilePath)
         {
             var store = GetDownloadStore(remoteFileId.StoreId);
-            throw new NotImplementedException();
+            await store.DownloadFile(remoteFileId, localFilePath);
         }
 
         private IRemoteFileStore GetDownloadStore(string storeId)
         {
             var store = _remoteFileStores.SingleOrDefault(x => x.StoreId.Equals(storeId));
-            // throw
-
-            return null;
+            if (store == null) throw new UnknownStoreException($"Unknown store '{storeId}'.");
+            return store;
         }
 
         private IRemoteFileStore GetUploadStore()
