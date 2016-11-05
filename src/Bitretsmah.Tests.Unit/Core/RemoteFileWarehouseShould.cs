@@ -119,11 +119,34 @@ namespace Bitretsmah.Tests.Unit.Core
             actualIds.ShouldBeEquivalentTo(expectedIds);
         }
 
-        [Test]
-        public async Task UploadFile()
+        [TestCase(StoreSelectionMethod.WithLessFreeSpace, "store_9")]
+        [TestCase(StoreSelectionMethod.WithMoreFreeSpace, "store_0")]
+        public async Task UploadFileToCorrectStore(StoreSelectionMethod method, string storeId)
         {
-            await Task.FromResult(0);
-            throw new NotImplementedException();
+            var stores = new List<IRemoteFileStore>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var storeMock = new Mock<IRemoteFileStore>();
+                storeMock.SetupGet(x => x.StoreId).Returns($"store_{i}");
+                storeMock.SetupGet(x => x.Quota).Returns(new Quota(50, 20 + i));
+                storeMock.Setup(x => x.UploadFile("test_file_path")).ReturnsAsync(new RemoteId($"store_{i}", "test_node_id"));
+                stores.Add(storeMock.Object);
+            }
+
+            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
+
+            var warehouse = new RemoteFileWarehouse(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            warehouse.StoreSelectionMethod = method;
+            await warehouse.LoadStores();
+            var remoteId = await warehouse.UploadFile("test_file_path");
+
+            remoteId.StoreId.Should().Be(storeId);
+            Mock.Get(stores.Single(x => x.StoreId.Equals(storeId))).Verify(x => x.UploadFile("test_file_path"), Times.Once);
+            stores.Where(x => !x.StoreId.Equals(storeId)).ToList().ForEach(x =>
+            {
+                Mock.Get(x).Verify(y => y.UploadFile(It.IsAny<string>()), Times.Never);
+            });
         }
 
         [TestCase("store_3")]

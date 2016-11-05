@@ -14,5 +14,11 @@
 
         public decimal Total { get; set; }
         public decimal Used { get; set; }
+        public decimal Free => Total - Used;
+
+        public override string ToString()
+        {
+            return $"Free: {Free}; Used: {Used}; Total: {Total};";
+        }
     }
 }
