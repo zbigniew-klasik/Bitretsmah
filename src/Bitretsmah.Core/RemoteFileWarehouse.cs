@@ -14,9 +14,9 @@ namespace Bitretsmah.Core
 
         Task LoadStores();
 
-        Task<RemoteId> UploadFile(string localFilePath);
+        Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress);
 
-        Task DownloadFile(RemoteId remoteFileId, string localFilePath);
+        Task DownloadFile(RemoteId remoteFileId, string localFilePath, IProgress<double> progress);
     }
 
     public class RemoteFileWarehouse : IRemoteFileWarehouse
@@ -41,16 +41,16 @@ namespace Bitretsmah.Core
             _remoteFileStores.AddRange(newStores);
         }
 
-        public async Task<RemoteId> UploadFile(string localFilePath)
+        public async Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
         {
             var store = GetUploadStore();
-            return await store.UploadFile(localFilePath);
+            return await store.UploadFile(localFilePath, progress);
         }
 
-        public async Task DownloadFile(RemoteId remoteFileId, string localFilePath)
+        public async Task DownloadFile(RemoteId remoteFileId, string localFilePath, IProgress<double> progress)
         {
             var store = GetDownloadStore(remoteFileId.StoreId);
-            await store.DownloadFile(remoteFileId, localFilePath);
+            await store.DownloadFile(remoteFileId, localFilePath, progress);
         }
 
         private IRemoteFileStore GetDownloadStore(string storeId)

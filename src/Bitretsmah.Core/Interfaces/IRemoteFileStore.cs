@@ -1,4 +1,5 @@
 ﻿using Bitretsmah.Core.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
@@ -9,8 +10,8 @@ namespace Bitretsmah.Core.Interfaces
 
         Quota Quota { get; }
 
-        Task<RemoteId> UploadFile(string localFilePath);
+        Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress);
 
-        Task DownloadFile(RemoteId remoteId, string localFilePath);
+        Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress);
     }
 }

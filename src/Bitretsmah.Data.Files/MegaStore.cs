@@ -19,12 +19,12 @@ namespace Bitretsmah.Data.Mega
 
         public Quota Quota { get; private set; }
 
-        public Task<RemoteId> UploadFile(string localFilePath)
+        public Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
         {
             throw new NotImplementedException();
         }
 
-        public Task DownloadFile(RemoteId remoteId, string localFilePath)
+        public Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress)
         {
             throw new NotImplementedException();
         }
