@@ -1,8 +1,12 @@
-﻿using CG.Web.MegaApiClient;
+﻿using Bitretsmah.Data.Mega;
+using CG.Web.MegaApiClient;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using File = System.IO.File;
 
 namespace Bitretsmah.Tests.Integration.Data.Mega
 {
@@ -16,13 +20,42 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
         }
 
         [Test]
-        public void Test()
+        public async Task SimpleUploadDownload()
         {
-            Console.WriteLine("test");
+            var fileName1 = Guid.NewGuid() + ".txt";
+            var fileName2 = Guid.NewGuid() + ".txt";
+            var fileContent = Guid.NewGuid().ToString();
+
+            Console.WriteLine($"File name: {fileName1}");
+            Console.WriteLine($"File content: {fileContent}");
+
+            try
+            {
+                File.WriteAllText(fileName1, fileContent);
+
+                var store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
+
+                var id = await store.UploadFile(fileName1, new Progress<double>());
+                await store.DownloadFile(id, fileName2, new Progress<double>());
+
+                var downloadedContent = File.ReadAllText(fileName2);
+                downloadedContent.Should().Be(fileContent);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            finally
+            {
+                Console.WriteLine("Finally:");
+                File.Delete(fileName1);
+                File.Delete(fileName2);
+            }
         }
 
         [OneTimeTearDown]
-        public void TearDown()
+        public void OneTimeTearDown()
         {
             CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());
         }
