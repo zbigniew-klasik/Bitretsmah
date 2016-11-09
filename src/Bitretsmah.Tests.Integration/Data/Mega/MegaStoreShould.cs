@@ -31,13 +31,19 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
 
             try
             {
-                File.WriteAllText(fileName1, fileContent);
-
+                Console.WriteLine("Creating store...");
                 var store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
 
+                Console.WriteLine("Writing file...");
+                File.WriteAllText(fileName1, fileContent);
+
+                Console.WriteLine("Uploading file...");
                 var id = await store.UploadFile(fileName1, new Progress<double>());
+
+                Console.WriteLine("Downloading file...");
                 await store.DownloadFile(id, fileName2, new Progress<double>());
 
+                Console.WriteLine("Reading file...");
                 var downloadedContent = File.ReadAllText(fileName2);
                 downloadedContent.Should().Be(fileContent);
             }
