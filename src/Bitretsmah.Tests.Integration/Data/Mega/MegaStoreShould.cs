@@ -26,38 +26,21 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
             var fileName2 = Guid.NewGuid() + ".txt";
             var fileContent = Guid.NewGuid().ToString();
 
-            Console.WriteLine($"File name: {fileName1}");
-            Console.WriteLine($"File content: {fileContent}");
+            Console.WriteLine("Creating store...");
+            var store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
 
-            try
-            {
-                Console.WriteLine("Creating store...");
-                var store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
+            Console.WriteLine("Writing file...");
+            File.WriteAllText(fileName1, fileContent);
 
-                Console.WriteLine("Writing file...");
-                File.WriteAllText(fileName1, fileContent);
+            Console.WriteLine("Uploading file...");
+            var id = await store.UploadFile(fileName1, new Progress<double>());
 
-                Console.WriteLine("Uploading file...");
-                var id = await store.UploadFile(fileName1, new Progress<double>());
+            Console.WriteLine("Downloading file...");
+            await store.DownloadFile(id, fileName2, new Progress<double>());
 
-                Console.WriteLine("Downloading file...");
-                await store.DownloadFile(id, fileName2, new Progress<double>());
-
-                Console.WriteLine("Reading file...");
-                var downloadedContent = File.ReadAllText(fileName2);
-                downloadedContent.Should().Be(fileContent);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex);
-                throw;
-            }
-            finally
-            {
-                Console.WriteLine("Finally:");
-                File.Delete(fileName1);
-                File.Delete(fileName2);
-            }
+            Console.WriteLine("Reading file...");
+            var downloadedContent = File.ReadAllText(fileName2);
+            downloadedContent.Should().Be(fileContent);
         }
 
         [OneTimeTearDown]
