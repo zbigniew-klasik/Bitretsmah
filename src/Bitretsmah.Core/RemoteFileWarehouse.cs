@@ -21,13 +21,11 @@ namespace Bitretsmah.Core
 
     public class RemoteFileWarehouse : IRemoteFileWarehouse
     {
-        private readonly IAccountService _accountService;
         private readonly IRemoteFileStoreFactory _remoteFileStoreFactory;
         protected readonly List<IRemoteFileStore> _remoteFileStores;
 
-        public RemoteFileWarehouse(IAccountService accountService, IRemoteFileStoreFactory remoteFileStoreFactory)
+        public RemoteFileWarehouse(IRemoteFileStoreFactory remoteFileStoreFactory)
         {
-            _accountService = accountService;
             _remoteFileStoreFactory = remoteFileStoreFactory;
             _remoteFileStores = new List<IRemoteFileStore>();
         }

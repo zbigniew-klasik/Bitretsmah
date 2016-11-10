@@ -18,8 +18,8 @@ namespace Bitretsmah.Tests.Unit.Core
 
         private class RemoteFileWarehouseWrapper : RemoteFileWarehouse
         {
-            public RemoteFileWarehouseWrapper(IAccountService accountService, IRemoteFileStoreFactory remoteFileStoreFactory)
-                : base(accountService, remoteFileStoreFactory)
+            public RemoteFileWarehouseWrapper(IRemoteFileStoreFactory remoteFileStoreFactory)
+                : base(remoteFileStoreFactory)
             {
             }
 
@@ -52,13 +52,11 @@ namespace Bitretsmah.Tests.Unit.Core
 
         #endregion PRIVATE TESTING CLASSES
 
-        private Mock<IAccountService> _accountServiceMock;
         private Mock<IRemoteFileStoreFactory> _remoteFileStoreFactoryMock;
 
         [SetUp]
         public void SetUp()
         {
-            _accountServiceMock = new Mock<IAccountService>();
             _remoteFileStoreFactoryMock = new Mock<IRemoteFileStoreFactory>();
         }
 
@@ -74,7 +72,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
 
-            var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_remoteFileStoreFactoryMock.Object);
             await remoteFileWarehouse.LoadStores();
             remoteFileWarehouse.RemoteFileStores.ShouldAllBeEquivalentTo(stores);
         }
@@ -82,7 +80,7 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public async Task LoadNewStores()
         {
-            var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_remoteFileStoreFactoryMock.Object);
 
             var oldStoreList = new List<IRemoteFileStore>()
             {
@@ -136,7 +134,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
 
-            var warehouse = new RemoteFileWarehouse(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
             warehouse.StoreSelectionMethod = method;
             await warehouse.LoadStores();
             var progress = new Progress<double>();
@@ -168,7 +166,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
 
-            var warehouse = new RemoteFileWarehouse(_accountServiceMock.Object, _remoteFileStoreFactoryMock.Object);
+            var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
             await warehouse.LoadStores();
             var progress = new Progress<double>();
             await warehouse.DownloadFile(remoteId, "test_file_path", progress);
