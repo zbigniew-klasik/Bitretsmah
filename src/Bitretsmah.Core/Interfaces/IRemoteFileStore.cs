@@ -8,7 +8,7 @@ namespace Bitretsmah.Core.Interfaces
     {
         string StoreId { get; }
 
-        Quota Quota { get; }
+        Task<Quota> GetQuota();
 
         Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress);
 

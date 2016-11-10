@@ -41,7 +41,7 @@ namespace Bitretsmah.Core
 
         public async Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
         {
-            var store = GetUploadStore();
+            var store = await GetUploadStore();
             return await store.UploadFile(localFilePath, progress);
         }
 
@@ -58,17 +58,20 @@ namespace Bitretsmah.Core
             return store;
         }
 
-        private IRemoteFileStore GetUploadStore()
+        private async Task<IRemoteFileStore> GetUploadStore()
         {
             if (!_remoteFileStores.Any()) throw new InvalidOperationException("The store list is empty.");
+
+            var storesQuota = _remoteFileStores.Select(x => new { Store = x, QuotaTask = x.GetQuota() }).ToList();
+            await Task.WhenAll(storesQuota.Select(x => x.QuotaTask));
 
             switch (StoreSelectionMethod)
             {
                 case StoreSelectionMethod.WithLessFreeSpace:
-                    return _remoteFileStores.OrderBy(x => x.Quota.Free).First();
+                    return storesQuota.OrderBy(x => x.QuotaTask.Result.Free).First().Store;
 
                 case StoreSelectionMethod.WithMoreFreeSpace:
-                    return _remoteFileStores.OrderBy(x => x.Quota.Free).Last();
+                    return storesQuota.OrderBy(x => x.QuotaTask.Result.Free).Last().Store;
 
                 default:
                     throw new NotImplementedException($"The store selection method: '{StoreSelectionMethod}' is not implemnted.");

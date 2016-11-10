@@ -28,16 +28,22 @@ namespace Bitretsmah.Tests.Unit.Core
 
         private class TestStore : IRemoteFileStore
         {
+            private readonly Quota _quota;
+
             public TestStore(string storeId, Quota quota)
             {
                 TestId = Guid.NewGuid();
                 StoreId = storeId;
-                Quota = quota;
+                _quota = quota;
             }
 
             public Guid TestId { get; private set; }
             public string StoreId { get; }
-            public Quota Quota { get; }
+
+            public Task<Quota> GetQuota()
+            {
+                return Task.FromResult(_quota);
+            }
 
             public Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
             {
@@ -127,7 +133,7 @@ namespace Bitretsmah.Tests.Unit.Core
             {
                 var storeMock = new Mock<IRemoteFileStore>();
                 storeMock.SetupGet(x => x.StoreId).Returns($"store_{i}");
-                storeMock.SetupGet(x => x.Quota).Returns(new Quota(50, 20 + i));
+                storeMock.Setup(x => x.GetQuota()).ReturnsAsync(new Quota(50, 20 + i));
                 storeMock.Setup(x => x.UploadFile("test_file_path", It.IsAny<IProgress<double>>())).ReturnsAsync(new RemoteId($"store_{i}", "test_node_id"));
                 stores.Add(storeMock.Object);
             }
@@ -160,7 +166,7 @@ namespace Bitretsmah.Tests.Unit.Core
             {
                 var storeMock = new Mock<IRemoteFileStore>();
                 storeMock.SetupGet(x => x.StoreId).Returns($"store_{i}");
-                storeMock.SetupGet(x => x.Quota).Returns(new Quota(50, 5 * i));
+                storeMock.Setup(x => x.GetQuota()).ReturnsAsync(new Quota(50, 5 * i));
                 stores.Add(storeMock.Object);
             }
 

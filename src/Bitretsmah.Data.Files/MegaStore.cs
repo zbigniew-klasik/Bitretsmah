@@ -12,6 +12,7 @@ namespace Bitretsmah.Data.Mega
     {
         private readonly NetworkCredential _credential;
         private readonly IMegaApiClient _megaApiClient;
+        private readonly Quota _quota;
         private INode _rootNode;
         private bool _isInitialized;
 
@@ -19,17 +20,22 @@ namespace Bitretsmah.Data.Mega
         {
             _credential = credential;
             _megaApiClient = new MegaApiClient();
+            _quota = new Quota();
         }
 
         public string StoreId => _credential.UserName;
 
-        public Quota Quota { get; private set; }
+        public async Task<Quota> GetQuota()
+        {
+            await EnsureInitialized();
+            return _quota;
+        }
 
         public async Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
         {
             await EnsureInitialized();
             var node = await _megaApiClient.UploadFileAsync(localFilePath, _rootNode, progress);
-            // TODO update quota
+            await UpdateQuota();
             return new RemoteId(StoreId, node.Id);
         }
 
@@ -46,8 +52,16 @@ namespace Bitretsmah.Data.Mega
         {
             if (_isInitialized) return;
             await _megaApiClient.LoginAsync(_credential.UserName, _credential.Password);
+            await UpdateQuota();
             _rootNode = (await _megaApiClient.GetNodesAsync()).Single(n => n.Type == NodeType.Root);
             _isInitialized = true;
+        }
+
+        private async Task UpdateQuota()
+        {
+            var information = await _megaApiClient.GetAccountInformationAsync();
+            _quota.Total = information.TotalQuota;
+            _quota.Used = information.UsedQuota;
         }
     }
 }
