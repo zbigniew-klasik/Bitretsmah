@@ -1,11 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Bitretsmah.Core.Models
 {
-    public class Directory
+    public class Directory : Node
     {
-        public string AbsolutPath { get; set; }
-        public DateTime LastDeepBackupDate { get; set; }
-        public DateTime LastQuickBackupDate { get; set; }
+        public string Name { get; set; }
+        public List<Node> Nodes { get; set; }
     }
 }

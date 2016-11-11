@@ -2,15 +2,12 @@
 
 namespace Bitretsmah.Core.Models
 {
-    public class File
+    public class File : Node
     {
-        public string RelativePath { get; set; }
+        public string Name { get; set; }
+        public decimal Size { get; set; }
         public string Hash { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public DateTime DeletedDate { get; set; }
-        public DateTime UploadedDate { get; set; }
-        public string Size { get; set; }
-        public RemoteId RemoteId { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
+        public DateTimeOffset ModificationTime { get; set; }
     }
 }

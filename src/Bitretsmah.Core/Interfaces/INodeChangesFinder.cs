@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
 {
-    public interface ILocalFilesService
+    public interface INodeChangesFinder
     {
-        Task<Node> GetNodeStructure(string nodePath);
+        Task<NodeChange> Find(Node initialNode, Node finalNode);
     }
 }
