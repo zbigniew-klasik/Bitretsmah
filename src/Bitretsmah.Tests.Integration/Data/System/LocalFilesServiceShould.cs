@@ -1,16 +1,23 @@
-﻿using NUnit.Framework;
-using System.IO;
+﻿using Bitretsmah.Data.System;
+using FluentAssertions;
+using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Tests.Integration.Data.System
 {
+    // TODO:
     [TestFixture]
     public class LocalFilesServiceShould
     {
         [Test]
-        public void Test()
+        public async Task Test()
         {
-            var file = new FileInfo(@"D:\Temp\Lucifer.S02E01.HDTV.x264-LOL[ettv]\lucifer.201.hdtv-lol[ettv].srt");
-            var dir = new DirectoryInfo(@"D:\Temp\Lucifer.S02E01.HDTV.x264-LOL[ettv]\lucifer.201.hdtv-lol[ettv].srt");
+            var dir = @"D:\Temp";
+
+            var service = new LocalFilesService();
+            var node = service.GetNodeStructure(dir);
+
+            node.Should().NotBeNull();
         }
     }
 }

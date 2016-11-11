@@ -5,6 +5,11 @@ namespace Bitretsmah.Core.Models
     public class Directory : Node
     {
         public string Name { get; set; }
-        public List<Node> Nodes { get; set; }
+        public List<Node> Nodes { get; set; } = new List<Node>();
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

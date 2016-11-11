@@ -1,10 +1,11 @@
 ﻿using Bitretsmah.Core.Models;
-using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
 {
     public interface ILocalFilesService
     {
-        Task<Node> GetNodeStructure(string nodePath);
+        Node GetNodeStructure(string nodePath);
+
+        string ComputeHash(string filePath);
     }
 }
