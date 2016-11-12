@@ -35,6 +35,7 @@ namespace Bitretsmah.Core
         {
             var change = new NodeChange(ChangeType.None, finalDirectory);
             if (initialDirectory.Name != finalDirectory.Name) change.Type = ChangeType.Modify;
+
             return change;
         }
     }
