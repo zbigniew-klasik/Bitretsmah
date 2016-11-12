@@ -1,11 +1,11 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using Bitretsmah.Core.Interfaces;
+﻿using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using Bitretsmah.Data.LiteDB;
 using Bitretsmah.Data.LiteDB.Internal;
 using FluentAssertions;
 using NUnit.Framework;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Tests.Integration.Data.LiteDB
 {
