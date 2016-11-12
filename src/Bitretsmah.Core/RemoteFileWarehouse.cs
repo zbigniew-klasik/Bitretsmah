@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Core
 {
-    public interface IRemoteFileWarehouse
+    internal interface IRemoteFileWarehouse
     {
         StoreSelectionMethod StoreSelectionMethod { get; set; }
 
@@ -19,7 +19,7 @@ namespace Bitretsmah.Core
         Task DownloadFile(RemoteId remoteFileId, string localFilePath, IProgress<double> progress);
     }
 
-    public class RemoteFileWarehouse : IRemoteFileWarehouse
+    internal class RemoteFileWarehouse : IRemoteFileWarehouse
     {
         private readonly IRemoteFileStoreFactory _remoteFileStoreFactory;
         protected readonly List<IRemoteFileStore> _remoteFileStores;

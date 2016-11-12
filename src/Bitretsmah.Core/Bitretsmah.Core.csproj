@@ -48,12 +48,12 @@
     <Compile Include="Exceptions\InvalidCredentialException.cs" />
     <Compile Include="Exceptions\UnknownStoreException.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
-    <Compile Include="Interfaces\INodeChangesFinder.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
     <Compile Include="Models\ChangeType.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\NodeChange.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />
+    <Compile Include="NodeChangesFinder.cs" />
     <Compile Include="RemoteFileWarehouse.cs" />
     <Compile Include="Interfaces\IDateTimeService.cs" />
     <Compile Include="Interfaces\ILocalFilesService.cs" />
