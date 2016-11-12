@@ -60,10 +60,10 @@ namespace Bitretsmah.Data.System
             var directory = new Directory { Name = directoryInfo.Name };
 
             foreach (var info in directoryInfo.GetDirectories())
-                directory.Nodes.Add(GetDirectoryStructure(info));
+                directory.InnerNodes.Add(GetDirectoryStructure(info));
 
             foreach (var info in directoryInfo.GetFiles())
-                directory.Nodes.Add(GetFileStructure(info));
+                directory.InnerNodes.Add(GetFileStructure(info));
 
             return directory;
         }

@@ -1,6 +1,7 @@
 ﻿namespace Bitretsmah.Core.Models
 {
-    public class Node
+    public abstract class Node
     {
+        public string Name { get; set; }
     }
 }

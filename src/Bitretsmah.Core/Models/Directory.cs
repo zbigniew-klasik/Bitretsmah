@@ -4,8 +4,18 @@ namespace Bitretsmah.Core.Models
 {
     public class Directory : Node
     {
-        public string Name { get; set; }
-        public List<Node> Nodes { get; set; } = new List<Node>();
+        public Directory()
+        {
+            InnerNodes = new List<Node>();
+        }
+
+        public Directory(string name)
+            : this()
+        {
+            Name = name;
+        }
+
+        public List<Node> InnerNodes { get; set; }
 
         public override string ToString()
         {
