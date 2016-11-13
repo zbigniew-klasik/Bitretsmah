@@ -25,7 +25,7 @@ namespace Bitretsmah.Tests.Unit.Core
             _drectory2 = new Directory("temp");
         }
 
-        #region FILE
+        #region SINGLE FILE
 
         [Test]
         public void FindNoChangeForSameFiles()
@@ -93,9 +93,9 @@ namespace Bitretsmah.Tests.Unit.Core
             result.State.Should().Be(NodeState.Modified);
         }
 
-        #endregion FILE
+        #endregion SINGLE FILE
 
-        //#region DIRECTORY
+        #region SINGLE DIRECTORY
 
         [Test]
         public void FindNoChangesInDirectory()
@@ -112,7 +112,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _drectory2.InnerNodes.Add(_file1);
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
-            result.State.Should().Be(NodeState.None);
+            result.State.Should().Be(NodeState.Modified);
             result.InnerNodes[0].State.Should().Be(NodeState.Created);
         }
 
@@ -123,7 +123,7 @@ namespace Bitretsmah.Tests.Unit.Core
             _drectory2.InnerNodes.Add(_file2);
             _file2.Hash = "different";
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
-            result.State.Should().Be(NodeState.None);
+            result.State.Should().Be(NodeState.Modified);
             result.InnerNodes[0].State.Should().Be(NodeState.Modified);
         }
 
@@ -132,11 +132,17 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _drectory1.InnerNodes.Add(_file1);
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
-            result.State.Should().Be(NodeState.None);
+            result.State.Should().Be(NodeState.Modified);
             result.InnerNodes[0].State.Should().Be(NodeState.Deleted);
         }
 
-        //#endregion DIRECTORY
+        #endregion SINGLE DIRECTORY
+
+        #region NESTED DIRECTORIES
+
+        // TODO
+
+        #endregion NESTED DIRECTORIES
 
         // add file/dir
         // remove file/dir
