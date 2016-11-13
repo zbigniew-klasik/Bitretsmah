@@ -49,7 +49,7 @@
     <Compile Include="Exceptions\UnknownStoreException.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
-    <Compile Include="Models\ChangeType.cs" />
+    <Compile Include="Models\NodeState.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\NodeChange.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />

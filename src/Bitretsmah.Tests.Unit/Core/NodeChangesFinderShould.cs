@@ -31,7 +31,7 @@ namespace Bitretsmah.Tests.Unit.Core
         public void ReturnNoChangeForSameFiles()
         {
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.None);
+            change.Type.Should().Be(NodeState.None);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -41,7 +41,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file2.Name = "foo.exe";
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.Modify);
+            change.Type.Should().Be(NodeState.Modified);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -51,7 +51,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file2.Size = 12;
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.Modify);
+            change.Type.Should().Be(NodeState.Modified);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -61,7 +61,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file2.CreationTime = newDate(7);
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.Modify);
+            change.Type.Should().Be(NodeState.Modified);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -71,7 +71,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file2.ModificationTime = newDate(7);
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.Modify);
+            change.Type.Should().Be(NodeState.Modified);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -82,7 +82,7 @@ namespace Bitretsmah.Tests.Unit.Core
             _file1.Hash = null;
             _file2.Hash = null;
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.None);
+            change.Type.Should().Be(NodeState.None);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -92,7 +92,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file1.Hash = null;
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.None);
+            change.Type.Should().Be(NodeState.None);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -102,7 +102,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file2.Hash = null;
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.None);
+            change.Type.Should().Be(NodeState.None);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -112,7 +112,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _file2.Hash = "different";
             var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(ChangeType.Modify);
+            change.Type.Should().Be(NodeState.Modified);
             change.Node.Should().Be(_file2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -125,7 +125,7 @@ namespace Bitretsmah.Tests.Unit.Core
         public void ReturnNoChangeForSameEmptyDirectories()
         {
             var change = _finder.Find(_drectory1, _drectory2);
-            change.Type.Should().Be(ChangeType.None);
+            change.Type.Should().Be(NodeState.None);
             change.Node.Should().Be(_drectory2);
             change.InnerChanges.Should().BeEmpty();
         }
@@ -135,7 +135,7 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _drectory2.Name = "stuff";
             var change = _finder.Find(_drectory1, _drectory2);
-            change.Type.Should().Be(ChangeType.Modify);
+            change.Type.Should().Be(NodeState.Modified);
             change.Node.Should().Be(_drectory2);
             change.InnerChanges.Should().BeEmpty();
         }

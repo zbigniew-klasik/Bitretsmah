@@ -9,14 +9,14 @@ namespace Bitretsmah.Core.Models
             InnerChanges = new List<NodeChange>();
         }
 
-        public NodeChange(ChangeType type, Node node)
+        public NodeChange(NodeState type, Node node)
             : this()
         {
             Type = type;
             Node = node;
         }
 
-        public ChangeType Type { get; set; }
+        public NodeState Type { get; set; }
         public Node Node { get; set; }
         public List<NodeChange> InnerChanges { get; set; }
 
