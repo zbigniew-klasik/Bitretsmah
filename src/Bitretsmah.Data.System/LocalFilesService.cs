@@ -51,7 +51,9 @@ namespace Bitretsmah.Data.System
                 Size = fileInfo.Length,
                 CreationTime = new DateTimeOffset(fileInfo.CreationTimeUtc, new TimeSpan(0)),
                 ModificationTime = new DateTimeOffset(fileInfo.LastWriteTimeUtc, new TimeSpan(0)),
-                Hash = null
+                Hash = null,
+                State = NodeState.None,
+                AbsolutePath = fileInfo.FullName
             };
         }
 

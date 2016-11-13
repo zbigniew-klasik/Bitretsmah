@@ -28,119 +28,115 @@ namespace Bitretsmah.Tests.Unit.Core
         #region FILE
 
         [Test]
-        public void ReturnNoChangeForSameFiles()
+        public void FindNoChangeForSameFiles()
         {
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.None);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.Should().BeOfType<File>();
+            result.ShouldBeEquivalentTo(_file2);
+            result.State.Should().Be(NodeState.None);
         }
 
         [Test]
-        public void ReturnModifedForDifferentFileName()
-        {
-            _file2.Name = "foo.exe";
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.Modified);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
-        }
-
-        [Test]
-        public void ReturnModifedForDifferentFileSize()
+        public void FindModifedForDifferentFileSize()
         {
             _file2.Size = 12;
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.Modified);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.Modified);
         }
 
         [Test]
-        public void ReturnModifedForDifferentFileCreationTime()
+        public void FindModifedForDifferentFileCreationTime()
         {
             _file2.CreationTime = newDate(7);
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.Modified);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.Modified);
         }
 
         [Test]
-        public void ReturnModifedForDifferentFileModificationTime()
+        public void FindModifedForDifferentFileModificationTime()
         {
             _file2.ModificationTime = newDate(7);
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.Modified);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.Modified);
         }
 
         [Test]
-        public void ReturnNoChangeForNullFileHashes()
+        public void FindNoChangeForNullFileHashes()
         {
             _file1.Hash = null;
             _file2.Hash = null;
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.None);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.None);
         }
 
         [Test]
-        public void ReturnNoChangeForFirstNullFileHash()
+        public void FindNoChangeForFirstNullFileHash()
         {
             _file1.Hash = null;
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.None);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.None);
         }
 
         [Test]
-        public void ReturnNoChangeForSecondNullFileHash()
+        public void FindNoChangeForSecondNullFileHash()
         {
             _file2.Hash = null;
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.None);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.None);
         }
 
         [Test]
-        public void ReturnModifedForDifferentFileHashes()
+        public void FindModifedForDifferentFileHashes()
         {
             _file2.Hash = "different";
-            var change = _finder.Find(_file1, _file2);
-            change.Type.Should().Be(NodeState.Modified);
-            change.Node.Should().Be(_file2);
-            change.InnerChanges.Should().BeEmpty();
+            var result = _finder.Find(_file1, _file2);
+            result.State.Should().Be(NodeState.Modified);
         }
 
         #endregion FILE
 
-        #region DIRECTORY
+        //#region DIRECTORY
 
         [Test]
-        public void ReturnNoChangeForSameEmptyDirectories()
+        public void FindNoChangesInDirectory()
         {
-            var change = _finder.Find(_drectory1, _drectory2);
-            change.Type.Should().Be(NodeState.None);
-            change.Node.Should().Be(_drectory2);
-            change.InnerChanges.Should().BeEmpty();
+            _drectory1.InnerNodes.Add(_file1);
+            _drectory2.InnerNodes.Add(_file2);
+            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            result.State.Should().Be(NodeState.None);
+            result.InnerNodes[0].State.Should().Be(NodeState.None);
         }
 
         [Test]
-        public void ReturnModifedForDifferentDirectoryName()
+        public void FindCreatedFileInDirectory()
         {
-            _drectory2.Name = "stuff";
-            var change = _finder.Find(_drectory1, _drectory2);
-            change.Type.Should().Be(NodeState.Modified);
-            change.Node.Should().Be(_drectory2);
-            change.InnerChanges.Should().BeEmpty();
+            _drectory2.InnerNodes.Add(_file1);
+            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            result.State.Should().Be(NodeState.None);
+            result.InnerNodes[0].State.Should().Be(NodeState.Created);
         }
 
-        #endregion DIRECTORY
+        [Test]
+        public void FindModifiedFileInDirectory()
+        {
+            _drectory1.InnerNodes.Add(_file1);
+            _drectory2.InnerNodes.Add(_file2);
+            _file2.Hash = "different";
+            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            result.State.Should().Be(NodeState.None);
+            result.InnerNodes[0].State.Should().Be(NodeState.Modified);
+        }
+
+        [Test]
+        public void FindDeletedFileInDirectory()
+        {
+            _drectory1.InnerNodes.Add(_file1);
+            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            result.State.Should().Be(NodeState.None);
+            result.InnerNodes[0].State.Should().Be(NodeState.Deleted);
+        }
+
+        //#endregion DIRECTORY
 
         // add file/dir
         // remove file/dir
