@@ -73,6 +73,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Core\AccountServiceShould.cs" />
+    <Compile Include="Core\ExtensionsShould.cs" />
     <Compile Include="Core\NodeChangesFinderShould.cs" />
     <Compile Include="Core\RemoteFileWarehouseShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

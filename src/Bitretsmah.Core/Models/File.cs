@@ -2,6 +2,7 @@
 
 namespace Bitretsmah.Core.Models
 {
+    [Serializable]
     public class File : Node
     {
         public File()
