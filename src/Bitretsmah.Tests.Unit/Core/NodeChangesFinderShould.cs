@@ -104,16 +104,20 @@ namespace Bitretsmah.Tests.Unit.Core
             _drectory2.InnerNodes.Add(_file2);
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
             result.State.Should().Be(NodeState.None);
-            result.InnerNodes[0].State.Should().Be(NodeState.None);
+            result.InnerNodes.Should().BeEmpty();
         }
 
         [Test]
         public void FindCreatedFileInDirectory()
         {
-            _drectory2.InnerNodes.Add(_file1);
+            _drectory1.InnerNodes.Add(_file1);
+            _drectory2.InnerNodes.Add(_file2);
+            _drectory2.InnerNodes.Add(new File("bar.txt", 987, "HASH", newDate(7), newDate(8)));
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
             result.State.Should().Be(NodeState.Modified);
+            result.InnerNodes.Count.Should().Be(1);
             result.InnerNodes[0].State.Should().Be(NodeState.Created);
+            result.InnerNodes[0].Name.Should().Be("bar.txt");
         }
 
         [Test]
@@ -121,19 +125,26 @@ namespace Bitretsmah.Tests.Unit.Core
         {
             _drectory1.InnerNodes.Add(_file1);
             _drectory2.InnerNodes.Add(_file2);
-            _file2.Hash = "different";
+            _drectory1.InnerNodes.Add(new File("bar.txt", 987, "HASH_OLD", newDate(7), newDate(8)));
+            _drectory2.InnerNodes.Add(new File("bar.txt", 987, "HASH_NEW", newDate(7), newDate(8)));
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
             result.State.Should().Be(NodeState.Modified);
+            result.InnerNodes.Count.Should().Be(1);
             result.InnerNodes[0].State.Should().Be(NodeState.Modified);
+            result.InnerNodes[0].Name.Should().Be("bar.txt");
         }
 
         [Test]
         public void FindDeletedFileInDirectory()
         {
             _drectory1.InnerNodes.Add(_file1);
+            _drectory2.InnerNodes.Add(_file2);
+            _drectory1.InnerNodes.Add(new File("bar.txt", 987, "HASH_OLD", newDate(7), newDate(8)));
             var result = (Directory)_finder.Find(_drectory1, _drectory2);
             result.State.Should().Be(NodeState.Modified);
+            result.InnerNodes.Count.Should().Be(1);
             result.InnerNodes[0].State.Should().Be(NodeState.Deleted);
+            result.InnerNodes[0].Name.Should().Be("bar.txt");
         }
 
         #endregion SINGLE DIRECTORY

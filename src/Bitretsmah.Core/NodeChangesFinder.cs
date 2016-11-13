@@ -18,10 +18,7 @@ namespace Bitretsmah.Core
             var finalNodeCopy = finalNode.DeepCopy();
 
             MarkNodeState(initialNodeCopy, finalNodeCopy);
-
-            // todo: clear not change nodes
-            // CleanUp(finalNodeCopy);
-
+            RemoveUnchangedNodes(finalNodeCopy);
             return finalNodeCopy;
         }
 
@@ -104,6 +101,16 @@ namespace Bitretsmah.Core
 
             finalNodes.AddRange(deletedNodes);
             return deletedNodes.Any();
+        }
+
+        private void RemoveUnchangedNodes(Node node)
+        {
+            var directory = node as Directory;
+            if (directory != null)
+            {
+                directory.InnerNodes.RemoveAll(x => x.State == NodeState.None);
+                directory.InnerNodes.ForEach(RemoveUnchangedNodes);
+            }
         }
     }
 }
