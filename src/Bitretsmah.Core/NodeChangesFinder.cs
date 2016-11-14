@@ -1,4 +1,5 @@
 ﻿using Bitretsmah.Core.Models;
+using EnsureThat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace Bitretsmah.Core
     {
         public Node Find(Node initialNode, Node finalNode)
         {
+            Ensure.That(initialNode).IsNotNull();
+            Ensure.That(finalNode).IsNotNull();
+
             var initialNodeCopy = initialNode.DeepCopy();
             var finalNodeCopy = finalNode.DeepCopy();
 
@@ -35,7 +39,8 @@ namespace Bitretsmah.Core
 
         private bool MarkFileState(File initialFile, File finalFile)
         {
-            if (initialFile.Name != finalFile.Name) throw new ArgumentException("Files should have the same name to be compared.");
+            Ensure.That(finalFile.Name).IsEqualTo(initialFile.Name);
+            Ensure.That(finalFile.State == NodeState.None).IsTrue();
 
             var modified = false;
 
@@ -50,8 +55,8 @@ namespace Bitretsmah.Core
 
         private bool MarkDirectoryState(Directory initialDirectory, Directory finalDirectory)
         {
-            if (initialDirectory.Name != finalDirectory.Name) throw new ArgumentException("Directories should have the same name to be compared.");
-            // todo initial state should be None!!!
+            Ensure.That(finalDirectory.Name).IsEqualTo(finalDirectory.Name);
+            Ensure.That(finalDirectory.State == NodeState.None).IsTrue();
 
             var modified = false;
 
@@ -68,10 +73,7 @@ namespace Bitretsmah.Core
         private bool MarkCreatedNodes(List<Node> initialNodes, List<Node> finalNodes)
         {
             var addedNodes = finalNodes.Where(x => initialNodes.All(y => y.Name != x.Name)).ToList();
-            addedNodes.ForEach(x => x.State = NodeState.Created);
-
-            // todo mark inner elements creted
-
+            addedNodes.ForEach(x => MarkNodeAndAllDescendants(x, NodeState.Created));
             return addedNodes.Any();
         }
 
@@ -95,12 +97,15 @@ namespace Bitretsmah.Core
         private bool MarkDeletedNodes(List<Node> initialNodes, List<Node> finalNodes)
         {
             var deletedNodes = initialNodes.Where(x => finalNodes.All(y => y.Name != x.Name)).ToList();
-            deletedNodes.ForEach(x => x.State = NodeState.Deleted);
-
-            // todo mark inner elements deleted
-
+            deletedNodes.ForEach(x => MarkNodeAndAllDescendants(x, NodeState.Deleted));
             finalNodes.AddRange(deletedNodes);
             return deletedNodes.Any();
+        }
+
+        private void MarkNodeAndAllDescendants(Node node, NodeState state)
+        {
+            node.State = state;
+            (node as Directory)?.InnerNodes.ForEach(x => MarkNodeAndAllDescendants(x, state));
         }
 
         private void RemoveUnchangedNodes(Node node)

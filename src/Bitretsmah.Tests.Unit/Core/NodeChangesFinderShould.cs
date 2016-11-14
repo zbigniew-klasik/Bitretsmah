@@ -3,6 +3,7 @@ using Bitretsmah.Core.Models;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Bitretsmah.Tests.Unit.Core
 {
@@ -151,7 +152,64 @@ namespace Bitretsmah.Tests.Unit.Core
 
         #region NESTED DIRECTORIES
 
-        // TODO
+        [Test]
+        public void FindCreatedDirectoryAndMarkInnerElements()
+        {
+            var initialNode =
+                CreateD("D_0",
+                    CreateF("F_1"));
+
+            var finalNode =
+                CreateD("D_0",
+                    CreateF("F_1"),
+                    CreateD("D_1",
+                        CreateF("F_2"),
+                        CreateD("D_2",
+                            CreateF("F_3"))));
+
+            var expectedResult =
+                CreateD("D_0", NodeState.Modified,
+                    CreateD("D_1", NodeState.Created,
+                        CreateF("F_2", NodeState.Created),
+                        CreateD("D_2", NodeState.Created,
+                            CreateF("F_3", NodeState.Created))));
+
+            var actualResult = (Directory)_finder.Find(initialNode, finalNode);
+            actualResult.ShouldBeEquivalentTo(expectedResult);
+            actualResult.ToJson().Should().Be(expectedResult.ToJson());
+        }
+
+        [Test]
+        public void FindDeletedDirectoryAndMarkInnerElements()
+        {
+            var initialNode =
+                CreateD("D_0",
+                    CreateF("F_1"),
+                    CreateD("D_1",
+                        CreateF("F_2"),
+                        CreateD("D_2",
+                            CreateF("F_3"))));
+
+            var finalNode =
+                CreateD("D_0",
+                    CreateF("F_1"));
+
+            var expectedResult =
+                CreateD("D_0", NodeState.Modified,
+                    CreateD("D_1", NodeState.Deleted,
+                        CreateF("F_2", NodeState.Deleted),
+                        CreateD("D_2", NodeState.Deleted,
+                            CreateF("F_3", NodeState.Deleted))));
+
+            var actualResult = (Directory)_finder.Find(initialNode, finalNode);
+            actualResult.ShouldBeEquivalentTo(expectedResult);
+            actualResult.ToJson().Should().Be(expectedResult.ToJson());
+        }
+
+        [Test]
+        public void FindModifiedInnerDirectory()
+        {
+        }
 
         #endregion NESTED DIRECTORIES
 
@@ -162,6 +220,42 @@ namespace Bitretsmah.Tests.Unit.Core
         private DateTimeOffset newDate(int seconds)
         {
             return new DateTimeOffset(2016, 11, 12, 19, 34, seconds, new TimeSpan(0));
+        }
+
+        private File CreateF(string name)
+        {
+            return new File
+            {
+                Name = name
+            };
+        }
+
+        private File CreateF(string name, NodeState state)
+        {
+            return new File
+            {
+                Name = name,
+                State = state
+            };
+        }
+
+        private Directory CreateD(string name, NodeState state, params Node[] nodes)
+        {
+            return new Directory
+            {
+                Name = name,
+                State = state,
+                InnerNodes = new List<Node>(nodes)
+            };
+        }
+
+        private Directory CreateD(string name, params Node[] nodes)
+        {
+            return new Directory
+            {
+                Name = name,
+                InnerNodes = new List<Node>(nodes)
+            };
         }
     }
 }
