@@ -10,87 +10,87 @@ namespace Bitretsmah.Tests.Unit.Core
     [TestFixture]
     public class NodeChangesFinderShould
     {
-        private INodeChangesFinder _finder;
-        private File _file1;
-        private File _file2;
-        private Directory _drectory1;
-        private Directory _drectory2;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _finder = new NodeChangesFinder();
-            _file1 = new File("foo.txt", 11, "hash", newDate(0), newDate(1));
-            _file2 = new File("foo.txt", 11, "hash", newDate(0), newDate(1));
-            _drectory1 = new Directory("temp");
-            _drectory2 = new Directory("temp");
-        }
+        private readonly INodeChangesFinder _finder = new NodeChangesFinder();
 
         #region SINGLE FILE
 
         [Test]
         public void FindNoChangeForSameFiles()
         {
-            var result = _finder.Find(_file1, _file2);
-            result.Should().BeOfType<File>();
-            result.ShouldBeEquivalentTo(_file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.None);
         }
 
         [Test]
         public void FindModifedForDifferentFileSize()
         {
-            _file2.Size = 12;
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            initialFile.Size = 5555;
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.Modified);
         }
 
         [Test]
         public void FindModifedForDifferentFileCreationTime()
         {
-            _file2.CreationTime = newDate(7);
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            initialFile.CreationTime = new DateTimeOffset(2016, 12, 12, 1, 1, 1, new TimeSpan(0));
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.Modified);
         }
 
         [Test]
         public void FindModifedForDifferentFileModificationTime()
         {
-            _file2.ModificationTime = newDate(7);
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            initialFile.ModificationTime = new DateTimeOffset(2016, 12, 12, 1, 1, 1, new TimeSpan(0));
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.Modified);
         }
 
         [Test]
         public void FindNoChangeForNullFileHashes()
         {
-            _file1.Hash = null;
-            _file2.Hash = null;
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            initialFile.Hash = null;
+            finalFile.Hash = null;
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.None);
         }
 
         [Test]
         public void FindNoChangeForFirstNullFileHash()
         {
-            _file1.Hash = null;
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            initialFile.Hash = null;
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.None);
         }
 
         [Test]
         public void FindNoChangeForSecondNullFileHash()
         {
-            _file2.Hash = null;
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            finalFile.Hash = null;
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.None);
         }
 
         [Test]
         public void FindModifedForDifferentFileHashes()
         {
-            _file2.Hash = "different";
-            var result = _finder.Find(_file1, _file2);
+            var initialFile = CreateF("foo.txt");
+            var finalFile = CreateF("foo.txt");
+            finalFile.Hash = "different";
+            var result = _finder.Find(initialFile, finalFile);
             result.State.Should().Be(NodeState.Modified);
         }
 
@@ -101,9 +101,9 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void FindNoChangesInDirectory()
         {
-            _drectory1.InnerNodes.Add(_file1);
-            _drectory2.InnerNodes.Add(_file2);
-            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            var initialDirectory = CreateD("D", CreateF("F"));
+            var finalDirectory = CreateD("D", CreateF("F"));
+            var result = (Directory)_finder.Find(initialDirectory, finalDirectory);
             result.State.Should().Be(NodeState.None);
             result.InnerNodes.Should().BeEmpty();
         }
@@ -111,41 +111,37 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void FindCreatedFileInDirectory()
         {
-            _drectory1.InnerNodes.Add(_file1);
-            _drectory2.InnerNodes.Add(_file2);
-            _drectory2.InnerNodes.Add(new File("bar.txt", 987, "HASH", newDate(7), newDate(8)));
-            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            var initialDirectory = CreateD("D", CreateF("F1"));
+            var finalDirectory = CreateD("D", CreateF("F1"), CreateF("F2"));
+            var result = (Directory)_finder.Find(initialDirectory, finalDirectory);
             result.State.Should().Be(NodeState.Modified);
             result.InnerNodes.Count.Should().Be(1);
             result.InnerNodes[0].State.Should().Be(NodeState.Created);
-            result.InnerNodes[0].Name.Should().Be("bar.txt");
+            result.InnerNodes[0].Name.Should().Be("F2");
         }
 
         [Test]
         public void FindModifiedFileInDirectory()
         {
-            _drectory1.InnerNodes.Add(_file1);
-            _drectory2.InnerNodes.Add(_file2);
-            _drectory1.InnerNodes.Add(new File("bar.txt", 987, "HASH_OLD", newDate(7), newDate(8)));
-            _drectory2.InnerNodes.Add(new File("bar.txt", 987, "HASH_NEW", newDate(7), newDate(8)));
-            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            var initialDirectory = CreateD("D", CreateF("F1"), CreateF("F2", NodeState.None, "hash"));
+            var finalDirectory = CreateD("D", CreateF("F1"), CreateF("F2", NodeState.None, "different_hash"));
+            var result = (Directory)_finder.Find(initialDirectory, finalDirectory);
             result.State.Should().Be(NodeState.Modified);
             result.InnerNodes.Count.Should().Be(1);
             result.InnerNodes[0].State.Should().Be(NodeState.Modified);
-            result.InnerNodes[0].Name.Should().Be("bar.txt");
+            result.InnerNodes[0].Name.Should().Be("F2");
         }
 
         [Test]
         public void FindDeletedFileInDirectory()
         {
-            _drectory1.InnerNodes.Add(_file1);
-            _drectory2.InnerNodes.Add(_file2);
-            _drectory1.InnerNodes.Add(new File("bar.txt", 987, "HASH_OLD", newDate(7), newDate(8)));
-            var result = (Directory)_finder.Find(_drectory1, _drectory2);
+            var initialDirectory = CreateD("D", CreateF("F1"), CreateF("F2"));
+            var finalDirectory = CreateD("D", CreateF("F1"));
+            var result = (Directory)_finder.Find(initialDirectory, finalDirectory);
             result.State.Should().Be(NodeState.Modified);
             result.InnerNodes.Count.Should().Be(1);
             result.InnerNodes[0].State.Should().Be(NodeState.Deleted);
-            result.InnerNodes[0].Name.Should().Be("bar.txt");
+            result.InnerNodes[0].Name.Should().Be("F2");
         }
 
         #endregion SINGLE DIRECTORY
@@ -153,7 +149,7 @@ namespace Bitretsmah.Tests.Unit.Core
         #region NESTED DIRECTORIES
 
         [Test]
-        public void FindCreatedDirectoryAndMarkInnerElements()
+        public void FindCreatedDirectoryAndMarkInnerNodes()
         {
             var initialNode =
                 CreateD("D_0",
@@ -180,7 +176,7 @@ namespace Bitretsmah.Tests.Unit.Core
         }
 
         [Test]
-        public void FindDeletedDirectoryAndMarkInnerElements()
+        public void FindDeletedDirectoryAndMarkInnerNodes()
         {
             var initialNode =
                 CreateD("D_0",
@@ -207,7 +203,7 @@ namespace Bitretsmah.Tests.Unit.Core
         }
 
         [Test]
-        public void FindModifiedInnerDirectory()
+        public void FindAllModifiedNodes()
         {
             var initialNode =
                 CreateD("root",
@@ -271,7 +267,6 @@ namespace Bitretsmah.Tests.Unit.Core
                             CreateF("F_3_3_1", NodeState.Deleted))));
 
             var actualResult = (Directory)_finder.Find(initialNode, finalNode);
-
             actualResult.ShouldBeEquivalentTo(expectedResult);
             actualResult.ToJson().Should().Be(expectedResult.ToJson());
         }
@@ -292,6 +287,10 @@ namespace Bitretsmah.Tests.Unit.Core
                 Name = name,
                 State = state,
                 Hash = hash,
+                Size = 1234,
+                CreationTime = new DateTimeOffset(2016, 10, 11, 18, 33, 14, new TimeSpan(0)),
+                ModificationTime = new DateTimeOffset(2016, 11, 12, 19, 34, 15, new TimeSpan(0)),
+                AbsolutePath = @"C:\Temp\" + name + ".txt"
             };
         }
 
@@ -307,11 +306,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
         private Directory CreateD(string name, params Node[] nodes)
         {
-            return new Directory
-            {
-                Name = name,
-                InnerNodes = new List<Node>(nodes)
-            };
+            return CreateD(name, NodeState.None, nodes);
         }
 
         #endregion HELP METHODS
