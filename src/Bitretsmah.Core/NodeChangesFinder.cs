@@ -66,7 +66,6 @@ namespace Bitretsmah.Core
 
             finalDirectory.State = modified ? NodeState.Modified : NodeState.None;
 
-            // TODO for each inner node check it
             return modified;
         }
 
@@ -88,8 +87,6 @@ namespace Bitretsmah.Core
                 var initalNode = initialNodes.Single(y => y.Name == finalNode.Name);
                 modified |= MarkNodeState(initalNode, finalNode);
             }
-
-            // todo: test inner directories
 
             return modified;
         }
@@ -115,6 +112,10 @@ namespace Bitretsmah.Core
             {
                 directory.InnerNodes.RemoveAll(x => x.State == NodeState.None);
                 directory.InnerNodes.ForEach(RemoveUnchangedNodes);
+                directory.InnerNodes = directory.InnerNodes
+                                                    .OrderByDescending(x => x.GetType().ToString())
+                                                    .ThenBy(x => x.Name)
+                                                    .ToList();
             }
         }
     }

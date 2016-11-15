@@ -8,5 +8,10 @@ namespace Bitretsmah.Core.Models
         public string Name { get; set; }
         public string AbsolutePath { get; set; }
         public NodeState State { get; set; }
+
+        public override string ToString()
+        {
+            return State == NodeState.None ? Name : $"{Name} - {State}";
+        }
     }
 }

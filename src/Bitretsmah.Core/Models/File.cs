@@ -22,10 +22,5 @@ namespace Bitretsmah.Core.Models
         public string Hash { get; set; }
         public DateTimeOffset CreationTime { get; set; }
         public DateTimeOffset ModificationTime { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
     }
 }

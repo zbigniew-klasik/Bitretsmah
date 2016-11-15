@@ -162,7 +162,7 @@ namespace Bitretsmah.Tests.Unit.Core
             var finalNode =
                 CreateD("D_0",
                     CreateF("F_1"),
-                    CreateD("D_1",
+                    CreateD("D_1", // has been created
                         CreateF("F_2"),
                         CreateD("D_2",
                             CreateF("F_3"))));
@@ -185,7 +185,7 @@ namespace Bitretsmah.Tests.Unit.Core
             var initialNode =
                 CreateD("D_0",
                     CreateF("F_1"),
-                    CreateD("D_1",
+                    CreateD("D_1", // will be deleted
                         CreateF("F_2"),
                         CreateD("D_2",
                             CreateF("F_3"))));
@@ -209,33 +209,89 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void FindModifiedInnerDirectory()
         {
+            var initialNode =
+                CreateD("root",
+                    CreateF("F_0"),
+                    CreateF("F_1"),                 // will be deleted
+                    CreateD("D_2",
+                        CreateF("F_2_0"),
+                        CreateF("F_2_1"),
+                        CreateD("D_2_2",
+                            CreateF("F_2_2_0"),
+                            CreateF("F_2_2_1")),    // will be deleted
+                        CreateD("D_2_3",            // will be deleted
+                            CreateF("F_2_3_0"),
+                            CreateF("F_2_3_1"))),
+                    CreateD("D_3",                  // will be deleted
+                        CreateF("F_3_0"),
+                        CreateF("F_3_1"),
+                        CreateD("D_3_2",
+                            CreateF("F_3_2_0"),
+                            CreateF("F_3_2_1")),
+                        CreateD("D_3_3",
+                            CreateF("F_3_3_0"),
+                            CreateF("F_3_3_1"))));
+
+            var finalNode =
+                CreateD("root",
+                    CreateF("F_0"),
+                    CreateD("D_2",
+                        CreateF("F_2_0"),
+                        CreateF("F_2_1", NodeState.None, "different_hash_1"),
+                        CreateD("D_2_2",
+                            CreateF("F_2_2_0", NodeState.None, "different_hash_2")),
+                            CreateD("D_2_2_2",      // has been created
+                                CreateF("F_2_2_2_0"),
+                                CreateD("F_2_2_2_1",
+                                    CreateF("F_2_2_2_1_0")))));
+
+            var expectedResult =
+                CreateD("root", NodeState.Modified,
+                    CreateF("F_1", NodeState.Deleted),
+                    CreateD("D_2", NodeState.Modified,
+                        CreateF("F_2_1", NodeState.Modified, "different_hash_1"),
+                        CreateD("D_2_2", NodeState.Modified,
+                            CreateF("F_2_2_0", NodeState.Modified, "different_hash_2"),
+                            CreateF("F_2_2_1", NodeState.Deleted)),
+                            CreateD("D_2_2_2", NodeState.Created,
+                                CreateF("F_2_2_2_0", NodeState.Created),
+                                CreateD("F_2_2_2_1", NodeState.Created,
+                                    CreateF("F_2_2_2_1_0", NodeState.Created))),
+                        CreateD("D_2_3", NodeState.Deleted,
+                            CreateF("F_2_3_0", NodeState.Deleted),
+                            CreateF("F_2_3_1", NodeState.Deleted))),
+                    CreateD("D_3", NodeState.Deleted,
+                        CreateF("F_3_0", NodeState.Deleted),
+                        CreateF("F_3_1", NodeState.Deleted),
+                        CreateD("D_3_2", NodeState.Deleted,
+                            CreateF("F_3_2_0", NodeState.Deleted),
+                            CreateF("F_3_2_1", NodeState.Deleted)),
+                        CreateD("D_3_3", NodeState.Deleted,
+                            CreateF("F_3_3_0", NodeState.Deleted),
+                            CreateF("F_3_3_1", NodeState.Deleted))));
+
+            var actualResult = (Directory)_finder.Find(initialNode, finalNode);
+
+            actualResult.ShouldBeEquivalentTo(expectedResult);
+            actualResult.ToJson().Should().Be(expectedResult.ToJson());
         }
 
         #endregion NESTED DIRECTORIES
 
-        // add file/dir
-        // remove file/dir
-        // modif file/dir
+        #region HELP METHODS
 
         private DateTimeOffset newDate(int seconds)
         {
             return new DateTimeOffset(2016, 11, 12, 19, 34, seconds, new TimeSpan(0));
         }
 
-        private File CreateF(string name)
-        {
-            return new File
-            {
-                Name = name
-            };
-        }
-
-        private File CreateF(string name, NodeState state)
+        private File CreateF(string name, NodeState state = NodeState.None, string hash = "hash")
         {
             return new File
             {
                 Name = name,
-                State = state
+                State = state,
+                Hash = hash,
             };
         }
 
@@ -257,5 +313,7 @@ namespace Bitretsmah.Tests.Unit.Core
                 InnerNodes = new List<Node>(nodes)
             };
         }
+
+        #endregion HELP METHODS
     }
 }
