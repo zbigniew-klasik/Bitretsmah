@@ -123,8 +123,8 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void FindModifiedFileInDirectory()
         {
-            var initialDirectory = CreateDirectory("D", CreateFile("F1"), CreateFile("F2", NodeState.None, "hash"));
-            var finalDirectory = CreateDirectory("D", CreateFile("F1"), CreateFile("F2", NodeState.None, "different_hash"));
+            var initialDirectory = CreateDirectory("D", CreateFile("F1"), CreateFile("F2", "hash"));
+            var finalDirectory = CreateDirectory("D", CreateFile("F1"), CreateFile("F2", "different_hash"));
             var result = (Directory)_finder.Find(initialDirectory, finalDirectory);
             result.State.Should().Be(NodeState.Modified);
             result.InnerNodes.Count.Should().Be(1);
@@ -233,9 +233,9 @@ namespace Bitretsmah.Tests.Unit.Core
                     CreateFile("F_0"),
                     CreateDirectory("D_2",
                         CreateFile("F_2_0"),
-                        CreateFile("F_2_1", NodeState.None, "different_hash_1"),
+                        CreateFile("F_2_1", "different_hash_1"),
                         CreateDirectory("D_2_2",
-                            CreateFile("F_2_2_0", NodeState.None, "different_hash_2")),
+                            CreateFile("F_2_2_0", "different_hash_2")),
                             CreateDirectory("D_2_2_2",          // has been created
                                 CreateFile("F_2_2_2_0"),
                                 CreateDirectory("F_2_2_2_1",

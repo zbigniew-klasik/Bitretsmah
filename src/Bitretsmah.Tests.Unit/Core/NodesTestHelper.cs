@@ -6,7 +6,7 @@ namespace Bitretsmah.Tests.Unit.Core
 {
     public static class NodesTestHelper
     {
-        public static File CreateFile(string name, NodeState state = NodeState.None, string hash = "hash")
+        public static File CreateFile(string name, NodeState state, string hash = "hash")
         {
             return new File
             {
@@ -18,6 +18,11 @@ namespace Bitretsmah.Tests.Unit.Core
                 ModificationTime = new DateTimeOffset(2016, 11, 12, 19, 34, 15, new TimeSpan(0)),
                 AbsolutePath = @"C:\Temp\" + name + ".txt"
             };
+        }
+
+        public static File CreateFile(string name, string hash = "hash")
+        {
+            return CreateFile(name, NodeState.None, hash);
         }
 
         public static Directory CreateDirectory(string name, NodeState state, params Node[] nodes)

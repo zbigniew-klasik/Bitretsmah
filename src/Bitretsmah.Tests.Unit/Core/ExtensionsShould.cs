@@ -1,8 +1,8 @@
 ﻿using Bitretsmah.Core;
-using Bitretsmah.Core.Models;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using static Bitretsmah.Tests.Unit.Core.NodesTestHelper;
 
 namespace Bitretsmah.Tests.Unit.Core
 {
@@ -12,7 +12,7 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void DeepCopySimpleObject()
         {
-            var file = new File("foo.txt", 123, "hash", DateTimeOffset.Now, DateTimeOffset.Now);
+            var file = CreateFile("foo.txt");
             var fileCopy = file.DeepCopy();
 
             fileCopy.Should().NotBe(file);
@@ -23,26 +23,26 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void DeepCopyComplicatedObject()
         {
-            var rootDirectory = new Directory("root");
+            var rootDirectory = CreateDirectory("root");
             for (var i = 0; i < 10; i++)
             {
-                var directory = new Directory("Dir " + i);
+                var directory = CreateDirectory("Dir " + i);
                 rootDirectory.InnerNodes.Add(directory);
 
                 for (var j = 0; j < 10; j++)
                 {
-                    var file = new File("file" + (i * j), 123, Guid.NewGuid().ToString(), DateTimeOffset.Now, DateTimeOffset.Now);
+                    var file = CreateFile("file" + (i * j), Guid.NewGuid().ToString());
                     directory.InnerNodes.Add(file);
                 }
 
                 for (var j = 0; j < 10; j++)
                 {
-                    var innerDirectory = new Directory("Dir " + i * j);
+                    var innerDirectory = CreateDirectory("Dir " + i * j);
                     directory.InnerNodes.Add(innerDirectory);
 
                     for (var k = 0; k < 10; k++)
                     {
-                        var file = new File("file" + (i * j ^ k), 321, Guid.NewGuid().ToString(), DateTimeOffset.Now, DateTimeOffset.Now);
+                        var file = CreateFile("file" + (i * j ^ k), Guid.NewGuid().ToString());
                         innerDirectory.InnerNodes.Add(file);
                     }
                 }

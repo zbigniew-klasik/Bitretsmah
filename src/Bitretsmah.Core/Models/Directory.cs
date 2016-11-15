@@ -11,12 +11,6 @@ namespace Bitretsmah.Core.Models
             InnerNodes = new List<Node>();
         }
 
-        public Directory(string name)
-            : this()
-        {
-            Name = name;
-        }
-
         public List<Node> InnerNodes { get; set; }
     }
 }
