@@ -57,6 +57,7 @@
     <Compile Include="Exceptions\UnknownStoreException.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
+    <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
     <Compile Include="Models\NodeState.cs" />
     <Compile Include="Models\Node.cs" />

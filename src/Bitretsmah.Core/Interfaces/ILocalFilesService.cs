@@ -5,7 +5,5 @@ namespace Bitretsmah.Core.Interfaces
     public interface ILocalFilesService
     {
         Node GetNodeStructure(string nodePath);
-
-        string ComputeHash(string filePath);
     }
 }

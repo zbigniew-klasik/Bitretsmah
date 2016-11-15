@@ -2,7 +2,6 @@
 using Bitretsmah.Core.Models;
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using Directory = Bitretsmah.Core.Models.Directory;
 using File = Bitretsmah.Core.Models.File;
 
@@ -21,26 +20,6 @@ namespace Bitretsmah.Data.System
                 return GetDirectoryStructure(directory);
 
             throw new Exception("incorrect path"); // todo
-        }
-
-        public string ComputeHash(string filePath)
-        {
-            var file = new FileInfo(filePath);
-            if (file.Exists)
-                return ComputeHash(file);
-
-            throw new Exception("incorrect path"); // todo
-        }
-
-        internal string ComputeHash(FileInfo fileInfo)
-        {
-            using (var stream = fileInfo.Open(FileMode.Open))
-            {
-                stream.Position = 0;
-                var sha1 = new SHA1Managed();
-                var hash = sha1.ComputeHash(stream);
-                return Convert.ToBase64String(hash);
-            }
         }
 
         private File GetFileStructure(FileInfo fileInfo)

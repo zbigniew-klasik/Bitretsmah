@@ -90,6 +90,7 @@
     <Compile Include="Data\Mega\MegaCredentialVerifierShould.cs" />
     <Compile Include="Data\Mega\MegaStoreFactoryShould.cs" />
     <Compile Include="Data\Mega\MegaStoreShould.cs" />
+    <Compile Include="Data\System\HashServiceShould.cs" />
     <Compile Include="Data\System\LocalFilesServiceShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
