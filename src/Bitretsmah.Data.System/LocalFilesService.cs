@@ -2,8 +2,11 @@
 using Bitretsmah.Core.Models;
 using System;
 using System.IO;
+using System.Linq;
 using Directory = Bitretsmah.Core.Models.Directory;
 using File = Bitretsmah.Core.Models.File;
+using SystemDirectoryInfo = System.IO.DirectoryInfo;
+using SystemFileInfo = System.IO.FileInfo;
 
 namespace Bitretsmah.Data.System
 {
@@ -11,40 +14,50 @@ namespace Bitretsmah.Data.System
     {
         public Node GetNodeStructure(string nodePath)
         {
-            var file = new FileInfo(nodePath);
+            var file = new SystemFileInfo(nodePath);
             if (file.Exists)
                 return GetFileStructure(file);
 
-            var directory = new DirectoryInfo(nodePath);
+            var directory = new SystemDirectoryInfo(nodePath);
             if (directory.Exists)
                 return GetDirectoryStructure(directory);
 
-            throw new Exception("incorrect path"); // todo
+            throw new DirectoryNotFoundException();
         }
 
-        private File GetFileStructure(FileInfo fileInfo)
+        private File GetFileStructure(SystemFileInfo fileInfo)
         {
             return new File
             {
                 Name = fileInfo.Name,
                 Size = fileInfo.Length,
-                CreationTime = new DateTimeOffset(fileInfo.CreationTimeUtc, new TimeSpan(0)),
-                ModificationTime = new DateTimeOffset(fileInfo.LastWriteTimeUtc, new TimeSpan(0)),
+                CreationTime = new DateTimeOffset(fileInfo.CreationTime),
+                ModificationTime = new DateTimeOffset(fileInfo.LastWriteTime),
                 Hash = null,
                 State = NodeState.None,
                 AbsolutePath = fileInfo.FullName
             };
         }
 
-        private Directory GetDirectoryStructure(DirectoryInfo directoryInfo)
+        private Directory GetDirectoryStructure(SystemDirectoryInfo directoryInfo)
         {
-            var directory = new Directory { Name = directoryInfo.Name };
+            var directory = new Directory
+            {
+                Name = directoryInfo.Name,
+                State = NodeState.None,
+                AbsolutePath = directoryInfo.FullName
+            };
 
             foreach (var info in directoryInfo.GetDirectories())
                 directory.InnerNodes.Add(GetDirectoryStructure(info));
 
             foreach (var info in directoryInfo.GetFiles())
                 directory.InnerNodes.Add(GetFileStructure(info));
+
+            directory.InnerNodes = directory.InnerNodes
+                                                    .OrderByDescending(x => x.GetType().ToString())
+                                                    .ThenBy(x => x.Name)
+                                                    .ToList();
 
             return directory;
         }
