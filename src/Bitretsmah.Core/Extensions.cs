@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Bitretsmah.Core
@@ -16,12 +15,6 @@ namespace Bitretsmah.Core
 
                 return (T)formatter.Deserialize(ms);
             }
-        }
-
-        public static string ToJson(this object obj, bool indented = true)
-        {
-            var format = indented ? Formatting.Indented : Formatting.None;
-            return JsonConvert.SerializeObject(obj, format);
         }
     }
 }

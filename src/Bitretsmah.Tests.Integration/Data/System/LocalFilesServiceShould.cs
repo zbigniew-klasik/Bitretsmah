@@ -1,9 +1,8 @@
-﻿using Bitretsmah.Core;
-using Bitretsmah.Core.Interfaces;
+﻿using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using Bitretsmah.Data.System;
+using Bitretsmah.Tests.Unit;
 using FluentAssertions;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using SystemDirectory = System.IO.Directory;
@@ -100,37 +99,13 @@ namespace Bitretsmah.Tests.Integration.Data.System
             var actualNodeStructure = service.GetNodeStructure(_d0Path);
 
             actualNodeStructure.ShouldBeEquivalentTo(d0);
-            ShouldSerializeSameAs(actualNodeStructure, d0);
+            actualNodeStructure.ShouldSerializeSameAs(d0);
         }
 
         [TearDown]
         public void TearDown()
         {
             SystemDirectory.Delete(_d0Path, true);
-        }
-
-        public static void ShouldSerializeSameAs(object actual, object expected)
-        {
-            if (expected == actual) return;
-
-            string expectedJson = expected.ToJson();
-            string actualJson = actual.ToJson();
-
-            if (expectedJson == actualJson) return;
-
-            string path = string.Empty;
-
-            try
-            {
-                path = SystemPath.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
-                SystemDirectory.CreateDirectory(path);
-                SystemFile.WriteAllText(SystemPath.Combine(path, "expected.json"), expectedJson);
-                SystemFile.WriteAllText(SystemPath.Combine(path, "actual.json"), actualJson);
-            }
-            finally
-            {
-                throw new JsonException($"The actual JSON does not match the expected. Compare files in directory: '{path}'.");
-            }
         }
     }
 }

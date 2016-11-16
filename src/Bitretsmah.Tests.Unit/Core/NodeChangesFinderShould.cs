@@ -172,7 +172,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var actualResult = (Directory)_finder.Find(initialNode, finalNode);
             actualResult.ShouldBeEquivalentTo(expectedResult);
-            actualResult.ToJson().Should().Be(expectedResult.ToJson());
+            actualResult.ShouldSerializeSameAs(expectedResult);
         }
 
         [Test]
@@ -199,7 +199,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var actualResult = (Directory)_finder.Find(initialNode, finalNode);
             actualResult.ShouldBeEquivalentTo(expectedResult);
-            actualResult.ToJson().Should().Be(expectedResult.ToJson());
+            actualResult.ShouldSerializeSameAs(expectedResult);
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var actualResult = (Directory)_finder.Find(initialNode, finalNode);
             actualResult.ShouldBeEquivalentTo(expectedResult);
-            actualResult.ToJson().Should().Be(expectedResult.ToJson());
+            actualResult.ShouldSerializeSameAs(expectedResult);
         }
 
         #endregion NESTED DIRECTORIES

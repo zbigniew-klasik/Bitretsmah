@@ -17,7 +17,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             fileCopy.Should().NotBe(file);
             fileCopy.ShouldBeEquivalentTo(file);
-            fileCopy.ToJson().Should().Be(file.ToJson());
+            fileCopy.ShouldSerializeSameAs(file);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var rootDirectoryCopy = rootDirectory.DeepCopy();
             rootDirectoryCopy.ShouldBeEquivalentTo(rootDirectory);
-            rootDirectoryCopy.ToJson().Should().Be(rootDirectory.ToJson());
+            rootDirectoryCopy.ShouldSerializeSameAs(rootDirectory);
         }
     }
 }
