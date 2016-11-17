@@ -63,5 +63,10 @@ namespace Bitretsmah.Data.Mega
             _quota.Total = information.TotalQuota;
             _quota.Used = information.UsedQuota;
         }
+
+        public void Dispose()
+        {
+            if (_isInitialized) _megaApiClient.LogoutAsync();
+        }
     }
 }

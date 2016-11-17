@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
 {
-    public interface IRemoteFileStore
+    public interface IRemoteFileStore : IDisposable
     {
         string StoreId { get; }
 

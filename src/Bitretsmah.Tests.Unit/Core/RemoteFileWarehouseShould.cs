@@ -54,6 +54,11 @@ namespace Bitretsmah.Tests.Unit.Core
             {
                 throw new NotImplementedException();
             }
+
+            public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion PRIVATE TESTING CLASSES
@@ -81,6 +86,30 @@ namespace Bitretsmah.Tests.Unit.Core
             var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_remoteFileStoreFactoryMock.Object);
             await remoteFileWarehouse.LoadStores();
             remoteFileWarehouse.RemoteFileStores.ShouldAllBeEquivalentTo(stores);
+        }
+
+        [Test]
+        public async Task DisposeAllStores()
+        {
+            var mocks = new List<Mock<IRemoteFileStore>>();
+            var stores = new List<IRemoteFileStore>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var mock = new Mock<IRemoteFileStore>();
+                mock.Setup(x => x.StoreId).Returns(i.ToString());
+                mocks.Add(mock);
+                stores.Add(mock.Object);
+            }
+
+            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
+
+            using (var remoteFileWarehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object))
+            {
+                await remoteFileWarehouse.LoadStores();
+            }
+
+            mocks.ForEach(x => x.Verify(y => y.Dispose()));
         }
 
         [Test]

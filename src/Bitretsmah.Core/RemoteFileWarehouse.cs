@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Core
 {
-    internal interface IRemoteFileWarehouse
+    public interface IRemoteFileWarehouse : IDisposable
     {
         StoreSelectionMethod StoreSelectionMethod { get; set; }
 
@@ -19,7 +19,7 @@ namespace Bitretsmah.Core
         Task DownloadFile(RemoteId remoteFileId, string localFilePath, IProgress<double> progress);
     }
 
-    internal class RemoteFileWarehouse : IRemoteFileWarehouse
+    public class RemoteFileWarehouse : IRemoteFileWarehouse
     {
         private readonly IRemoteFileStoreFactory _remoteFileStoreFactory;
         protected readonly List<IRemoteFileStore> _remoteFileStores;
@@ -76,6 +76,11 @@ namespace Bitretsmah.Core
                 default:
                     throw new NotImplementedException($"The store selection method: '{StoreSelectionMethod}' is not implemnted.");
             }
+        }
+
+        public void Dispose()
+        {
+            _remoteFileStores.ForEach(x => x.Dispose());
         }
     }
 }

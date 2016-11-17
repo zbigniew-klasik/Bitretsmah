@@ -37,7 +37,11 @@ namespace Bitretsmah.Core
             _hashService.ComputeFileHash(b.AbsolutePath); // for each new file
 
             // upload files and save files info
-            var x = _remoteFileWarehouseFactory.Create();
+            using (var warehouse = _remoteFileWarehouseFactory.Create())
+            {
+                // upload
+                // save file info
+            }
 
             // save backup info
             await _backupRepository.Add(new Backup());
