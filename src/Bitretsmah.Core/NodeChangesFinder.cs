@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace Bitretsmah.Core
 {
-    internal interface INodeChangesFinder
+    public interface INodeChangesFinder
     {
         Node Find(Node initialNode, Node finalNode);
     }
 
-    internal class NodeChangesFinder : INodeChangesFinder
+    public class NodeChangesFinder : INodeChangesFinder
     {
         public Node Find(Node initialNode, Node finalNode)
         {
