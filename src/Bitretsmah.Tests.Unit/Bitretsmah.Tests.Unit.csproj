@@ -79,6 +79,7 @@
     <Compile Include="Assertions.cs" />
     <Compile Include="Core\AccountServiceShould.cs" />
     <Compile Include="Core\ExtensionsShould.cs" />
+    <Compile Include="Core\NodeChangesApplierShould.cs" />
     <Compile Include="Core\NodeChangesFinderShould.cs" />
     <Compile Include="Core\NodesTestHelper.cs" />
     <Compile Include="Core\RemoteFileWarehouseShould.cs" />

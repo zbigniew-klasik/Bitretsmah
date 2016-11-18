@@ -66,6 +66,7 @@
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\NodeChange.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />
+    <Compile Include="NodeChangesApplier.cs" />
     <Compile Include="NodeChangesFinder.cs" />
     <Compile Include="RemoteFileWarehouse.cs" />
     <Compile Include="Interfaces\IDateTimeService.cs" />
