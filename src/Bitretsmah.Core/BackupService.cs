@@ -22,20 +22,57 @@ namespace Bitretsmah.Core
             _remoteFileWarehouseFactory = remoteFileWarehouseFactory;
         }
 
-        public async Task CreateBackup(string path)
+        public async Task CreateBackup(string path, IProgress<BackupProgress> progress)
         {
-            // get last time data
-            var a = await _backupRepository.GetLastForPath(path);
+            var change = await GetChange(path);
 
+            await ComputeHashes(change, progress);
+
+            await UploadFiles(change, progress);
+
+            // TODO: Upload Change
+
+            await SaveBackup(change);
+
+            throw new NotImplementedException();
+        }
+
+        private async Task<Node> GetChange(string path)
+        {
             // get local structure
-            var b = _localFilesService.GetNodeStructure(path);
+            var currentStructure = _localFilesService.GetNodeStructure(path);
 
-            // compare local with last time
-            var c = _nodeChangesFinder.Find(a.Node, b);
+            // get last time data
+            var lastBackup = await _backupRepository.GetLastForPath(path);
 
-            // compute hashes
-            _hashService.ComputeFileHash(b.AbsolutePath); // for each new file
+            Node change;
 
+            if (lastBackup == null)
+            {
+                // to do mark all as added
+                change = null;
+            }
+            else
+            {
+                var previousStructure = lastBackup.Node;
+                change = _nodeChangesFinder.Find(previousStructure, currentStructure);
+            }
+
+            return change;
+        }
+
+        private Task ComputeHashes(Node change, IProgress<BackupProgress> progress)
+        {
+            // todo: foreach
+            _hashService.ComputeFileHash(change.AbsolutePath);
+
+            progress.Report(new BackupProgress());
+
+            return Task.Run(() => _hashService.ComputeFileHash(change.AbsolutePath));
+        }
+
+        private Task UploadFiles(Node change, IProgress<BackupProgress> progress)
+        {
             // upload files and save files info
             using (var warehouse = _remoteFileWarehouseFactory.Create())
             {
@@ -43,10 +80,14 @@ namespace Bitretsmah.Core
                 // save file info
             }
 
-            // save backup info
-            await _backupRepository.Add(new Backup());
+            return null;
+        }
 
-            throw new NotImplementedException();
+        private async Task SaveBackup(Node change)
+        {
+            // todo save change
+            // todo create and save backup
+            await _backupRepository.Add(new Backup());
         }
     }
 }

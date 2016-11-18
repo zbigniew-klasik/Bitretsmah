@@ -61,6 +61,7 @@
     <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
     <Compile Include="Models\Backup.cs" />
+    <Compile Include="Models\BackupProgress.cs" />
     <Compile Include="Models\NodeState.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\NodeChange.cs" />
