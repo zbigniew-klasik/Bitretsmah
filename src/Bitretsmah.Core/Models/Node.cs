@@ -13,5 +13,10 @@ namespace Bitretsmah.Core.Models
         {
             return State == NodeState.None ? Name : $"{Name} - {State}";
         }
+
+        public virtual void SetAllStates(NodeState state)
+        {
+            State = state;
+        }
     }
 }

@@ -3,6 +3,7 @@ using Bitretsmah.Core.Models;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using static Bitretsmah.Tests.Unit.Core.NodesTestHelper;
 
 namespace Bitretsmah.Tests.Unit.Core
 {
@@ -42,6 +43,68 @@ namespace Bitretsmah.Tests.Unit.Core
 
             actualFile.ShouldBeEquivalentTo(expectedFile);
             actualFile.ShouldSerializeSameAs(expectedFile);
+        }
+
+        [Test]
+        public void ApplyCreatedFileInDirectory()
+        {
+            var initialDirectory =
+                CreateDirectory("root");
+
+            var change =
+                CreateDirectory("root", NodeState.Modified,
+                    CreateFile("F1", NodeState.Created));
+
+            var expectedDirectory =
+                CreateDirectory("root", NodeState.None,
+                    CreateFile("F1", NodeState.None));
+
+            INodeChangesApplier applier = new NodeChangesApplier();
+            var actualDirectory = applier.Apply(initialDirectory, change);
+
+            actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
+            actualDirectory.ShouldSerializeSameAs(expectedDirectory);
+        }
+
+        [Test]
+        public void ApplyModifiedFileInDirectory()
+        {
+        }
+
+        [Test]
+        public void ApplyDeletedFileInDirectory()
+        {
+            var initialDirectory =
+                CreateDirectory("root",
+                    CreateFile("F1"));
+
+            var change =
+                CreateDirectory("root", NodeState.Modified,
+                    CreateFile("F1", NodeState.Deleted));
+
+            var expectedDirectory =
+                CreateDirectory("root");
+
+            INodeChangesApplier applier = new NodeChangesApplier();
+            var actualDirectory = applier.Apply(initialDirectory, change);
+
+            actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
+            actualDirectory.ShouldSerializeSameAs(expectedDirectory);
+        }
+
+        [Test]
+        public void ApplyCreatedDirectoryInDirectory()
+        {
+        }
+
+        [Test]
+        public void ApplyModifiedDirectoryInDirectory()
+        {
+        }
+
+        [Test]
+        public void ApplyDeletedDirectoryInDirectory()
+        {
         }
     }
 }

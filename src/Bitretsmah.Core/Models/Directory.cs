@@ -12,5 +12,11 @@ namespace Bitretsmah.Core.Models
         }
 
         public List<Node> InnerNodes { get; set; }
+
+        public override void SetAllStates(NodeState state)
+        {
+            base.SetAllStates(state);
+            InnerNodes.ForEach(x => x.SetAllStates(state));
+        }
     }
 }

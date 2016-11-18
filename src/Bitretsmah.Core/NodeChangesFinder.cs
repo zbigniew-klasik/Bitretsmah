@@ -72,7 +72,7 @@ namespace Bitretsmah.Core
         private bool MarkCreatedNodes(List<Node> initialNodes, List<Node> finalNodes)
         {
             var addedNodes = finalNodes.Where(x => initialNodes.All(y => y.Name != x.Name)).ToList();
-            addedNodes.ForEach(x => MarkNodeAndAllDescendants(x, NodeState.Created));
+            addedNodes.ForEach(x => x.SetAllStates(NodeState.Created));
             return addedNodes.Any();
         }
 
@@ -94,15 +94,9 @@ namespace Bitretsmah.Core
         private bool MarkDeletedNodes(List<Node> initialNodes, List<Node> finalNodes)
         {
             var deletedNodes = initialNodes.Where(x => finalNodes.All(y => y.Name != x.Name)).ToList();
-            deletedNodes.ForEach(x => MarkNodeAndAllDescendants(x, NodeState.Deleted));
+            deletedNodes.ForEach(x => x.SetAllStates(NodeState.Deleted));
             finalNodes.AddRange(deletedNodes);
             return deletedNodes.Any();
-        }
-
-        private void MarkNodeAndAllDescendants(Node node, NodeState state)
-        {
-            node.State = state;
-            (node as Directory)?.InnerNodes.ForEach(x => MarkNodeAndAllDescendants(x, state));
         }
 
         private void RemoveUnchangedNodes(Node node)

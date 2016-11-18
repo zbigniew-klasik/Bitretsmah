@@ -2,6 +2,7 @@
 using EnsureThat;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bitretsmah.Core
 {
@@ -49,7 +50,24 @@ namespace Bitretsmah.Core
 
         private Node ApplyDirectoryChange(Directory initialDirectory, Directory change)
         {
-            throw new NotImplementedException();
+            Ensure.That(initialDirectory.Name).IsEqualTo(change.Name);
+            Ensure.That(initialDirectory.AbsolutePath).IsEqualTo(change.AbsolutePath);
+
+            var finalDirectory = initialDirectory.DeepCopy();
+
+            change.InnerNodes.Where(x => x.State == NodeState.Created).ToList().ForEach(x =>
+            {
+                var createdNode = x.DeepCopy();
+                createdNode.SetAllStates(NodeState.None);
+                finalDirectory.InnerNodes.Add(createdNode);
+            });
+
+            // TODO: modified
+
+            finalDirectory.InnerNodes.RemoveAll(x =>
+                change.InnerNodes.Any(y => y.Name == x.Name && y.State == NodeState.Deleted));
+
+            return finalDirectory;
         }
     }
 }
