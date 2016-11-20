@@ -69,6 +69,23 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void ApplyModifiedFileInDirectory()
         {
+            var initialDirectory =
+                CreateDirectory("root",
+                    CreateFile("F1", "hash"));
+
+            var change =
+                CreateDirectory("root", NodeState.Modified,
+                    CreateFile("F1", NodeState.Modified, "different_hash"));
+
+            var expectedDirectory =
+                CreateDirectory("root", NodeState.None,
+                    CreateFile("F1", NodeState.None, "different_hash"));
+
+            INodeChangesApplier applier = new NodeChangesApplier();
+            var actualDirectory = applier.Apply(initialDirectory, change);
+
+            actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
+            actualDirectory.ShouldSerializeSameAs(expectedDirectory);
         }
 
         [Test]

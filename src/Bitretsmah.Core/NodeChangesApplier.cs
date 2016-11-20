@@ -22,52 +22,65 @@ namespace Bitretsmah.Core
 
         public Node Apply(Node initialNode, Node change)
         {
+            var finalNode = initialNode.DeepCopy();
+            var changeCopy = change.DeepCopy();
+            ApplyChanges(finalNode, changeCopy);
+            return finalNode;
+        }
+
+        private void ApplyChanges(Node initialNode, Node change)
+        {
             if (initialNode is File && change is File)
-                return ApplyFileChange((File)initialNode, (File)change);
+            {
+                ApplyFileChange((File)initialNode, (File)change);
+                return;
+            }
 
             if (initialNode is Directory && change is Directory)
-                return ApplyDirectoryChange((Directory)initialNode, (Directory)change);
+            {
+                ApplyDirectoryChange((Directory)initialNode, (Directory)change);
+                return;
+            }
 
             throw new InvalidOperationException("Unknown node type.");
         }
 
-        private Node ApplyFileChange(File initialFile, File change)
+        private void ApplyFileChange(File finalNode, File change)
         {
-            Ensure.That(initialFile.Name).IsEqualTo(change.Name);
-            Ensure.That(initialFile.AbsolutePath).IsEqualTo(change.AbsolutePath);
+            Ensure.That(finalNode.Name).IsEqualTo(change.Name);
+            Ensure.That(finalNode.AbsolutePath).IsEqualTo(change.AbsolutePath);
             Ensure.That(change.State == NodeState.Modified).IsTrue();
-
-            var finalNode = initialFile.DeepCopy();
 
             finalNode.Hash = change.Hash;
             finalNode.Size = change.Size;
             finalNode.CreationTime = change.CreationTime;
             finalNode.ModificationTime = change.ModificationTime;
             finalNode.State = NodeState.None;
-
-            return finalNode;
         }
 
-        private Node ApplyDirectoryChange(Directory initialDirectory, Directory change)
+        private void ApplyDirectoryChange(Directory finalDirectory, Directory change)
         {
-            Ensure.That(initialDirectory.Name).IsEqualTo(change.Name);
-            Ensure.That(initialDirectory.AbsolutePath).IsEqualTo(change.AbsolutePath);
+            Ensure.That(finalDirectory.Name).IsEqualTo(change.Name);
+            Ensure.That(finalDirectory.AbsolutePath).IsEqualTo(change.AbsolutePath);
 
-            var finalDirectory = initialDirectory.DeepCopy();
+            change.InnerNodes
+                .Where(creatingChange => creatingChange.State == NodeState.Created)
+                .ToList().ForEach(creatingChange =>
+                {
+                    creatingChange.SetAllStates(NodeState.None);
+                    finalDirectory.InnerNodes.Add(creatingChange);
+                });
 
-            change.InnerNodes.Where(x => x.State == NodeState.Created).ToList().ForEach(x =>
-            {
-                var createdNode = x.DeepCopy();
-                createdNode.SetAllStates(NodeState.None);
-                finalDirectory.InnerNodes.Add(createdNode);
-            });
-
-            // TODO: modified
+            change.InnerNodes
+                .Where(modifyingChange => modifyingChange.State == NodeState.Modified)
+                .ToList().ForEach(modifyingChange =>
+                {
+                    var modifiedNode = finalDirectory.InnerNodes.Single(node => node.Name == modifyingChange.Name);
+                    ApplyChanges(modifiedNode, modifyingChange);
+                });
 
             finalDirectory.InnerNodes.RemoveAll(x =>
                 change.InnerNodes.Any(y => y.Name == x.Name && y.State == NodeState.Deleted));
-
-            return finalDirectory;
         }
     }
 }
