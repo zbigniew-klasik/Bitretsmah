@@ -3,6 +3,7 @@ using Bitretsmah.Core.Models;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using static Bitretsmah.Tests.Unit.Core.NodesTestHelper;
 
 namespace Bitretsmah.Tests.Unit.Core
@@ -154,6 +155,51 @@ namespace Bitretsmah.Tests.Unit.Core
 
             INodeChangesApplier applier = new NodeChangesApplier();
             var actualDirectory = applier.Apply(initialDirectory, change);
+
+            actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
+            actualDirectory.ShouldSerializeSameAs(expectedDirectory);
+        }
+
+        [Test]
+        public void ApplyManyChanges()
+        {
+            var initialDirectory =
+                CreateDirectory("root");
+
+            var change1 =
+                CreateDirectory("root", NodeState.Modified,
+                    CreateDirectory("D0", NodeState.Created,
+                        CreateDirectory("D00", NodeState.Created,
+                            CreateFile("F000", NodeState.Created))));
+
+            var change2 =
+                CreateDirectory("root", NodeState.Modified,
+                    CreateDirectory("D0", NodeState.Modified,
+                        CreateDirectory("D00", NodeState.Deleted,
+                            CreateFile("F000", NodeState.Deleted))),
+                    CreateDirectory("D1", NodeState.Created,
+                        CreateDirectory("D10", NodeState.Created,
+                            CreateFile("F1000", NodeState.Created))));
+
+            var change3 =
+                CreateDirectory("root", NodeState.Modified,
+                    CreateDirectory("D1", NodeState.Modified,
+                        CreateDirectory("D10", NodeState.Modified,
+                            CreateFile("F1000", NodeState.Modified, "different_hash_for_F1000"))),
+                    CreateFile("F2", NodeState.Created, "hash_for_F2"));
+
+            var expectedDirectory =
+                CreateDirectory("root", NodeState.None,
+                    CreateDirectory("D0", NodeState.None),
+                    CreateDirectory("D1", NodeState.None,
+                        CreateDirectory("D10", NodeState.None,
+                            CreateFile("F1000", NodeState.None, "different_hash_for_F1000"))),
+                    CreateFile("F2", NodeState.None, "hash_for_F2"));
+
+            var changes = new List<Node>() { change1, change2, change3 };
+
+            INodeChangesApplier applier = new NodeChangesApplier();
+            var actualDirectory = applier.Apply(initialDirectory, changes);
 
             actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
             actualDirectory.ShouldSerializeSameAs(expectedDirectory);

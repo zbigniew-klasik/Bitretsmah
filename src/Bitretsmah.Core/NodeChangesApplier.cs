@@ -17,7 +17,14 @@ namespace Bitretsmah.Core
     {
         public Node Apply(Node initialNode, IEnumerable<Node> changes)
         {
-            throw new NotImplementedException();
+            var finalNode = initialNode;
+
+            foreach (var change in changes)
+            {
+                finalNode = Apply(finalNode, change);
+            }
+
+            return finalNode;
         }
 
         public Node Apply(Node initialNode, Node change)
