@@ -112,16 +112,51 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public void ApplyCreatedDirectoryInDirectory()
         {
-        }
+            var initialDirectory =
+                CreateDirectory("D0");
 
-        [Test]
-        public void ApplyModifiedDirectoryInDirectory()
-        {
+            var change =
+                CreateDirectory("D0", NodeState.Modified,
+                    CreateDirectory("D1", NodeState.Created,
+                        CreateDirectory("D2", NodeState.Created,
+                            CreateFile("F", NodeState.Created))));
+
+            var expectedDirectory =
+                CreateDirectory("D0", NodeState.None,
+                    CreateDirectory("D1", NodeState.None,
+                        CreateDirectory("D2", NodeState.None,
+                            CreateFile("F", NodeState.None))));
+
+            INodeChangesApplier applier = new NodeChangesApplier();
+            var actualDirectory = applier.Apply(initialDirectory, change);
+
+            actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
+            actualDirectory.ShouldSerializeSameAs(expectedDirectory);
         }
 
         [Test]
         public void ApplyDeletedDirectoryInDirectory()
         {
+            var initialDirectory =
+                CreateDirectory("D0",
+                    CreateDirectory("D1",
+                        CreateDirectory("D2",
+                            CreateFile("F"))));
+
+            var change =
+                CreateDirectory("D0", NodeState.Modified,
+                    CreateDirectory("D1", NodeState.Modified,
+                        CreateDirectory("D2", NodeState.Deleted)));
+
+            var expectedDirectory =
+                CreateDirectory("D0", NodeState.None,
+                    CreateDirectory("D1", NodeState.None));
+
+            INodeChangesApplier applier = new NodeChangesApplier();
+            var actualDirectory = applier.Apply(initialDirectory, change);
+
+            actualDirectory.ShouldBeEquivalentTo(expectedDirectory);
+            actualDirectory.ShouldSerializeSameAs(expectedDirectory);
         }
     }
 }
