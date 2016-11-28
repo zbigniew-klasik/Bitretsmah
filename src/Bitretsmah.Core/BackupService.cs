@@ -22,28 +22,43 @@ namespace Bitretsmah.Core
             _remoteFileWarehouseFactory = remoteFileWarehouseFactory;
         }
 
-        public async Task CreateBackup(string path, IProgress<BackupProgress> progress)
+        public async Task CreateBackup(BackupRequest request)
         {
-            var change = await GetChange(path);
+            var current = GetCurrentLocalStructure(request.LocalPath);
 
-            await ComputeHashes(change, progress);
+            if (request.ComputeHashForEachFile)
+            {
+                await ComputeHashesForAllFiles(null, null);
+            }
 
-            await UploadFiles(change, progress);
+            var last = await GetLastKnownStructure(request);
 
-            // TODO: Upload Change
+            var change = FindChange();
+
+            if (!request.ComputeHashForEachFile)
+            {
+                await ComputeHashesForNewFiles(change, request.Progress);
+            }
+
+            await UploadNewFiles(change, request.Progress);
 
             await SaveBackup(change);
 
             throw new NotImplementedException();
         }
 
-        private async Task<Node> GetChange(string path)
+        private Node GetCurrentLocalStructure(string path)
+        {
+            // if path exists:
+            return _localFilesService.GetNodeStructure(path);
+        }
+
+        private async Task<Node> GetLastKnownStructure(BackupRequest request)
         {
             // get local structure
-            var currentStructure = _localFilesService.GetNodeStructure(path);
 
             // get last time data
-            var lastBackup = await _backupRepository.GetLastForPath(path);
+            var lastBackup = await _backupRepository.GetLastForTarget(request.Targer);
 
             Node change;
 
@@ -54,30 +69,41 @@ namespace Bitretsmah.Core
             }
             else
             {
-                var previousStructure = lastBackup.Node;
-                change = _nodeChangesFinder.Find(previousStructure, currentStructure);
+                var previousStructure = lastBackup.Change;
+                change = _nodeChangesFinder.Find(previousStructure, null);
             }
 
             return change;
         }
 
-        private Task ComputeHashes(Node change, IProgress<BackupProgress> progress)
+        private Node FindChange()
+        {
+            return null;
+        }
+
+        private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
+        {
+            return null;
+        }
+
+        private Task ComputeHashesForNewFiles(Node change, IProgress<BackupProgress> progress)
         {
             // todo: foreach
             _hashService.ComputeFileHash(change.AbsolutePath);
 
+            // update progress
             progress.Report(new BackupProgress());
 
             return Task.Run(() => _hashService.ComputeFileHash(change.AbsolutePath));
         }
 
-        private Task UploadFiles(Node change, IProgress<BackupProgress> progress)
+        private Task UploadNewFiles(Node change, IProgress<BackupProgress> progress)
         {
-            // upload files and save files info
             using (var warehouse = _remoteFileWarehouseFactory.Create())
             {
-                // upload
-                // save file info
+                // upload all files in a loop
+                // update progress
+                progress.Report(new BackupProgress());
             }
 
             return null;
@@ -85,8 +111,12 @@ namespace Bitretsmah.Core
 
         private async Task SaveBackup(Node change)
         {
-            // todo save change
-            // todo create and save backup
+            // TODO:
+            // create new backup entity
+            // upload backup to Mega
+            // save backup in local DB
+            // calculate indexes and save to local DB
+
             await _backupRepository.Add(new Backup());
         }
     }

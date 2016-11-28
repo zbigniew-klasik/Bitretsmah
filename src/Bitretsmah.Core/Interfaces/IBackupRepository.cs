@@ -5,7 +5,7 @@ namespace Bitretsmah.Core.Interfaces
 {
     public interface IBackupRepository
     {
-        Task<Backup> GetLastForPath(string path);
+        Task<Backup> GetLastForTarget(string path);
 
         Task Add(Backup backup);
     }
