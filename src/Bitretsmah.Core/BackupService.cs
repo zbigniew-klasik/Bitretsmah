@@ -1,79 +1,60 @@
 ﻿using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
+using EnsureThat;
 using System;
 using System.Threading.Tasks;
 
 namespace Bitretsmah.Core
 {
-    public class BackupService
+    public interface IBackupService
+    {
+        Task Backup(BackupRequest request);
+    }
+
+    public class BackupService : IBackupService
     {
         private readonly IBackupRepository _backupRepository;
         private readonly IHashService _hashService;
+        private readonly IHistoryService _historyService;
         private readonly ILocalFilesService _localFilesService;
         private readonly INodeChangesFinder _nodeChangesFinder;
         private readonly IRemoteFileWarehouseFactory _remoteFileWarehouseFactory;
 
-        public BackupService(IBackupRepository backupRepository, IHashService hashService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
+        public BackupService(IBackupRepository backupRepository, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
         {
             _backupRepository = backupRepository;
             _hashService = hashService;
+            _historyService = historyService;
             _localFilesService = localFilesService;
             _nodeChangesFinder = nodeChangesFinder;
             _remoteFileWarehouseFactory = remoteFileWarehouseFactory;
         }
 
-        public async Task CreateBackup(BackupRequest request)
+        public async Task Backup(BackupRequest request)
         {
-            var current = GetCurrentLocalStructure(request.LocalPath);
+            Ensure.That(request).IsNotNull();
+            Ensure.That(request.Target).IsNotNullOrWhiteSpace();
+            Ensure.That(request.LocalPath).IsNotNullOrWhiteSpace();
+
+            var currentStructure = _localFilesService.GetNodeStructure(request.LocalPath);
 
             if (request.ComputeHashForEachFile)
             {
-                await ComputeHashesForAllFiles(null, null);
+                await ComputeHashesForAllFiles(currentStructure, request.Progress);
             }
 
-            var last = await GetLastKnownStructure(request);
+            var previousStructure = await _historyService.GetLastStructure(request.Target);
 
-            var change = FindChange();
+            var structureChange = _nodeChangesFinder.Find(previousStructure, currentStructure);
 
             if (!request.ComputeHashForEachFile)
             {
-                await ComputeHashesForNewFiles(change, request.Progress);
+                await ComputeHashesForNewFiles(structureChange, request.Progress);
             }
 
-            await UploadNewFiles(change, request.Progress);
+            await UploadNewFiles(structureChange, request.Progress);
 
-            await SaveBackup(change);
-
-            throw new NotImplementedException();
-        }
-
-        private Node GetCurrentLocalStructure(string path)
-        {
-            // if path exists:
-            return _localFilesService.GetNodeStructure(path);
-        }
-
-        private async Task<Node> GetLastKnownStructure(BackupRequest request)
-        {
-            // get local structure
-
-            // get last time data
-            var lastBackup = await _backupRepository.GetLastForTarget(request.Targer);
-
-            Node change;
-
-            if (lastBackup == null)
-            {
-                // to do mark all as added
-                change = null;
-            }
-            else
-            {
-                var previousStructure = lastBackup.Change;
-                change = _nodeChangesFinder.Find(previousStructure, null);
-            }
-
-            return change;
+            await SaveBackup(structureChange, request.Progress);
         }
 
         private Node FindChange()
@@ -109,7 +90,7 @@ namespace Bitretsmah.Core
             return null;
         }
 
-        private async Task SaveBackup(Node change)
+        private async Task SaveBackup(Node change, IProgress<BackupProgress> progress)
         {
             // TODO:
             // create new backup entity
