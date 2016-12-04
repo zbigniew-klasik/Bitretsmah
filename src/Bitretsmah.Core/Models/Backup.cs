@@ -6,7 +6,7 @@ namespace Bitretsmah.Core.Models
     {
         public string Target { get; set; }
 
-        public Node Change { get; set; }
+        public Node StructureChange { get; set; }
 
         public DateTimeOffset CreationTime { get; set; }
     }

@@ -11,10 +11,20 @@ namespace Bitretsmah.Core
         Node Apply(Node initialNode, Node change);
 
         Node Apply(Node initialNode, IEnumerable<Node> changes);
+
+        Node Apply(IEnumerable<Node> changes);
     }
 
     public class NodeChangesApplier : INodeChangesApplier
     {
+        public Node Apply(Node initialNode, Node change)
+        {
+            var finalNode = initialNode.DeepCopy();
+            var changeCopy = change.DeepCopy();
+            ApplyChanges(finalNode, changeCopy);
+            return finalNode;
+        }
+
         public Node Apply(Node initialNode, IEnumerable<Node> changes)
         {
             var finalNode = initialNode;
@@ -27,12 +37,9 @@ namespace Bitretsmah.Core
             return finalNode;
         }
 
-        public Node Apply(Node initialNode, Node change)
+        public Node Apply(IEnumerable<Node> changes)
         {
-            var finalNode = initialNode.DeepCopy();
-            var changeCopy = change.DeepCopy();
-            ApplyChanges(finalNode, changeCopy);
-            return finalNode;
+            throw new NotImplementedException();
         }
 
         private void ApplyChanges(Node initialNode, Node change)

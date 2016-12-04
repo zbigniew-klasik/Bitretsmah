@@ -24,9 +24,9 @@ namespace Bitretsmah.Tests.Unit.Core
             var historyServiceMock = new Mock<IHistoryService>();
             historyServiceMock.Setup(x => x.GetLastStructure(targetName)).ReturnsAsync(previousStructure);
 
-            var change = new Directory();
+            var structureChange = new Directory();
             var nodeChangesFinderMock = new Mock<INodeChangesFinder>();
-            nodeChangesFinderMock.Setup(x => x.Find(previousStructure, currentStructure)).Returns(change);
+            nodeChangesFinderMock.Setup(x => x.Find(previousStructure, currentStructure)).Returns(structureChange);
 
             var backupRepositoryMock = new Mock<IBackupRepository>();
             var hashServiceMock = new Mock<IHashService>();
