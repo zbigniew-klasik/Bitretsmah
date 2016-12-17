@@ -31,13 +31,13 @@ namespace Bitretsmah.Tests.Unit.Core
             backupRepositoryMock.Setup(x => x.GetAllForTarget(target)).ReturnsAsync(backups);
 
             var nodeChangesApplier = new Mock<INodeChangesApplier>();
-            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<IEnumerable<Node>>())).Returns(expectedLastStructure);
+            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<ICollection<Node>>())).Returns(expectedLastStructure);
 
             var historyService = new HistoryService(backupRepositoryMock.Object, nodeChangesApplier.Object);
             var actualLastStructure = await historyService.GetLastStructure(target);
 
             backupRepositoryMock.Verify(x => x.GetAllForTarget(target), Times.Once());
-            nodeChangesApplier.Verify(x => x.Apply(It.IsAny<IEnumerable<Node>>()), Times.Once);
+            nodeChangesApplier.Verify(x => x.Apply(It.IsAny<ICollection<Node>>()), Times.Once);
             actualLastStructure.ShouldBeEquivalentTo(expectedLastStructure);
             actualLastStructure.ShouldSerializeSameAs(expectedLastStructure);
         }
@@ -61,10 +61,10 @@ namespace Bitretsmah.Tests.Unit.Core
             var backupRepositoryMock = new Mock<IBackupRepository>();
             backupRepositoryMock.Setup(x => x.GetAllForTarget(target)).ReturnsAsync(backups);
 
-            IEnumerable<Node> actualNodes = null;
+            ICollection<Node> actualNodes = null;
             var nodeChangesApplier = new Mock<INodeChangesApplier>();
-            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<IEnumerable<Node>>()))
-                .Callback<IEnumerable<Node>>(x => actualNodes = x)
+            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<ICollection<Node>>()))
+                .Callback<ICollection<Node>>(x => actualNodes = x)
                 .Returns(lastStructure);
 
             var historyService = new HistoryService(backupRepositoryMock.Object, nodeChangesApplier.Object);
@@ -88,7 +88,7 @@ namespace Bitretsmah.Tests.Unit.Core
             backupRepositoryMock.Setup(x => x.GetAllForTarget(target)).ReturnsAsync(backups);
 
             var nodeChangesApplier = new Mock<INodeChangesApplier>();
-            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<IEnumerable<Node>>())).Returns(lastStructure);
+            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<ICollection<Node>>())).Returns(lastStructure);
 
             var historyService = new HistoryService(backupRepositoryMock.Object, nodeChangesApplier.Object);
             var result = await historyService.GetLastStructure(target);
@@ -107,7 +107,7 @@ namespace Bitretsmah.Tests.Unit.Core
             backupRepositoryMock.Setup(x => x.GetAllForTarget(target)).ReturnsAsync(backups);
 
             var nodeChangesApplier = new Mock<INodeChangesApplier>();
-            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<IEnumerable<Node>>())).Returns(lastStructure);
+            nodeChangesApplier.Setup(x => x.Apply(It.IsAny<ICollection<Node>>())).Returns(lastStructure);
 
             var historyService = new HistoryService(backupRepositoryMock.Object, nodeChangesApplier.Object);
             var result = await historyService.GetLastStructure(target);

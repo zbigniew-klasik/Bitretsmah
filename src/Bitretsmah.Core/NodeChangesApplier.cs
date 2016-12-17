@@ -10,23 +10,29 @@ namespace Bitretsmah.Core
     {
         Node Apply(Node initialNode, Node change);
 
-        Node Apply(Node initialNode, IEnumerable<Node> changes);
+        Node Apply(Node initialNode, ICollection<Node> changes);
 
-        Node Apply(IEnumerable<Node> changes);
+        Node Apply(ICollection<Node> changes);
     }
 
     public class NodeChangesApplier : INodeChangesApplier
     {
         public Node Apply(Node initialNode, Node change)
         {
+            EnsureArg.IsNotNull(initialNode);
+            EnsureArg.IsNotNull(change);
+
             var finalNode = initialNode.DeepCopy();
             var changeCopy = change.DeepCopy();
             ApplyChanges(finalNode, changeCopy);
             return finalNode;
         }
 
-        public Node Apply(Node initialNode, IEnumerable<Node> changes)
+        public Node Apply(Node initialNode, ICollection<Node> changes)
         {
+            EnsureArg.IsNotNull(initialNode);
+            EnsureArg.HasItems(changes, nameof(changes));
+
             var finalNode = initialNode;
 
             foreach (var change in changes)
@@ -37,9 +43,15 @@ namespace Bitretsmah.Core
             return finalNode;
         }
 
-        public Node Apply(IEnumerable<Node> changes)
+        public Node Apply(ICollection<Node> changes)
         {
-            throw new NotImplementedException();
+            EnsureArg.HasItems(changes, nameof(changes));
+            var initialNode = changes.First();
+            EnsureArg.IsTrue(initialNode.State == NodeState.Created, "The node state should be 'Created'.");
+            initialNode.SetAllStates(NodeState.None);
+            var otherChanges = changes.Skip(1).ToList();
+            var finalNode = Apply(initialNode, otherChanges);
+            return finalNode;
         }
 
         private void ApplyChanges(Node initialNode, Node change)

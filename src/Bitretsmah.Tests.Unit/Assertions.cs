@@ -10,8 +10,8 @@ namespace Bitretsmah.Tests.Unit
         {
             if (expected == actual) return;
 
-            string expectedJson = JsonConvert.SerializeObject(expected);
-            string actualJson = JsonConvert.SerializeObject(actual);
+            string expectedJson = JsonConvert.SerializeObject(expected, Formatting.Indented);
+            string actualJson = JsonConvert.SerializeObject(actual, Formatting.Indented);
 
             if (expectedJson == actualJson) return;
 
