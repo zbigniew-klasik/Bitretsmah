@@ -32,9 +32,9 @@ namespace Bitretsmah.Core
 
         public async Task Backup(BackupRequest request)
         {
-            Ensure.That(request).IsNotNull();
-            Ensure.That(request.Target).IsNotNullOrWhiteSpace();
-            Ensure.That(request.LocalPath).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNull(request, nameof(request));
+            EnsureArg.IsNotNullOrWhiteSpace(request.Target, nameof(request.Target));
+            EnsureArg.IsNotNullOrWhiteSpace(request.LocalPath, nameof(request.LocalPath));
 
             var currentStructure = _localFilesService.GetNodeStructure(request.LocalPath);
 
@@ -47,27 +47,12 @@ namespace Bitretsmah.Core
 
             var structureChange = _nodeChangesFinder.Find(previousStructure, currentStructure);
 
-            if (!request.ComputeHashForEachFile)
-            {
-                await ComputeHashesForNewFiles(structureChange, request.Progress);
-            }
-
             await UploadNewFiles(structureChange, request.Progress);
 
             await SaveBackup(structureChange, request.Progress);
         }
 
-        private Node FindChange()
-        {
-            return null;
-        }
-
         private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
-        {
-            return null;
-        }
-
-        private Task ComputeHashesForNewFiles(Node change, IProgress<BackupProgress> progress)
         {
             // todo: foreach
             _hashService.ComputeFileHash(change.AbsolutePath);
@@ -82,6 +67,7 @@ namespace Bitretsmah.Core
         {
             using (var warehouse = _remoteFileWarehouseFactory.Create())
             {
+                _hashService.ComputeFileHash(change.AbsolutePath);
                 // upload all files in a loop
                 // update progress
                 progress.Report(new BackupProgress());
