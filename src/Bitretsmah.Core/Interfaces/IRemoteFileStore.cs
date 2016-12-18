@@ -11,11 +11,7 @@ namespace Bitretsmah.Core.Interfaces
 
         Task<Quota> GetQuota();
 
-        Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress);
-
         Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress);
-
-        Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress);
 
         Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress);
     }

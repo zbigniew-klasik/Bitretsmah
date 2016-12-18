@@ -32,29 +32,12 @@ namespace Bitretsmah.Data.Mega
             return _quota;
         }
 
-        public async Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
-        {
-            await EnsureInitialized();
-            var node = await _megaApiClient.UploadFileAsync(localFilePath, _rootNode, progress);
-            await UpdateQuota();
-            return new RemoteId(StoreId, node.Id);
-        }
-
         public async Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)
         {
             await EnsureInitialized();
             var node = await _megaApiClient.UploadAsync(stream, remoteFileName, _rootNode, progress);
             await UpdateQuota();
             return new RemoteId(StoreId, node.Id);
-        }
-
-        public async Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress)
-        {
-            await EnsureInitialized();
-            if (remoteId.StoreId != StoreId) throw new ArgumentException(); // todo
-            var node = (await _megaApiClient.GetNodesAsync(_rootNode)).SingleOrDefault(x => x.Id == remoteId.NodeId);
-            if (node == null) throw new Exception("invalid node"); // todo
-            await _megaApiClient.DownloadFileAsync(node, localFilePath, progress);
         }
 
         public async Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress)

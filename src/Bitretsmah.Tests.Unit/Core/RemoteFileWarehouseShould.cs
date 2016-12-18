@@ -46,17 +46,7 @@ namespace Bitretsmah.Tests.Unit.Core
                 return Task.FromResult(_quota);
             }
 
-            public Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress)
-            {
-                throw new NotImplementedException();
-            }
-
             public Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress)
             {
                 throw new NotImplementedException();
             }
@@ -174,7 +164,7 @@ namespace Bitretsmah.Tests.Unit.Core
                 var storeMock = new Mock<IRemoteFileStore>();
                 storeMock.SetupGet(x => x.StoreId).Returns($"store_{i}");
                 storeMock.Setup(x => x.GetQuota()).ReturnsAsync(new Quota(50, 20 + i));
-                storeMock.Setup(x => x.UploadFile("test_file_path", It.IsAny<IProgress<double>>())).ReturnsAsync(new RemoteId($"store_{i}", "test_node_id"));
+                storeMock.Setup(x => x.UploadFile(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<IProgress<double>>())).ReturnsAsync(new RemoteId($"store_{i}", "test_node_id"));
                 stores.Add(storeMock.Object);
             }
 
@@ -183,14 +173,16 @@ namespace Bitretsmah.Tests.Unit.Core
             var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
             warehouse.StoreSelectionMethod = method;
             await warehouse.LoadStores();
+
+            var stream = new MemoryStream();
             var progress = new Progress<double>();
-            var remoteId = await warehouse.UploadFile("test_file_path", progress);
+            var remoteId = await warehouse.UploadFile(stream, "remote_file_name", progress);
 
             remoteId.StoreId.Should().Be(storeId);
-            Mock.Get(stores.Single(x => x.StoreId.Equals(storeId))).Verify(x => x.UploadFile("test_file_path", progress), Times.Once);
+            Mock.Get(stores.Single(x => x.StoreId.Equals(storeId))).Verify(x => x.UploadFile(stream, "remote_file_name", progress), Times.Once);
             stores.Where(x => !x.StoreId.Equals(storeId)).ToList().ForEach(x =>
             {
-                Mock.Get(x).Verify(y => y.UploadFile(It.IsAny<string>(), It.IsAny<IProgress<double>>()), Times.Never);
+                Mock.Get(x).Verify(y => y.UploadFile(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<IProgress<double>>()), Times.Never);
             });
         }
 
@@ -215,12 +207,12 @@ namespace Bitretsmah.Tests.Unit.Core
             var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
             await warehouse.LoadStores();
             var progress = new Progress<double>();
-            await warehouse.DownloadFile(remoteId, "test_file_path", progress);
+            await warehouse.DownloadFile(remoteId, progress);
 
-            Mock.Get(stores.Single(x => x.StoreId.Equals(storeId))).Verify(x => x.DownloadFile(remoteId, "test_file_path", progress), Times.Once);
+            Mock.Get(stores.Single(x => x.StoreId.Equals(storeId))).Verify(x => x.DownloadFile(remoteId, progress), Times.Once);
             stores.Where(x => !x.StoreId.Equals(remoteId.StoreId)).ToList().ForEach(x =>
             {
-                Mock.Get(x).Verify(y => y.DownloadFile(It.IsAny<RemoteId>(), It.IsAny<string>(), It.IsAny<IProgress<double>>()), Times.Never);
+                Mock.Get(x).Verify(y => y.DownloadFile(It.IsAny<RemoteId>(), It.IsAny<IProgress<double>>()), Times.Never);
             });
         }
     }

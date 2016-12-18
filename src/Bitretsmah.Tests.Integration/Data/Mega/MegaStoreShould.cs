@@ -24,40 +24,6 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
         }
 
         [Test]
-        public async Task UploadFileAndDownloadFile()
-        {
-            var fileName1 = Guid.NewGuid() + ".txt";
-            var fileName2 = Guid.NewGuid() + ".txt";
-            var fileContent = Guid.NewGuid().ToString();
-
-            Console.WriteLine("Creating store...");
-            var store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
-
-            Console.WriteLine("Verifying quota before upload...");
-            var quotaBeforeUpload = await store.GetQuota();
-            quotaBeforeUpload.Total.Should().Be(Quota50GB);
-            quotaBeforeUpload.Free.Should().Be(Quota50GB);
-
-            Console.WriteLine("Writing file...");
-            File.WriteAllText(fileName1, fileContent);
-
-            Console.WriteLine("Uploading file...");
-            var id = await store.UploadFile(fileName1, new Progress<double>());
-
-            Console.WriteLine("Verifying quota after upload...");
-            var quotaAfterUpload = await store.GetQuota();
-            quotaAfterUpload.Total.Should().Be(Quota50GB);
-            quotaAfterUpload.Free.Should().Be(Quota50GB - new FileInfo(fileName1).Length);
-
-            Console.WriteLine("Downloading file...");
-            await store.DownloadFile(id, fileName2, new Progress<double>());
-
-            Console.WriteLine("Reading file...");
-            var downloadedContent = File.ReadAllText(fileName2);
-            downloadedContent.Should().Be(fileContent);
-        }
-
-        [Test]
         public async Task UploadFileAndDownloadFileUsingStreams()
         {
             var fileName1 = Guid.NewGuid() + ".txt";
