@@ -2,6 +2,7 @@
 using Bitretsmah.Core.Models;
 using CG.Web.MegaApiClient;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -39,6 +40,14 @@ namespace Bitretsmah.Data.Mega
             return new RemoteId(StoreId, node.Id);
         }
 
+        public async Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)
+        {
+            await EnsureInitialized();
+            var node = await _megaApiClient.UploadAsync(stream, remoteFileName, _rootNode, progress);
+            await UpdateQuota();
+            return new RemoteId(StoreId, node.Id);
+        }
+
         public async Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress)
         {
             await EnsureInitialized();
@@ -46,6 +55,16 @@ namespace Bitretsmah.Data.Mega
             var node = (await _megaApiClient.GetNodesAsync(_rootNode)).SingleOrDefault(x => x.Id == remoteId.NodeId);
             if (node == null) throw new Exception("invalid node"); // todo
             await _megaApiClient.DownloadFileAsync(node, localFilePath, progress);
+        }
+
+        public async Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress)
+        {
+            await EnsureInitialized();
+            if (remoteId.StoreId != StoreId) throw new ArgumentException(); // todo
+            var node = (await _megaApiClient.GetNodesAsync(_rootNode)).SingleOrDefault(x => x.Id == remoteId.NodeId);
+            if (node == null) throw new Exception("invalid node"); // todo
+            var stream = await _megaApiClient.DownloadAsync(node, progress);
+            return stream;
         }
 
         private async Task EnsureInitialized()

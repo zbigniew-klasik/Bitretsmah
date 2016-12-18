@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,7 +51,17 @@ namespace Bitretsmah.Tests.Unit.Core
                 throw new NotImplementedException();
             }
 
+            public Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)
+            {
+                throw new NotImplementedException();
+            }
+
             public Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress)
             {
                 throw new NotImplementedException();
             }

@@ -1,5 +1,6 @@
 ﻿using Bitretsmah.Core.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Bitretsmah.Core.Interfaces
@@ -12,6 +13,10 @@ namespace Bitretsmah.Core.Interfaces
 
         Task<RemoteId> UploadFile(string localFilePath, IProgress<double> progress);
 
+        Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress);
+
         Task DownloadFile(RemoteId remoteId, string localFilePath, IProgress<double> progress);
+
+        Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress);
     }
 }
