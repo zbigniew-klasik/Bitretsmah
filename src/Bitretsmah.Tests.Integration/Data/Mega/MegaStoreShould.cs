@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core.Models;
+﻿using Bitretsmah.Core.Interfaces;
+using Bitretsmah.Core.Models;
 using Bitretsmah.Data.Mega;
 using CG.Web.MegaApiClient;
 using FluentAssertions;
@@ -32,7 +33,7 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
             var fileContent = Guid.NewGuid().ToString();
 
             Console.WriteLine("Creating store...");
-            var store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
+            IRemoteFileStore store = new MegaStore(AppConfigHelper.GetTestMegaCredential());
 
             Console.WriteLine("Verifying quota before upload...");
             var quotaBeforeUpload = await store.GetQuota();

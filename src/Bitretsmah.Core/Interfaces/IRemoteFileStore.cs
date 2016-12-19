@@ -1,5 +1,6 @@
 ﻿using Bitretsmah.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace Bitretsmah.Core.Interfaces
         string StoreId { get; }
 
         Task<Quota> GetQuota();
+
+        Task<ICollection<RemoteFile>> GetFilesList();
 
         Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress);
 

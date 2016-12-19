@@ -46,6 +46,11 @@ namespace Bitretsmah.Tests.Unit.Core
                 return Task.FromResult(_quota);
             }
 
+            public Task<ICollection<RemoteFile>> GetFilesList()
+            {
+                throw new NotImplementedException();
+            }
+
             public Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)
             {
                 throw new NotImplementedException();
