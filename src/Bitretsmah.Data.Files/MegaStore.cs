@@ -2,6 +2,7 @@
 using Bitretsmah.Core.Models;
 using CG.Web.MegaApiClient;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -30,6 +31,22 @@ namespace Bitretsmah.Data.Mega
         {
             await EnsureInitialized();
             return _quota;
+        }
+
+        public async Task<ICollection<RemoteFile>> GetFilesList()
+        {
+            await EnsureInitialized();
+            var query =
+                from fileNode in (await _megaApiClient.GetNodesAsync(_rootNode))
+                where fileNode.Type == NodeType.File
+                select new RemoteFile
+                {
+                    Id = new RemoteId { StoreId = StoreId, NodeId = fileNode.Id },
+                    Name = fileNode.Name,
+                    Size = fileNode.Size
+                };
+
+            return query.ToList();
         }
 
         public async Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)

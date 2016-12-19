@@ -67,6 +67,7 @@
     <Compile Include="Models\NodeState.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\NodeChange.cs" />
+    <Compile Include="Models\RemoteFile.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />
     <Compile Include="NodeChangesApplier.cs" />
     <Compile Include="NodeChangesFinder.cs" />

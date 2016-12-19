@@ -24,7 +24,7 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
         }
 
         [Test]
-        public async Task UploadFileAndDownloadFileUsingStreams()
+        public async Task UploadFileAndDownloadFile()
         {
             var fileName1 = Guid.NewGuid() + ".txt";
             var fileName2 = Guid.NewGuid() + ".txt";
@@ -49,7 +49,13 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
                 remoteId = await store.UploadFile(fileStream, remoteName, new Progress<double>());
             }
 
-            // TODO: verify remote file name
+            Console.WriteLine("Verifying uploaded file...");
+            var remoteFiles = await store.GetFilesList();
+            remoteFiles.Count.Should().Be(1);
+            var remoteFile = remoteFiles.First();
+            remoteFile.Id.StoreId.Should().Be(store.StoreId);
+            remoteFile.Name.Should().Be(remoteName);
+            remoteFile.Size.Should().Be(new FileInfo(fileName1).Length);
 
             Console.WriteLine("Verifying quota after upload...");
             var quotaAfterUpload = await store.GetQuota();
