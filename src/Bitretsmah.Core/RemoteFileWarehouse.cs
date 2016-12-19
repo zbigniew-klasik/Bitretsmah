@@ -15,6 +15,8 @@ namespace Bitretsmah.Core
 
         Task LoadStores();
 
+        Task<ICollection<RemoteFile>> GetFilesList();
+
         Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress);
 
         Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress);
@@ -38,6 +40,18 @@ namespace Bitretsmah.Core
             var allStores = await _remoteFileStoreFactory.GetAll();
             var newStores = allStores.Where(x => !_remoteFileStores.Any(y => y.StoreId.Equals(x.StoreId)));
             _remoteFileStores.AddRange(newStores);
+        }
+
+        public async Task<ICollection<RemoteFile>> GetFilesList()
+        {
+            var filesList = new List<RemoteFile>();
+
+            foreach (var store in _remoteFileStores)
+            {
+                filesList.AddRange(await store.GetFilesList());
+            }
+
+            return filesList;
         }
 
         public async Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)

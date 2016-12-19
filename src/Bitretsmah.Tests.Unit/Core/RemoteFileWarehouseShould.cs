@@ -175,7 +175,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
 
-            var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
+            IRemoteFileWarehouse warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
             warehouse.StoreSelectionMethod = method;
             await warehouse.LoadStores();
 
@@ -209,7 +209,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
 
-            var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
+            IRemoteFileWarehouse warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
             await warehouse.LoadStores();
             var progress = new Progress<double>();
             await warehouse.DownloadFile(remoteId, progress);
@@ -219,6 +219,86 @@ namespace Bitretsmah.Tests.Unit.Core
             {
                 Mock.Get(x).Verify(y => y.DownloadFile(It.IsAny<RemoteId>(), It.IsAny<IProgress<double>>()), Times.Never);
             });
+        }
+
+        [Test]
+        public async Task GetFilesListFromAllStores()
+        {
+            var stores = new List<IRemoteFileStore>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                var storeMock = new Mock<IRemoteFileStore>();
+                storeMock.SetupGet(x => x.StoreId).Returns($"store_{i}");
+                storeMock.Setup(x => x.GetFilesList())
+                    .ReturnsAsync(new List<RemoteFile>()
+                {
+                    new RemoteFile
+                    {
+                        Id = new RemoteId($"store_{i}", $"file_{i}0"),
+                        Name = $"Abc_{i}.txt",
+                        Size = 100 + i
+                    },
+                    new RemoteFile
+                    {
+                        Id = new RemoteId($"store_{i}", $"file_{i}1"),
+                        Name = $"Cde_{i}.bin",
+                        Size = 100 + i
+                    }
+                });
+
+                stores.Add(storeMock.Object);
+            }
+
+            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
+
+            IRemoteFileWarehouse warehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object);
+            await warehouse.LoadStores();
+
+            var actualFilesList = await warehouse.GetFilesList();
+
+            var expectedFilesList = new List<RemoteFile>()
+            {
+                new RemoteFile
+                {
+                    Id = new RemoteId($"store_0", $"file_00"),
+                    Name = $"Abc_0.txt",
+                    Size = 100
+                },
+                new RemoteFile
+                {
+                    Id = new RemoteId($"store_0", $"file_01"),
+                    Name = $"Cde_0.bin",
+                    Size = 100
+                },
+                new RemoteFile
+                {
+                    Id = new RemoteId($"store_1", $"file_10"),
+                    Name = $"Abc_1.txt",
+                    Size = 101
+                },
+                new RemoteFile
+                {
+                    Id = new RemoteId($"store_1", $"file_11"),
+                    Name = $"Cde_1.bin",
+                    Size = 101
+                },
+                new RemoteFile
+                {
+                    Id = new RemoteId($"store_2", $"file_20"),
+                    Name = $"Abc_2.txt",
+                    Size = 102
+                },
+                new RemoteFile
+                {
+                    Id = new RemoteId($"store_2", $"file_21"),
+                    Name = $"Cde_2.bin",
+                    Size = 102
+                }
+            };
+
+            actualFilesList.ShouldBeEquivalentTo(expectedFilesList);
+            actualFilesList.ShouldSerializeSameAs(expectedFilesList);
         }
     }
 }
