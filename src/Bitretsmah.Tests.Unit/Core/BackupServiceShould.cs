@@ -32,13 +32,15 @@ namespace Bitretsmah.Tests.Unit.Core
             var hashServiceMock = new Mock<IHashService>();
             var remoteFileWarehouseFactoryMock = new Mock<IRemoteFileWarehouseFactory>();
 
+            var changedFilesUploaderMock = new Mock<IChangedFilesUploader>();
+
             IBackupService backupService = new BackupService(
                 backupRepositoryMock.Object,
+                changedFilesUploaderMock.Object,
                 hashServiceMock.Object,
                 historyServiceMock.Object,
                 localFilesServiceMock.Object,
-                nodeChangesFinderMock.Object,
-                remoteFileWarehouseFactoryMock.Object);
+                nodeChangesFinderMock.Object);
 
             var request = new BackupRequest
             {

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AccountService.cs" />
     <Compile Include="BackupService.cs" />
+    <Compile Include="ChangedFilesUploader.cs" />
     <Compile Include="DirectoryConfigurator.cs" />
     <Compile Include="Exceptions\BitretsmahException.cs" />
     <Compile Include="Exceptions\InvalidCredentialException.cs" />

@@ -14,20 +14,20 @@ namespace Bitretsmah.Core
     public class BackupService : IBackupService
     {
         private readonly IBackupRepository _backupRepository;
+        private readonly IChangedFilesUploader _changedFilesUploader;
         private readonly IHashService _hashService;
         private readonly IHistoryService _historyService;
         private readonly ILocalFilesService _localFilesService;
         private readonly INodeChangesFinder _nodeChangesFinder;
-        private readonly IRemoteFileWarehouseFactory _remoteFileWarehouseFactory;
 
-        public BackupService(IBackupRepository backupRepository, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
+        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder)
         {
             _backupRepository = backupRepository;
+            _changedFilesUploader = changedFilesUploader;
             _hashService = hashService;
             _historyService = historyService;
             _localFilesService = localFilesService;
             _nodeChangesFinder = nodeChangesFinder;
-            _remoteFileWarehouseFactory = remoteFileWarehouseFactory;
         }
 
         public async Task Backup(BackupRequest request)
@@ -47,7 +47,7 @@ namespace Bitretsmah.Core
 
             var structureChange = _nodeChangesFinder.Find(previousStructure, currentStructure);
 
-            await UploadNewFiles(structureChange, request.Progress);
+            await _changedFilesUploader.Upload(structureChange, request.Progress);
 
             await SaveBackup(structureChange, request.Progress);
         }
@@ -63,19 +63,6 @@ namespace Bitretsmah.Core
             return Task.Run(() => _hashService.ComputeFileHash(change.AbsolutePath));
         }
 
-        private Task UploadNewFiles(Node change, IProgress<BackupProgress> progress)
-        {
-            using (var warehouse = _remoteFileWarehouseFactory.Create())
-            {
-                _hashService.ComputeFileHash(change.AbsolutePath);
-                // upload all files in a loop
-                // update progress
-                progress.Report(new BackupProgress());
-            }
-
-            return null;
-        }
-
         private async Task SaveBackup(Node change, IProgress<BackupProgress> progress)
         {
             // TODO:
@@ -84,6 +71,8 @@ namespace Bitretsmah.Core
             // save backup in local DB
             // calculate indexes and save to local DB
 
+            // local backup repo
+            // remote backup repo
             await _backupRepository.Add(new Backup());
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Bitretsmah.Core.Models
 {
@@ -17,6 +18,11 @@ namespace Bitretsmah.Core.Models
         public virtual void SetAllStates(NodeState state)
         {
             State = state;
+        }
+
+        public virtual ICollection<Node> StructureToList()
+        {
+            return new List<Node>() { this };
         }
     }
 }
