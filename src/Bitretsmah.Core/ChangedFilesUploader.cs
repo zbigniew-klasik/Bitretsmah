@@ -30,8 +30,9 @@ namespace Bitretsmah.Core
 
             var createdAndModifiedFiles =
                 filesStructureChange.StructureToList()
-                    .Where(x => x is File)
                     .Where(x => x.State == NodeState.Created || x.State == NodeState.Modified)
+                    .Where(x => x is File)
+                    .Select(x => (File)x)
                     .ToList();
 
             if (!createdAndModifiedFiles.Any()) return;
@@ -42,8 +43,10 @@ namespace Bitretsmah.Core
                 {
                     try
                     {
-                        // compute hash if not computed yet
-                        _hashService.ComputeFileHash(filesStructureChange.AbsolutePath);
+                        if (string.IsNullOrWhiteSpace(file.Hash))
+                        {
+                            _hashService.ComputeFileHash(file.AbsolutePath);
+                        }
 
                         // upload file if it does not exist in warehouse yet
 
