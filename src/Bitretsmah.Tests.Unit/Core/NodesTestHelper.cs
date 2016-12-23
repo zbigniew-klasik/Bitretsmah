@@ -16,7 +16,7 @@ namespace Bitretsmah.Tests.Unit.Core
                 Size = 1234,
                 CreationTime = new DateTimeOffset(2016, 10, 11, 18, 33, 14, new TimeSpan(0)),
                 ModificationTime = new DateTimeOffset(2016, 11, 12, 19, 34, 15, new TimeSpan(0)),
-                AbsolutePath = @"C:\Temp\" + name + ".txt"
+                AbsolutePath = @"C:\Temp\" + name
             };
         }
 

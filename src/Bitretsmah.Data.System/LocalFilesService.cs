@@ -61,5 +61,10 @@ namespace Bitretsmah.Data.System
 
             return directory;
         }
+
+        public Stream ReadFileStream(string filePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
