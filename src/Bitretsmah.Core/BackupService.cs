@@ -15,15 +15,17 @@ namespace Bitretsmah.Core
     {
         private readonly IBackupRepository _backupRepository;
         private readonly IChangedFilesUploader _changedFilesUploader;
+        private readonly IDateTimeService _dateTimeService;
         private readonly IHashService _hashService;
         private readonly IHistoryService _historyService;
         private readonly ILocalFilesService _localFilesService;
         private readonly INodeChangesFinder _nodeChangesFinder;
 
-        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder)
+        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder)
         {
             _backupRepository = backupRepository;
             _changedFilesUploader = changedFilesUploader;
+            _dateTimeService = dateTimeService;
             _hashService = hashService;
             _historyService = historyService;
             _localFilesService = localFilesService;
@@ -49,7 +51,9 @@ namespace Bitretsmah.Core
 
             await _changedFilesUploader.Upload(structureChange, request.Progress);
 
-            await SaveBackup(structureChange, request.Progress);
+            await SaveBackup(request, structureChange);
+
+            return;
         }
 
         private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
@@ -63,17 +67,19 @@ namespace Bitretsmah.Core
             return Task.Run(() => _hashService.ComputeFileHash(change.AbsolutePath));
         }
 
-        private async Task SaveBackup(Node change, IProgress<BackupProgress> progress)
+        private async Task SaveBackup(BackupRequest request, Node change)
         {
-            // TODO:
-            // create new backup entity
-            // upload backup to Mega
-            // save backup in local DB
-            // calculate indexes and save to local DB
+            var backup = new Backup
+            {
+                Target = request.Target,
+                StructureChange = change,
+                CreationTime = _dateTimeService.Now
+            };
 
-            // local backup repo
-            // remote backup repo
-            await _backupRepository.Add(new Backup());
+            await _backupRepository.Add(backup);
+
+            // TODO:
+            // use remote backup repository to upload backup to Mega
         }
     }
 }
