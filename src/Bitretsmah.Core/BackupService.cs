@@ -58,7 +58,7 @@ namespace Bitretsmah.Core
             _hashService.ComputeFileHash(change.AbsolutePath);
 
             // update progress
-            progress.Report(new BackupProgress());
+            // progress.Report(new BackupProgress());
 
             return Task.Run(() => _hashService.ComputeFileHash(change.AbsolutePath));
         }

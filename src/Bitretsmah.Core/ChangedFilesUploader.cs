@@ -45,27 +45,44 @@ namespace Bitretsmah.Core
             {
                 var uploadedFilesHashes = await GetUploadedFilesHashes(warehouse);
 
+                int processedFilesNumber = 0;
+
                 foreach (var file in createdAndModifiedFiles)
                 {
                     try
                     {
                         if (string.IsNullOrWhiteSpace(file.Hash))
                         {
+                            progress.Report(
+                                new BackupProgress(
+                                    new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, file)));
+
                             _hashService.ComputeFileHash(file.AbsolutePath);
                         }
 
                         if (uploadedFilesHashes.All(x => x != file.Hash))
                         {
+                            progress.Report(
+                                new BackupProgress(
+                                    new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, 0, file)));
+
                             var stream = _localFilesService.ReadFileStream(file.AbsolutePath);
-                            await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", new Progress<double>());
+
+                            var uploadProgress = new Progress<double>(uploadPercenteg =>
+                                progress.Report(
+                                    new BackupProgress(
+                                        new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, uploadPercenteg, file)))
+                                );
+
+                            await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);
                         }
 
-                        // progress.Report(new BackupProgress());
+                        processedFilesNumber++;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // TODO
-                        throw;
+                        // TODO: proper error handling and logging
+                        progress.Report(new BackupProgress(ex.Message));
                     }
                 }
             }
