@@ -27,6 +27,11 @@ namespace Bitretsmah.UI.ConsoleApp
 
             var result = parser.Parse(args);
 
+            if (result.HasErrors)
+            {
+                throw new ArgumentException(result.ErrorText);
+            }
+
             if (result.AdditionalOptionsFound.Any())
             {
                 throw new ArgumentException($"Unknown argument: {result.AdditionalOptionsFound.First().Key}.");

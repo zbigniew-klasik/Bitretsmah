@@ -16,7 +16,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [TestCase("", null)]
-        [TestCase("--backup", null)]
         [TestCase("--backup foo", "foo")]
         public void ParseBackupArgument(string arguments, string expectedResult)
         {
@@ -24,7 +23,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [TestCase("", null)]
-        [TestCase("--restore", null)]
         [TestCase("--restore foo", "foo")]
         public void ParseRestoreArgument(string arguments, string expectedResult)
         {
@@ -32,7 +30,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [TestCase("", null)]
-        [TestCase("--set-account", null)]
         [TestCase("--set-account john@snow.org", "john@snow.org")]
         [TestCase("--set-account john@snow.org --password Pa$$w0rd", "john@snow.org")]
         public void ParseSetAccountArgument(string arguments, string expectedResult)
@@ -41,7 +38,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [TestCase("", null)]
-        [TestCase("--password", null)]
         [TestCase("--password Pa$$w0rd", "Pa$$w0rd")]
         [TestCase("--set-account john@snow.org --password Pa$$w0rd", "Pa$$w0rd")]
         public void ParsePasswordArgument(string arguments, string expectedResult)
@@ -50,7 +46,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [TestCase(@"", null)]
-        [TestCase(@"--set-target", null)]
         [TestCase(@"--set-target foo", "foo")]
         [TestCase(@"--set-target bar --path D:\temp\bar", "bar")]
         public void ParseSetTargetArgument(string arguments, string expectedResult)
@@ -59,7 +54,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [TestCase(@"", null)]
-        [TestCase(@"--path", null)]
         [TestCase(@"--path D:\temp\foo", @"D:\temp\foo")]
         [TestCase(@"--path C:\temp\bar.txt", @"C:\temp\bar.txt")]
         [TestCase(@"--set-target foo --path D:\something\important", @"D:\something\important")]
@@ -93,6 +87,17 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         public void ParseVersionArgument(string arguments, bool expectedResult)
         {
             Parse(arguments).Version.Should().Be(expectedResult);
+        }
+
+        [TestCase("--backup")]
+        [TestCase("--restore")]
+        [TestCase("--set-account")]
+        [TestCase("--password")]
+        [TestCase("--set-target")]
+        [TestCase("--path")]
+        public void ThrowExceptionForParseError(string arguments)
+        {
+            Assert.Throws<ArgumentException>(() => Parse(arguments));
         }
 
         [Test]
