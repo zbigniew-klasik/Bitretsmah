@@ -77,6 +77,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Assertions.cs" />
+    <Compile Include="ConsoleApp\ConsoleArgumentsParserShould.cs" />
     <Compile Include="Core\AccountServiceShould.cs" />
     <Compile Include="Core\BackupServiceShould.cs" />
     <Compile Include="Core\ExtensionsShould.cs" />
@@ -94,6 +95,10 @@
     <ProjectReference Include="..\Bitretsmah.Core\Bitretsmah.Core.csproj">
       <Project>{5162931a-bde0-4c66-86ee-4c16e22c8b3e}</Project>
       <Name>Bitretsmah.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Bitretsmah.UI.ConsoleApp\Bitretsmah.UI.ConsoleApp.csproj">
+      <Project>{a50e6e85-eaeb-4a1b-9ba0-464e563cbe3b}</Project>
+      <Name>Bitretsmah.UI.ConsoleApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -41,10 +41,9 @@ namespace Bitretsmah.UI.ConsoleApp
             parser.SetupHelp("h", "help").Callback(ShowHelp).UseForEmptyArgs();
             parser.Setup(x => x.ShowVersion).As('v', "version").WithDescription("Shows the version of that application.");
             parser.Setup(x => x.ShowInfo).As('i', "info").WithDescription("Shows information about accounts and directories.");
-            parser.Setup(x => x.SetAccount).As("set-account").WithDescription("Configures a storage account.");
+            parser.Setup(x => x.SetAccountOld).As("set-account").WithDescription("Configures a storage account.");
             parser.Setup(x => x.SetDirectory).As("set-directory").WithDescription("Configures a directory to backup.");
-            parser.Setup(x => x.Silent).As('s', "silent").WithDescription("Runs with the silent mode.");
-            parser.Setup(x => x.Force).As('F', "forced").WithDescription("Runs with the forced mode."); ;
+            parser.Setup(x => x.Forced).As('F', "forced").WithDescription("Runs with the forced mode."); ;
 
             var result = parser.Parse(args);
 
@@ -94,19 +93,19 @@ namespace Bitretsmah.UI.ConsoleApp
 
         private void HandleAccountSet()
         {
-            if (_commands.SetAccount == null) return;
+            if (_commands.SetAccountOld == null) return;
 
-            if (_commands.SetAccount.Count < 1 || _commands.SetAccount.Count > 2)
+            if (_commands.SetAccountOld.Count < 1 || _commands.SetAccountOld.Count > 2)
             {
                 Console.Error.WriteLine("Invalid number of arguments.");
                 return;
             }
 
-            var credential = new NetworkCredential { UserName = _commands.SetAccount[0] };
+            var credential = new NetworkCredential { UserName = _commands.SetAccountOld[0] };
 
-            if (_commands.SetAccount.Count == 2)
+            if (_commands.SetAccountOld.Count == 2)
             {
-                credential.Password = _commands.SetAccount[1];
+                credential.Password = _commands.SetAccountOld[1];
             }
             else
             {
