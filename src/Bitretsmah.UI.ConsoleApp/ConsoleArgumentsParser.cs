@@ -4,12 +4,12 @@ using Fclp;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
-    public interface IConsoleArgumentsParser
+    internal interface IConsoleArgumentsParser
     {
         ConsoleArguments Parse(string[] args);
     }
 
-    public class ConsoleArgumentsParser : IConsoleArgumentsParser
+    internal class ConsoleArgumentsParser : IConsoleArgumentsParser
     {
         public ConsoleArguments Parse(string[] args)
         {

@@ -1,6 +1,6 @@
 ﻿namespace Bitretsmah.UI.ConsoleApp
 {
-    public class ConsoleArguments
+    internal class ConsoleArguments
     {
         /// <summary>
         ///     List all accounts.

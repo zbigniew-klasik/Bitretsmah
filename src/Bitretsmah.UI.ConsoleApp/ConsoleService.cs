@@ -5,7 +5,16 @@ using System.Security;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
-    public class ConsoleService
+    internal interface IConsoleService
+    {
+        void WriteHelp();
+
+        void WriteVersion();
+
+        SecureString ReadPassword();
+    }
+
+    internal class ConsoleService : IConsoleService
     {
         public const string ProgramName = "Bitretsmah";
 

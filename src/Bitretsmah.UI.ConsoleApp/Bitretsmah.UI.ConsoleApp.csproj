@@ -50,6 +50,7 @@
     <Compile Include="ConsoleArgumentsParser.cs" />
     <Compile Include="ConsoleArguments.cs" />
     <Compile Include="ConsoleService.cs" />
+    <Compile Include="Executor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

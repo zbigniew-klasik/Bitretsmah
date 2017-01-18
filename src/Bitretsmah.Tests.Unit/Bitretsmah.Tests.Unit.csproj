@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Assertions.cs" />
     <Compile Include="ConsoleApp\ConsoleArgumentsParserShould.cs" />
+    <Compile Include="ConsoleApp\ExecutorShould.cs" />
     <Compile Include="Core\AccountServiceShould.cs" />
     <Compile Include="Core\BackupServiceShould.cs" />
     <Compile Include="Core\ChangedFilesUploaderShould.cs" />
