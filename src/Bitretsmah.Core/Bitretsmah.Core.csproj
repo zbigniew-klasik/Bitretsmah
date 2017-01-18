@@ -62,6 +62,7 @@
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
     <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
+    <Compile Include="Interfaces\ITargetRepository.cs" />
     <Compile Include="Models\Backup.cs" />
     <Compile Include="Models\BackupProgress.cs" />
     <Compile Include="Models\BackupRequest.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Models\NodeChange.cs" />
     <Compile Include="Models\RemoteFile.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />
+    <Compile Include="Models\Target.cs" />
     <Compile Include="NodeChangesApplier.cs" />
     <Compile Include="NodeChangesFinder.cs" />
     <Compile Include="RemoteFileWarehouse.cs" />
