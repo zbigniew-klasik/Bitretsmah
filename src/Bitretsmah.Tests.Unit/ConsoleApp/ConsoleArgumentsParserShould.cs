@@ -8,11 +8,13 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
     [TestFixture]
     public class ConsoleArgumentsParserShould
     {
-        private ConsoleArguments Parse(string arguments)
+        [TestCase("--accounts", true)]
+        [TestCase("--targets", false)]
+        [TestCase("--accounts --targets", true)]
+        [TestCase("--targets --accounts", true)]
+        public void ParseAccountsArgument(string arguments, bool expectedResult)
         {
-            string[] args = arguments.Split(' ');
-            var parser = new ConsoleArgumentsParser();
-            return parser.Parse(args);
+            Parse(arguments).Accounts.Should().Be(expectedResult);
         }
 
         [TestCase("", null)]
@@ -20,46 +22,6 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         public void ParseBackupArgument(string arguments, string expectedResult)
         {
             Parse(arguments).Backup.Should().Be(expectedResult);
-        }
-
-        [TestCase("", null)]
-        [TestCase("--restore foo", "foo")]
-        public void ParseRestoreArgument(string arguments, string expectedResult)
-        {
-            Parse(arguments).Restore.Should().Be(expectedResult);
-        }
-
-        [TestCase("", null)]
-        [TestCase("--set-account john@snow.org", "john@snow.org")]
-        [TestCase("--set-account john@snow.org --password Pa$$w0rd", "john@snow.org")]
-        public void ParseSetAccountArgument(string arguments, string expectedResult)
-        {
-            Parse(arguments).SetAccount.Should().Be(expectedResult);
-        }
-
-        [TestCase("", null)]
-        [TestCase("--password Pa$$w0rd", "Pa$$w0rd")]
-        [TestCase("--set-account john@snow.org --password Pa$$w0rd", "Pa$$w0rd")]
-        public void ParsePasswordArgument(string arguments, string expectedResult)
-        {
-            Parse(arguments).Password.Should().Be(expectedResult);
-        }
-
-        [TestCase(@"", null)]
-        [TestCase(@"--set-target foo", "foo")]
-        [TestCase(@"--set-target bar --path D:\temp\bar", "bar")]
-        public void ParseSetTargetArgument(string arguments, string expectedResult)
-        {
-            Parse(arguments).SetTarget.Should().Be(expectedResult);
-        }
-
-        [TestCase(@"", null)]
-        [TestCase(@"--path D:\temp\foo", @"D:\temp\foo")]
-        [TestCase(@"--path C:\temp\bar.txt", @"C:\temp\bar.txt")]
-        [TestCase(@"--set-target foo --path D:\something\important", @"D:\something\important")]
-        public void ParsePathArgument(string arguments, string expectedResult)
-        {
-            Parse(arguments).Path.Should().Be(expectedResult);
         }
 
         [TestCase("--forced", true)]
@@ -78,6 +40,55 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         public void ParseHelpArgument(string arguments, bool expectedResult)
         {
             Parse(arguments).Help.Should().Be(expectedResult);
+        }
+
+        [TestCase("", null)]
+        [TestCase("--password Pa$$w0rd", "Pa$$w0rd")]
+        [TestCase("--set-account john@snow.org --password Pa$$w0rd", "Pa$$w0rd")]
+        public void ParsePasswordArgument(string arguments, string expectedResult)
+        {
+            Parse(arguments).Password.Should().Be(expectedResult);
+        }
+
+        [TestCase(@"", null)]
+        [TestCase(@"--path D:\temp\foo", @"D:\temp\foo")]
+        [TestCase(@"--path C:\temp\bar.txt", @"C:\temp\bar.txt")]
+        [TestCase(@"--set-target foo --path D:\something\important", @"D:\something\important")]
+        public void ParsePathArgument(string arguments, string expectedResult)
+        {
+            Parse(arguments).Path.Should().Be(expectedResult);
+        }
+
+        [TestCase("", null)]
+        [TestCase("--restore foo", "foo")]
+        public void ParseRestoreArgument(string arguments, string expectedResult)
+        {
+            Parse(arguments).Restore.Should().Be(expectedResult);
+        }
+
+        [TestCase("", null)]
+        [TestCase("--set-account john@snow.org", "john@snow.org")]
+        [TestCase("--set-account john@snow.org --password Pa$$w0rd", "john@snow.org")]
+        public void ParseSetAccountArgument(string arguments, string expectedResult)
+        {
+            Parse(arguments).SetAccount.Should().Be(expectedResult);
+        }
+
+        [TestCase(@"", null)]
+        [TestCase(@"--set-target foo", "foo")]
+        [TestCase(@"--set-target bar --path D:\temp\bar", "bar")]
+        public void ParseSetTargetArgument(string arguments, string expectedResult)
+        {
+            Parse(arguments).SetTarget.Should().Be(expectedResult);
+        }
+
+        [TestCase("--accounts", false)]
+        [TestCase("--targets", true)]
+        [TestCase("--accounts --targets", true)]
+        [TestCase("--targets --accounts", true)]
+        public void ParseTargetsArgument(string arguments, bool expectedResult)
+        {
+            Parse(arguments).Targets.Should().Be(expectedResult);
         }
 
         [TestCase("--version", true)]
@@ -105,6 +116,13 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         {
             var ex = Assert.Throws<ArgumentException>(() => Parse("--foo"));
             ex.Message.Should().Be("Unknown argument: foo.");
+        }
+
+        private ConsoleArguments Parse(string arguments)
+        {
+            string[] args = arguments.Split(' ');
+            var parser = new ConsoleArgumentsParser();
+            return parser.Parse(args);
         }
     }
 }
