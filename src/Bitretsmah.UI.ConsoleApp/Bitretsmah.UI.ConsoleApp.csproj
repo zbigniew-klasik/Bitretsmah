@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleArgumentsParser.cs" />
     <Compile Include="ConsoleArguments.cs" />
     <Compile Include="ConsoleService.cs" />
     <Compile Include="Program.cs" />
@@ -74,6 +75,7 @@
       <Name>Bitretsmah.Data.System</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
