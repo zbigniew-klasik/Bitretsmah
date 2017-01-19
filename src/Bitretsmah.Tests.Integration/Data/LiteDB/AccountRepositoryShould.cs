@@ -6,9 +6,11 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Net;
 using System.Threading.Tasks;
+using Bitretsmah.Tests.Unit;
 
 namespace Bitretsmah.Tests.Integration.Data.LiteDB
 {
+    [TestFixture]
     public class AccountRepositoryShould
     {
         private IAccountRepository _accountRepository;
@@ -37,8 +39,8 @@ namespace Bitretsmah.Tests.Integration.Data.LiteDB
         {
             var accounts = await _accountRepository.GetAll();
             accounts.Count.Should().Be(2);
-            accounts[0].ShouldBeEquivalentTo(_firstAccount);
-            accounts[1].ShouldBeEquivalentTo(_secondAccount);
+            accounts[0].ShouldSerializeSameAs(_firstAccount);
+            accounts[1].ShouldSerializeSameAs(_secondAccount);
         }
 
         [Test]
@@ -49,10 +51,10 @@ namespace Bitretsmah.Tests.Integration.Data.LiteDB
 
             using (var db = DbFactory.Create())
             {
-                var createdAccount = db.Accounts.FindOne(x => x.Credential.UserName.Equals(newCredential.UserName));
-                createdAccount.Should().NotBeNull();
-                createdAccount.Credential.ShouldBeEquivalentTo(newCredential);
-                createdAccount.Quota.ShouldBeEquivalentTo(new Quota(0, 0));
+                var account = db.Accounts.FindOne(x => x.Credential.UserName.Equals(newCredential.UserName));
+                account.Should().NotBeNull();
+                account.Credential.ShouldSerializeSameAs(newCredential);
+                account.Quota.ShouldSerializeSameAs(new Quota(0, 0));
             }
         }
 
@@ -64,10 +66,10 @@ namespace Bitretsmah.Tests.Integration.Data.LiteDB
 
             using (var db = DbFactory.Create())
             {
-                var createdAccount = db.Accounts.FindOne(x => x.Credential.UserName.Equals(updatedCredential.UserName));
-                createdAccount.Should().NotBeNull();
-                createdAccount.Credential.ShouldBeEquivalentTo(updatedCredential);
-                createdAccount.Quota.ShouldBeEquivalentTo(new Quota(10, 3));
+                var account = db.Accounts.FindOne(x => x.Credential.UserName.Equals(updatedCredential.UserName));
+                account.Should().NotBeNull();
+                account.Credential.ShouldSerializeSameAs(updatedCredential);
+                account.Quota.ShouldSerializeSameAs(new Quota(10, 3));
             }
         }
     }

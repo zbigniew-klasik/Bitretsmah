@@ -19,8 +19,10 @@ namespace Bitretsmah.Data.LiteDB.Internal
         }
 
         public const string AccountsCollectionName = "accounts";
+        public const string TargetsCollectionName = "targets";
 
         public LiteCollection<Account> Accounts => GetCollection<Account>(AccountsCollectionName);
+        public LiteCollection<Target> Targets => GetCollection<Target>(TargetsCollectionName);
 
         private static void Configure()
         {

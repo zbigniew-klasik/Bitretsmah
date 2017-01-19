@@ -30,7 +30,8 @@ namespace Bitretsmah.Core
         public async Task SetTarget(string name, string path)
         {
             await _targetRepository.AddOrUpdate(null);
-            throw new NotImplementedException();
         }
+
+        // TODO: remove target
     }
 }
