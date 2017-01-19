@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Fclp;
+using System;
 using System.Linq;
-using Fclp;
 
 namespace Bitretsmah.UI.ConsoleApp
 {

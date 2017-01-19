@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Bitretsmah.Core;
+﻿using Bitretsmah.Core;
 using Bitretsmah.Core.Exceptions;
+using System;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.UI.ConsoleApp
 {

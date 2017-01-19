@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using Bitretsmah.Core;
+﻿using Bitretsmah.Core;
 using Bitretsmah.Core.Models;
 using Bitretsmah.UI.ConsoleApp;
 using Moq;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Bitretsmah.Tests.Unit.ConsoleApp
 {

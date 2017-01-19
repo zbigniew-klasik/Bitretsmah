@@ -1,7 +1,7 @@
-﻿using System;
-using Bitretsmah.UI.ConsoleApp;
+﻿using Bitretsmah.UI.ConsoleApp;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 
 namespace Bitretsmah.Tests.Unit.ConsoleApp
 {
