@@ -28,7 +28,7 @@ namespace Bitretsmah.Core
 
         public async Task SetTarget(string name, string path)
         {
-            await _targetRepository.AddOrUpdate(null);
+            await _targetRepository.AddOrUpdate(new Target { Name = name, LocalPath = path });
         }
 
         // TODO: remove target

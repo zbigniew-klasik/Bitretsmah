@@ -89,6 +89,7 @@
     <Compile Include="Core\NodesTestHelper.cs" />
     <Compile Include="Core\RemoteFileWarehouseShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetServiceShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
