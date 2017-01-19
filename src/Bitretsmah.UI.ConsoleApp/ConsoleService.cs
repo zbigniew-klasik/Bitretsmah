@@ -1,17 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Security;
+using Bitretsmah.Core.Models;
+using Bitretsmah.Core.Exceptions;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
-    internal interface IConsoleService
+    public interface IConsoleService
     {
         void WriteHelp();
 
         void WriteVersion();
 
         SecureString ReadPassword();
+
+        void TargetSetSuccessfully();
+
+        void ListTargets(IEnumerable<Target> targets);
+
+        void WriteError(BitretsmahException exception);
     }
 
     internal class ConsoleService : IConsoleService
@@ -74,6 +84,33 @@ namespace Bitretsmah.UI.ConsoleApp
             }
             Console.WriteLine();
             return pwd;
+        }
+
+        public void TargetSetSuccessfully()
+        {
+            Console.WriteLine("Target set successfully.");
+        }
+
+        public void ListTargets(IEnumerable<Target> targets)
+        {
+            var targetsList = targets.ToList();
+
+            if (targetsList.Any())
+            {
+                Console.WriteLine("Targets:");
+                targetsList.ForEach(x => Console.WriteLine($"\t{x.Name}\t{x.LocalPath}"));
+            }
+            else
+            {
+                Console.WriteLine("No targets configured.");
+            }
+        }
+
+        public void WriteError(BitretsmahException exception)
+        {
+            // TODO: add custom message for each exception
+
+            Console.WriteLine($"EXCEPTION: {exception.GetType()}: {exception.Message}");
         }
     }
 }
