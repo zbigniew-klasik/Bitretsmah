@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountRepository.cs" />
+    <Compile Include="BackupRepository.cs" />
     <Compile Include="Internal\Db.cs" />
     <Compile Include="Internal\DbFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

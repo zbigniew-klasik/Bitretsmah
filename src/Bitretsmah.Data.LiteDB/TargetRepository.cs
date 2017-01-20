@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bitretsmah.Data.LiteDB
 {
-    internal class TargetRepository : ITargetRepository
+    public class TargetRepository : ITargetRepository
     {
         public Task<List<Target>> GetAll()
         {
