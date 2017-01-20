@@ -17,6 +17,10 @@ namespace Bitretsmah.UI.ConsoleApp
 
         SecureString ReadPassword();
 
+        void AccountSetSuccessfully();
+
+        void ListAccounts(IEnumerable<Account> accounts);
+
         void TargetSetSuccessfully();
 
         void ListTargets(IEnumerable<Target> targets);
@@ -86,9 +90,34 @@ namespace Bitretsmah.UI.ConsoleApp
             return pwd;
         }
 
+        public void AccountSetSuccessfully()
+        {
+            Console.WriteLine("Account configured successfully.");
+        }
+
+        public void ListAccounts(IEnumerable<Account> accounts)
+        {
+            var accountsList = accounts.ToList();
+
+            if (accountsList.Any())
+            {
+                decimal totalQuota = accountsList.Sum(x => x.Quota.Total);
+                decimal usedQuota = accountsList.Sum(x => x.Quota.Used);
+                decimal freeQuota = accountsList.Sum(x => x.Quota.Free);
+
+                Console.WriteLine("Accounts:");
+                accountsList.ForEach(x => Console.WriteLine($"\t{x.Credential.UserName}\t{x.Quota.Free}"));
+                Console.WriteLine($"Quota: {totalQuota}\tUsed: {usedQuota}\tFree: {freeQuota}");
+            }
+            else
+            {
+                Console.WriteLine("No accounts configured.");
+            }
+        }
+
         public void TargetSetSuccessfully()
         {
-            Console.WriteLine("Target set successfully.");
+            Console.WriteLine("Target configured successfully.");
         }
 
         public void ListTargets(IEnumerable<Target> targets)
