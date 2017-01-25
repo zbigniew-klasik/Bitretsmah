@@ -40,9 +40,15 @@ namespace Bitretsmah.UI.ConsoleApp
                 if (arguments.Targets)
                     await ListAllTargets();
             }
-            catch (BitretsmahException exception)
+            catch (BitretsmahException ex)
             {
-                Console.WriteLine(exception);
+                //TODO: log
+                _consoleService.WriteErrorMessage(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                //TODO: log
+                _consoleService.WriteUnexpectedException(ex);
             }
         }
 
@@ -50,6 +56,8 @@ namespace Bitretsmah.UI.ConsoleApp
         {
             if (string.IsNullOrWhiteSpace(username))
             {
+                // TODO: move it to the Service
+
                 //throw new InvalidAccountUsername(name);
             }
 
@@ -69,16 +77,6 @@ namespace Bitretsmah.UI.ConsoleApp
 
         private async Task SetTarget(string name, string path)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new InvalidTargetName(name);
-            }
-
-            if (string.IsNullOrWhiteSpace(path)) // TODO: also check if path exists
-            {
-                throw new InvalidTargetPath(path);
-            }
-
             await _targetService.SetTarget(name, path);
             _consoleService.TargetSetSuccessfully();
         }

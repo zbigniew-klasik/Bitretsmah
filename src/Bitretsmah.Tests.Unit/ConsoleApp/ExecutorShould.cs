@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core;
+﻿using System;
+using Bitretsmah.Core;
 using Bitretsmah.Core.Models;
 using Bitretsmah.UI.ConsoleApp;
 using Moq;
@@ -6,6 +7,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Exceptions;
 using FluentAssertions;
 
 namespace Bitretsmah.Tests.Unit.ConsoleApp
@@ -26,6 +28,8 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _targetServiceMock = new Mock<ITargetService>();
             _executor = new Executor(_accountServiceMock.Object, _consoleServiceMock.Object, _targetServiceMock.Object);
         }
+
+        #region Accounts
 
         [Test]
         public async Task SetAccountWithProvidedPassword()
@@ -94,6 +98,10 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _consoleServiceMock.Verify(x => x.ListAccounts(accounts));
         }
 
+        #endregion Accounts
+
+        #region Targets
+
         [Test]
         public async Task SetTarget()
         {
@@ -125,5 +133,37 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _targetServiceMock.Verify(x => x.GetAll());
             _consoleServiceMock.Verify(x => x.ListTargets(targets));
         }
+
+        #endregion Targets
+
+        #region Exceptions
+
+        [Test]
+        public async Task HandleBitretsmahException()
+        {
+            var ex = new BitretsmahException("expected exception");
+            _targetServiceMock.Setup(x => x.GetAll()).ThrowsAsync(ex);
+
+            var arguments = new ConsoleArguments { Targets = true };
+            await _executor.Execut(arguments);
+
+            // TODO: verify exception is logged
+            _consoleServiceMock.Verify(x => x.WriteErrorMessage("expected exception"), Times.Once);
+        }
+
+        [Test]
+        public async Task HandleUnexpectedException()
+        {
+            var ex = new Exception("unexpected exception");
+            _targetServiceMock.Setup(x => x.GetAll()).ThrowsAsync(ex);
+
+            var arguments = new ConsoleArguments { Targets = true };
+            await _executor.Execut(arguments);
+
+            // TODO: verify exception is logged
+            _consoleServiceMock.Verify(x => x.WriteUnexpectedException(ex), Times.Once);
+        }
+
+        #endregion Exceptions
     }
 }

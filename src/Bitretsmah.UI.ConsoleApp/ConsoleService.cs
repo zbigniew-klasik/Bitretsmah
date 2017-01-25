@@ -25,7 +25,9 @@ namespace Bitretsmah.UI.ConsoleApp
 
         void ListTargets(IEnumerable<Target> targets);
 
-        void WriteError(BitretsmahException exception);
+        void WriteErrorMessage(string message);
+
+        void WriteUnexpectedException(Exception exception);
     }
 
     internal class ConsoleService : IConsoleService
@@ -135,11 +137,20 @@ namespace Bitretsmah.UI.ConsoleApp
             }
         }
 
-        public void WriteError(BitretsmahException exception)
+        public void WriteErrorMessage(string message)
         {
-            // TODO: add custom message for each exception
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(message);
+            Console.ResetColor();
+        }
 
-            Console.WriteLine($"EXCEPTION: {exception.GetType()}: {exception.Message}");
+        public void WriteUnexpectedException(Exception exception)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"UNEXPECTED EXCEPTION:");
+            Console.WriteLine($"\t{exception.GetType()}:\t{exception.Message}");
+            Console.WriteLine($"See program log for details."); // todo: WRITE LOG PATH
+            Console.ResetColor();
         }
     }
 }
