@@ -65,6 +65,7 @@
     <Compile Include="Interfaces\IBackupRepository.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
     <Compile Include="Interfaces\IHashService.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
     <Compile Include="Interfaces\ITargetRepository.cs" />
     <Compile Include="Models\Backup.cs" />

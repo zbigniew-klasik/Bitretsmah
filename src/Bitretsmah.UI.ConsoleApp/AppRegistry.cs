@@ -13,8 +13,9 @@ namespace Bitretsmah.UI.ConsoleApp
         {
             // Bitretsmah.UI.ConsoleApp
             For<IConsoleArgumentsParser>().Use<ConsoleArgumentsParser>();
-            For<IExecutor>().Use<Executor>();
             For<IConsoleService>().Use<ConsoleService>();
+            For<IExecutor>().Use<Executor>();
+            For<ILogger>().Use<Logger>();
 
             // Bitretsmah.Core
             For<IAccountService>().Use<AccountService>();
