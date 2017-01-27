@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core.Interfaces;
+﻿using System;
+using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,10 +16,12 @@ namespace Bitretsmah.Core
 
     public class TargetService : ITargetService
     {
+        private readonly ILocalFilesService _localFilesService;
         private readonly ITargetRepository _targetRepository;
 
-        public TargetService(ITargetRepository targetRepository)
+        public TargetService(ILocalFilesService localFilesService, ITargetRepository targetRepository)
         {
+            _localFilesService = localFilesService;
             _targetRepository = targetRepository;
         }
 
@@ -29,14 +32,19 @@ namespace Bitretsmah.Core
 
         public async Task SetTarget(string name, string path)
         {
-            if (string.IsNullOrWhiteSpace(name)) // TODO: unit tests for that
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new InvalidTargetName(name);
+                throw new EmptyTargetNameException();
             }
 
-            if (string.IsNullOrWhiteSpace(path)) // TODO: also check if path exists
+            if (string.IsNullOrWhiteSpace(path))
             {
-                throw new InvalidTargetPath(path);
+                throw new EmptyTargetPathException();
+            }
+
+            if (!_localFilesService.Exists(path))
+            {
+                throw new InvalidTargetPathException(path);
             }
 
             await _targetRepository.AddOrUpdate(new Target { Name = name, LocalPath = path });

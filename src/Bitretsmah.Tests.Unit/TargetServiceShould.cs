@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core;
+﻿using System;
+using Bitretsmah.Core;
 using Bitretsmah.Core.Exceptions;
 using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
@@ -14,14 +15,16 @@ namespace Bitretsmah.Tests.Unit
     [TestFixture]
     public class TargetServiceShould
     {
+        private Mock<ILocalFilesService> _localFilesService;
         private Mock<ITargetRepository> _targetRepositoryMock;
         private ITargetService _targetService;
 
         [SetUp]
         public void SetUp()
         {
+            _localFilesService = new Mock<ILocalFilesService>();
             _targetRepositoryMock = new Mock<ITargetRepository>();
-            _targetService = new TargetService(_targetRepositoryMock.Object);
+            _targetService = new TargetService(_localFilesService.Object, _targetRepositoryMock.Object);
         }
 
         [Test]
@@ -43,6 +46,8 @@ namespace Bitretsmah.Tests.Unit
             var name = "My Target";
             var path = @"B:\targets\my_target";
 
+            _localFilesService.Setup(x => x.Exists(path)).Returns(true);
+
             Target actualTarget = null;
             _targetRepositoryMock
                 .Setup(x => x.AddOrUpdate(It.IsAny<Target>()))
@@ -55,6 +60,38 @@ namespace Bitretsmah.Tests.Unit
             actualTarget.Should().NotBeNull();
             actualTarget.Name.Should().Be(name);
             actualTarget.LocalPath.Should().Be(path);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void SetTarget_WithEmptyName_ThrowsException(string name)
+        {
+            var path = @"C:\targets\my_target";
+            Assert.That(() => _targetService.SetTarget(name, path), Throws.TypeOf<EmptyTargetNameException>());
+            _targetRepositoryMock.Verify(x => x.AddOrUpdate(It.IsAny<Target>()), Times.Never);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void SetTarget_WithEmptyPath_ThrowsException(string path)
+        {
+            var name = @"My Target";
+            Assert.That(() => _targetService.SetTarget(name, path), Throws.TypeOf<EmptyTargetPathException>());
+            _targetRepositoryMock.Verify(x => x.AddOrUpdate(It.IsAny<Target>()), Times.Never);
+        }
+
+        [Test]
+        public void SetTarget_WithInvalidPath_ThrowsException()
+        {
+            var name = "My Target";
+            var path = @"B:\targets\my_target";
+
+            _localFilesService.Setup(x => x.Exists(path)).Returns(false);
+
+            Assert.That(() => _targetService.SetTarget(name, path), Throws.TypeOf<InvalidTargetPathException>());
+            _targetRepositoryMock.Verify(x => x.AddOrUpdate(It.IsAny<Target>()), Times.Never);
         }
     }
 }

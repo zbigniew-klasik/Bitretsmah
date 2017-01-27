@@ -66,5 +66,11 @@ namespace Bitretsmah.Data.System
         {
             throw new NotImplementedException();
         }
+
+        public bool Exists(string path)
+        {
+            // todo: unittests
+            return new SystemDirectoryInfo(path).Exists || new SystemFileInfo(path).Exists;
+        }
     }
 }

@@ -148,8 +148,10 @@ namespace Bitretsmah.UI.ConsoleApp
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"UNEXPECTED EXCEPTION:");
-            Console.WriteLine($"\t{exception.GetType()}:\t{exception.Message}");
-            Console.WriteLine($"See program log for details."); // todo: WRITE LOG PATH
+            Console.WriteLine($"{exception.GetType()}:\t{exception.Message}");
+            Console.WriteLine();
+            Console.WriteLine($"SEE PROGRAM LOG FOR DETAILS:");
+            Console.WriteLine(); // todo: WRITE LOG PATH
             Console.ResetColor();
         }
     }

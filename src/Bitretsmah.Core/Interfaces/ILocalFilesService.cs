@@ -8,5 +8,7 @@ namespace Bitretsmah.Core.Interfaces
         Node GetNodeStructure(string nodePath);
 
         Stream ReadFileStream(string filePath);
+
+        bool Exists(string path);
     }
 }
