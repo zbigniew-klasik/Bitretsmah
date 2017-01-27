@@ -50,6 +50,31 @@ namespace Bitretsmah.Tests.Unit.Core
             _accountRepositoryMock.Verify(x => x.AddOrUpdate(credential), Times.Once);
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void ThrowExceptionForEmptyUsername(string username)
+        {
+            var credential = new NetworkCredential(username, "Pa$$w0rd");
+
+            Assert.That(() => _accountService.SetCredential(credential), Throws.TypeOf<EmptyUserNameException>());
+
+            _credentialVerifierMock.Verify(x => x.Verify(credential), Times.Never);
+            _accountRepositoryMock.Verify(x => x.AddOrUpdate(It.IsAny<NetworkCredential>()), Times.Never);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void ThrowExceptionForEmptyPassword(string password)
+        {
+            var credential = new NetworkCredential("user@server.com", password);
+
+            Assert.That(() => _accountService.SetCredential(credential), Throws.TypeOf<EmptyPasswordException>());
+
+            _credentialVerifierMock.Verify(x => x.Verify(credential), Times.Never);
+            _accountRepositoryMock.Verify(x => x.AddOrUpdate(It.IsAny<NetworkCredential>()), Times.Never);
+        }
+
         [Test]
         public void ThrowExceptionForIncorrectCredential()
         {

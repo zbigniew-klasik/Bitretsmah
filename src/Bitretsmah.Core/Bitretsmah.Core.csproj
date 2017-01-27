@@ -53,7 +53,9 @@
     <Compile Include="BackupService.cs" />
     <Compile Include="ChangedFilesUploader.cs" />
     <Compile Include="Exceptions\BitretsmahException.cs" />
+    <Compile Include="Exceptions\EmptyPasswordException.cs" />
     <Compile Include="Exceptions\EmptyTargetPathException.cs" />
+    <Compile Include="Exceptions\EmptyUserNameException.cs" />
     <Compile Include="Exceptions\InvalidCredentialException.cs" />
     <Compile Include="Exceptions\InvalidTargetPathException.cs" />
     <Compile Include="Exceptions\EmptyTargetNameException.cs" />

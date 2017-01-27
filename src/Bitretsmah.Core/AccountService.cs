@@ -32,13 +32,23 @@ namespace Bitretsmah.Core
 
         public async Task SetCredential(NetworkCredential credential)
         {
+            if (string.IsNullOrWhiteSpace(credential.UserName))
+            {
+                throw new EmptyUserNameException();
+            }
+
+            if (string.IsNullOrEmpty(credential.Password))
+            {
+                throw new EmptyPasswordException();
+            }
+
             if (await _credentialVerifier.Verify(credential))
             {
                 await _accountRepository.AddOrUpdate(credential);
             }
             else
             {
-                throw new InvalidCredentialException();
+                throw new InvalidCredentialException(credential.UserName);
             }
         }
     }

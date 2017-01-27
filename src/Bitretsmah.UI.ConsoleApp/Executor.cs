@@ -54,13 +54,6 @@ namespace Bitretsmah.UI.ConsoleApp
 
         private async Task SetAccount(string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                // TODO: move it to the Service
-
-                //throw new InvalidAccountUsername(name);
-            }
-
             var credential = string.IsNullOrWhiteSpace(password)
                 ? new NetworkCredential(username, _consoleService.ReadPassword())
                 : new NetworkCredential(username, password);

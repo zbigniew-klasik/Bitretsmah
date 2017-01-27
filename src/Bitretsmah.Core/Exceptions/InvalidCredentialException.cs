@@ -2,13 +2,8 @@
 {
     public class InvalidCredentialException : BitretsmahException
     {
-        public InvalidCredentialException()
-            : base()
-        {
-        }
-
-        public InvalidCredentialException(string message)
-            : base(message)
+        public InvalidCredentialException(string username)
+            : base($"Cannot log in as '{username}'. Invalid user name or password.")
         {
         }
     }
