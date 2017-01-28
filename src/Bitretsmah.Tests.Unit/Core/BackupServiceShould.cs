@@ -15,12 +15,16 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public async Task CallAllServicesWithProperArguments()
         {
+            var targetName = @"Test Target name";
             var localPath = @"C:\Temp\Directory for backup";
+            var target = new Target { Name = targetName, LocalPath = localPath };
+            var targetServiceMock = new Mock<ITargetService>();
+            targetServiceMock.Setup(x => x.GetByName(targetName)).ReturnsAsync(target);
+
             var currentStructure = new Directory();
             var localFilesServiceMock = new Mock<ILocalFilesService>();
             localFilesServiceMock.Setup(x => x.GetNodeStructure(localPath)).Returns(currentStructure);
 
-            var targetName = @"Test Target name";
             var previousStructure = new Directory();
             var historyServiceMock = new Mock<IHistoryService>();
             historyServiceMock.Setup(x => x.GetLastStructure(targetName)).ReturnsAsync(previousStructure);
@@ -34,7 +38,6 @@ namespace Bitretsmah.Tests.Unit.Core
             dateTimeServiceMock.SetupGet(x => x.Now).Returns(now);
 
             var hashServiceMock = new Mock<IHashService>();
-            var remoteFileWarehouseFactoryMock = new Mock<IRemoteFileWarehouseFactory>();
             var changedFilesUploaderMock = new Mock<IChangedFilesUploader>();
 
             Backup savedBackup = null;
@@ -51,12 +54,12 @@ namespace Bitretsmah.Tests.Unit.Core
                 hashServiceMock.Object,
                 historyServiceMock.Object,
                 localFilesServiceMock.Object,
-                nodeChangesFinderMock.Object);
+                nodeChangesFinderMock.Object,
+                targetServiceMock.Object);
 
             var request = new BackupRequest
             {
-                Target = targetName,
-                LocalPath = localPath,
+                TargetName = targetName,
                 ComputeHashForEachFile = false,
                 Progress = new Progress<BackupProgress>()
             };

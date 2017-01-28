@@ -8,6 +8,8 @@ namespace Bitretsmah.Core.Interfaces
     {
         Task<List<Target>> GetAll();
 
+        Task<Target> GetByName(string name);
+
         Task AddOrUpdate(Target target);
     }
 }

@@ -11,6 +11,8 @@ namespace Bitretsmah.Core
     {
         Task<IEnumerable<Target>> GetAll();
 
+        Task<Target> GetByName(string name);
+
         Task SetTarget(string name, string path);
     }
 
@@ -28,6 +30,23 @@ namespace Bitretsmah.Core
         public async Task<IEnumerable<Target>> GetAll()
         {
             return await _targetRepository.GetAll();
+        }
+
+        public async Task<Target> GetByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new EmptyTargetNameException();
+            }
+
+            var target = await _targetRepository.GetByName(name);
+
+            if (target == null)
+            {
+                throw new UnknownTargetException(name);
+            }
+
+            return target;
         }
 
         public async Task SetTarget(string name, string path)

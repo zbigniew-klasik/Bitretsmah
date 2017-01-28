@@ -41,6 +41,39 @@ namespace Bitretsmah.Tests.Unit
         }
 
         [Test]
+        public async Task GetByName()
+        {
+            var name = "My Target";
+            var target = new Target { Name = name };
+
+            _targetRepositoryMock.Setup(x => x.GetByName(name)).ReturnsAsync(target);
+
+            var result = await _targetService.GetByName(name);
+
+            result.Should().Be(target);
+            _targetRepositoryMock.Verify(x => x.GetByName(name), Times.Once);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void GetByName_ForEmptyName_ThrowsException(string name)
+        {
+            Assert.That(() => _targetService.GetByName(name), Throws.TypeOf<EmptyTargetNameException>());
+            _targetRepositoryMock.Verify(x => x.GetByName(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void GetByName_ForUnknownName_ThrowsException()
+        {
+            var name = "My Target";
+            _targetRepositoryMock.Setup(x => x.GetByName(name)).Returns(Task.FromResult<Target>(null));
+
+            Assert.That(() => _targetService.GetByName(name), Throws.TypeOf<UnknownTargetException>());
+            _targetRepositoryMock.Verify(x => x.GetByName(name), Times.Once);
+        }
+
+        [Test]
         public async Task SetTarget()
         {
             var name = "My Target";

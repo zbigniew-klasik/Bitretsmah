@@ -20,8 +20,9 @@ namespace Bitretsmah.Core
         private readonly IHistoryService _historyService;
         private readonly ILocalFilesService _localFilesService;
         private readonly INodeChangesFinder _nodeChangesFinder;
+        private readonly ITargetService _targetService;
 
-        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder)
+        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, ITargetService targetService)
         {
             _backupRepository = backupRepository;
             _changedFilesUploader = changedFilesUploader;
@@ -30,22 +31,24 @@ namespace Bitretsmah.Core
             _historyService = historyService;
             _localFilesService = localFilesService;
             _nodeChangesFinder = nodeChangesFinder;
+            _targetService = targetService;
         }
 
         public async Task Backup(BackupRequest request)
         {
             EnsureArg.IsNotNull(request, nameof(request));
-            EnsureArg.IsNotNullOrWhiteSpace(request.Target, nameof(request.Target));
-            EnsureArg.IsNotNullOrWhiteSpace(request.LocalPath, nameof(request.LocalPath));
+            EnsureArg.IsNotNullOrWhiteSpace(request.TargetName, nameof(request.TargetName));
 
-            var currentStructure = _localFilesService.GetNodeStructure(request.LocalPath);
+            var target = await _targetService.GetByName(request.TargetName);
+
+            var currentStructure = _localFilesService.GetNodeStructure(target.LocalPath);
 
             if (request.ComputeHashForEachFile)
             {
                 await ComputeHashesForAllFiles(currentStructure, request.Progress);
             }
 
-            var previousStructure = await _historyService.GetLastStructure(request.Target);
+            var previousStructure = await _historyService.GetLastStructure(request.TargetName);
 
             var structureChange = _nodeChangesFinder.Find(previousStructure, currentStructure);
 
@@ -71,7 +74,7 @@ namespace Bitretsmah.Core
         {
             var backup = new Backup
             {
-                Target = request.Target,
+                Target = request.TargetName,
                 StructureChange = change,
                 CreationTime = _dateTimeService.Now
             };

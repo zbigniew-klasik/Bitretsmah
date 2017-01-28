@@ -43,6 +43,20 @@ namespace Bitretsmah.Tests.Integration.Data.LiteDB
         }
 
         [Test]
+        public async Task GetByName()
+        {
+            var target = await _targetRepository.GetByName("My Target 2");
+            target.ShouldSerializeSameAs(_secondTarget);
+        }
+
+        [Test]
+        public async Task GetByName_ForUnknownName_ReturnsNull()
+        {
+            var target = await _targetRepository.GetByName("My Target 3");
+            target.Should().BeNull();
+        }
+
+        [Test]
         public async Task AddNewTarget()
         {
             var newTarget = new Target { Name = "My Target 3", LocalPath = @"C:\folder_3" };

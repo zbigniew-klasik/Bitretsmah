@@ -60,6 +60,7 @@
     <Compile Include="Exceptions\InvalidTargetPathException.cs" />
     <Compile Include="Exceptions\EmptyTargetNameException.cs" />
     <Compile Include="Exceptions\UnknownStoreException.cs" />
+    <Compile Include="Exceptions\UnknownTargetException.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HistoryService.cs" />
     <Compile Include="Interfaces\IBackupRepository.cs" />

@@ -20,6 +20,17 @@ namespace Bitretsmah.Data.LiteDB
             });
         }
 
+        public Task<Target> GetByName(string name)
+        {
+            return Task.Run(() =>
+            {
+                using (var db = DbFactory.Create())
+                {
+                    return db.Targets.FindOne(x => x.Name.Equals(name));
+                }
+            });
+        }
+
         public Task AddOrUpdate(Target target)
         {
             return Task.Run(() =>
