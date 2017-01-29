@@ -55,8 +55,6 @@ namespace Bitretsmah.Core
             await _changedFilesUploader.Upload(structureChange, request.Progress);
 
             await SaveBackup(request, structureChange);
-
-            return;
         }
 
         private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
@@ -74,7 +72,7 @@ namespace Bitretsmah.Core
         {
             var backup = new Backup
             {
-                Target = request.TargetName,
+                TargetName = request.TargetName,
                 StructureChange = change,
                 CreationTime = _dateTimeService.Now
             };

@@ -74,7 +74,7 @@ namespace Bitretsmah.Tests.Unit.Core
             backupRepositoryMock.Verify(x => x.Add(It.IsAny<Backup>()), Times.Once);
 
             savedBackup.Should().NotBeNull();
-            savedBackup.Target.Should().Be(targetName);
+            savedBackup.TargetName.Should().Be(targetName);
             savedBackup.StructureChange.Should().Be(structureChange);
             savedBackup.CreationTime.Should().Be(now);
         }

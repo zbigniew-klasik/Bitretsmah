@@ -6,7 +6,7 @@ namespace Bitretsmah.Core.Interfaces
 {
     public interface IBackupRepository
     {
-        Task<IEnumerable<Backup>> GetAllForTarget(string target);
+        Task<List<Backup>> GetAllForTarget(string targetName);
 
         Task Add(Backup backup);
     }

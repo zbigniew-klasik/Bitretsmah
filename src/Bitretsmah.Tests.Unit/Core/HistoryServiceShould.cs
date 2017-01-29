@@ -20,9 +20,9 @@ namespace Bitretsmah.Tests.Unit.Core
             var target = "Test Target";
             var backups = new List<Backup>()
             {
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-3), StructureChange = new Directory { Name = "Temp" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-2), StructureChange = new Directory { Name = "Temp" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-1), StructureChange = new Directory { Name = "Temp" }, Target = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-3), StructureChange = new Directory { Name = "Temp" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-2), StructureChange = new Directory { Name = "Temp" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-1), StructureChange = new Directory { Name = "Temp" }, TargetName = target },
             };
 
             var expectedLastStructure = new Directory { Name = "Temp" };
@@ -48,12 +48,12 @@ namespace Bitretsmah.Tests.Unit.Core
             var target = "Test Target";
             var backups = new List<Backup>()
             {
-                new Backup() { CreationTime = DateTimeOffset.Now.AddMinutes(-1), StructureChange = new Directory { Name = "F" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-4), StructureChange = new Directory { Name = "A" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-2), StructureChange = new Directory { Name = "C" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddHours(-1), StructureChange = new Directory { Name = "E" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-1), StructureChange = new Directory { Name = "D" }, Target = target },
-                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-3), StructureChange = new Directory { Name = "B" }, Target = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddMinutes(-1), StructureChange = new Directory { Name = "F" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-4), StructureChange = new Directory { Name = "A" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-2), StructureChange = new Directory { Name = "C" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddHours(-1), StructureChange = new Directory { Name = "E" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-1), StructureChange = new Directory { Name = "D" }, TargetName = target },
+                new Backup() { CreationTime = DateTimeOffset.Now.AddDays(-3), StructureChange = new Directory { Name = "B" }, TargetName = target },
             };
 
             var lastStructure = new Directory { Name = "Temp" };
