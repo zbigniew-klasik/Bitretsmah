@@ -87,6 +87,7 @@
     <Compile Include="Core\NodeChangesApplierShould.cs" />
     <Compile Include="Core\NodeChangesFinderShould.cs" />
     <Compile Include="Core\NodesTestHelper.cs" />
+    <Compile Include="Core\RemoteFileWarehouseFactoryShould.cs" />
     <Compile Include="Core\RemoteFileWarehouseShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TargetServiceShould.cs" />

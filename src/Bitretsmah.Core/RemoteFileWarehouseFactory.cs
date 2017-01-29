@@ -1,4 +1,5 @@
 ﻿using System;
+using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.Core
 {
@@ -9,9 +10,16 @@ namespace Bitretsmah.Core
 
     public class RemoteFileWarehouseFactory : IRemoteFileWarehouseFactory
     {
+        private readonly IRemoteFileStoreFactory _remoteFileStoreFactory;
+
+        public RemoteFileWarehouseFactory(IRemoteFileStoreFactory remoteFileStoreFactory)
+        {
+            _remoteFileStoreFactory = remoteFileStoreFactory;
+        }
+
         public IRemoteFileWarehouse Create()
         {
-            throw new NotImplementedException();
+            return new RemoteFileWarehouse(_remoteFileStoreFactory);
         }
     }
 }
