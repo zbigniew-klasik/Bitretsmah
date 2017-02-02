@@ -32,6 +32,36 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _executor = new Executor(_accountServiceMock.Object, _consoleServiceMock.Object, _loggerMock.Object, _targetServiceMock.Object);
         }
 
+        #region Help & Version
+
+        [Test]
+        public async Task WritesHelp()
+        {
+            var arguments = new ConsoleArguments
+            {
+                Help = true
+            };
+
+            await _executor.Execut(arguments);
+
+            _consoleServiceMock.Verify(x => x.WriteHelp());
+        }
+
+        [Test]
+        public async Task WritesVersion()
+        {
+            var arguments = new ConsoleArguments
+            {
+                Version = true
+            };
+
+            await _executor.Execut(arguments);
+
+            _consoleServiceMock.Verify(x => x.WriteVersion());
+        }
+
+        #endregion
+
         #region Accounts
 
         [Test]

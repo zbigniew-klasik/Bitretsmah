@@ -31,17 +31,41 @@ namespace Bitretsmah.UI.ConsoleApp
         {
             try
             {
+                if (arguments.Help)
+                {
+                    _consoleService.WriteHelp();
+                    return;
+                }
+
+                if (arguments.Version)
+                {
+                    _consoleService.WriteVersion();
+                    return;
+                }
+
                 if (arguments.SetAccount != null)
+                {
                     await SetAccount(arguments.SetAccount, arguments.Password);
+                    return;
+                }
 
                 if (arguments.Accounts)
+                {
                     await ListAllAccounts();
+                    return;
+                }
 
                 if (arguments.SetTarget != null)
+                {
                     await SetTarget(arguments.SetTarget, arguments.Path);
+                    return;
+                }
 
                 if (arguments.Targets)
+                {
                     await ListAllTargets();
+                    return;
+                }
             }
             catch (BitretsmahException ex)
             {
