@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Bitretsmah.Core.Exceptions;
+using Bitretsmah.Core.Interfaces;
 using FluentAssertions;
 
 namespace Bitretsmah.Tests.Unit.ConsoleApp
@@ -17,6 +18,7 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
     {
         private Mock<IAccountService> _accountServiceMock;
         private Mock<IConsoleService> _consoleServiceMock;
+        private Mock<ILogger> _loggerMock;
         private Mock<ITargetService> _targetServiceMock;
         private IExecutor _executor;
 
@@ -25,8 +27,9 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         {
             _accountServiceMock = new Mock<IAccountService>();
             _consoleServiceMock = new Mock<IConsoleService>();
+            _loggerMock = new Mock<ILogger>();
             _targetServiceMock = new Mock<ITargetService>();
-            _executor = new Executor(_accountServiceMock.Object, _consoleServiceMock.Object, _targetServiceMock.Object);
+            _executor = new Executor(_accountServiceMock.Object, _consoleServiceMock.Object, _loggerMock.Object, _targetServiceMock.Object);
         }
 
         #region Accounts
@@ -147,7 +150,7 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             var arguments = new ConsoleArguments { Targets = true };
             await _executor.Execut(arguments);
 
-            // TODO: verify exception is logged
+            _loggerMock.Verify(x => x.Warn(ex));
             _consoleServiceMock.Verify(x => x.WriteErrorMessage("expected exception"), Times.Once);
         }
 
@@ -160,7 +163,7 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             var arguments = new ConsoleArguments { Targets = true };
             await _executor.Execut(arguments);
 
-            // TODO: verify exception is logged
+            _loggerMock.Verify(x => x.Error(ex));
             _consoleServiceMock.Verify(x => x.WriteUnexpectedException(ex), Times.Once);
         }
 

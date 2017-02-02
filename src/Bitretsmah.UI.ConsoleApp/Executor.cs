@@ -3,6 +3,7 @@ using Bitretsmah.Core.Exceptions;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
@@ -15,12 +16,14 @@ namespace Bitretsmah.UI.ConsoleApp
     {
         private readonly IAccountService _accountService;
         private readonly IConsoleService _consoleService;
+        private readonly ILogger _logger;
         private readonly ITargetService _targetService;
 
-        public Executor(IAccountService accountService, IConsoleService consoleService, ITargetService targetService)
+        public Executor(IAccountService accountService, IConsoleService consoleService, ILogger logger, ITargetService targetService)
         {
             _accountService = accountService;
             _consoleService = consoleService;
+            _logger = logger;
             _targetService = targetService;
         }
 
@@ -42,12 +45,12 @@ namespace Bitretsmah.UI.ConsoleApp
             }
             catch (BitretsmahException ex)
             {
-                //TODO: log
+                _logger.Warn(ex);
                 _consoleService.WriteErrorMessage(ex.Message);
             }
             catch (Exception ex)
             {
-                //TODO: log
+                _logger.Error(ex);
                 _consoleService.WriteUnexpectedException(ex);
             }
         }
