@@ -76,6 +76,7 @@
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\NodeChange.cs" />
     <Compile Include="Models\RemoteFile.cs" />
+    <Compile Include="Models\RestoreRequest.cs" />
     <Compile Include="Models\StoreSelectionMethod.cs" />
     <Compile Include="Models\Target.cs" />
     <Compile Include="NodeChangesApplier.cs" />

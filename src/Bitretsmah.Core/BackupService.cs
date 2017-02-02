@@ -36,25 +36,32 @@ namespace Bitretsmah.Core
 
         public async Task Backup(BackupRequest request)
         {
-            EnsureArg.IsNotNull(request, nameof(request));
-            EnsureArg.IsNotNullOrWhiteSpace(request.TargetName, nameof(request.TargetName));
+            var currentStructure = await GetCurrentStructure(request.TargetName, request.ComputeHashForEachFile, request.Progress);
+            var previousStructure = await _historyService.GetLastStructure(request.TargetName);
+            var structureChange = _nodeChangesFinder.Find(previousStructure, currentStructure);
+            await _changedFilesUploader.Upload(structureChange, request.Progress);
+            await SaveBackup(request, structureChange);
+        }
 
-            var target = await _targetService.GetByName(request.TargetName);
+        public async Task Restore(RestoreRequest request)
+        {
+            var currentStructure = await GetCurrentStructure(request.TargetName, request.ComputeHashForEachFile, request.Progress);
+            //targetStructure
+            //structureChange
+            //downloadChanges
+        }
 
+        private async Task<Node> GetCurrentStructure(string targetName, bool computeHashForEachFile, IProgress<BackupProgress> progress)
+        {
+            var target = await _targetService.GetByName(targetName);
             var currentStructure = _localFilesService.GetNodeStructure(target.LocalPath);
 
-            if (request.ComputeHashForEachFile)
+            if (computeHashForEachFile)
             {
-                await ComputeHashesForAllFiles(currentStructure, request.Progress);
+                await ComputeHashesForAllFiles(currentStructure, progress);
             }
 
-            var previousStructure = await _historyService.GetLastStructure(request.TargetName);
-
-            var structureChange = _nodeChangesFinder.Find(previousStructure, currentStructure);
-
-            await _changedFilesUploader.Upload(structureChange, request.Progress);
-
-            await SaveBackup(request, structureChange);
+            return currentStructure;
         }
 
         private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
