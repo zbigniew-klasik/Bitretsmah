@@ -81,7 +81,6 @@ namespace Bitretsmah.Data.System
 
         public bool Exists(string path)
         {
-            // todo: unittests
             return new SystemDirectoryInfo(path).Exists || new SystemFileInfo(path).Exists;
         }
     }

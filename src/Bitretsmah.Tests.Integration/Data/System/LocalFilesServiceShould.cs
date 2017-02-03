@@ -164,6 +164,20 @@ namespace Bitretsmah.Tests.Integration.Data.System
             actualFileContent.Should().Be(expectedFileContent);
         }
 
+        [Test]
+        public void EsistsShouldReturnCorrectValues()
+        {
+            ILocalFilesService service = new LocalFilesService();
+
+            service.Exists(_d0Path).Should().BeTrue();
+            service.Exists(_d1Path).Should().BeTrue();
+            service.Exists(_d2Path).Should().BeTrue();
+            service.Exists(_f1Path).Should().BeTrue();
+            service.Exists(_f2Path).Should().BeTrue();
+
+            service.Exists(Guid.NewGuid().ToString()).Should().BeFalse();
+        }
+
         [TearDown]
         public void TearDown()
         {
