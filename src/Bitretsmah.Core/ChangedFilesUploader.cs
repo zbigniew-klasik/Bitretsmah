@@ -74,7 +74,7 @@ namespace Bitretsmah.Core
                                         new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, uploadPercenteg, file)))
                                 );
 
-                            await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);
+                            file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress); // TODO: save the uploaded ID !!!
                         }
 
                         processedFilesNumber++;

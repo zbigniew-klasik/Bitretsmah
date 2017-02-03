@@ -1,5 +1,8 @@
-﻿namespace Bitretsmah.Core.Models
+﻿using System;
+
+namespace Bitretsmah.Core.Models
 {
+    [Serializable]
     public class RemoteId
     {
         public RemoteId()

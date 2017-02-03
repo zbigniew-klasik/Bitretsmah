@@ -17,7 +17,7 @@
         public BackupProgress(string errorMessage)
         {
             State = BackupState.Error;
-            ErrorMessage = ErrorMessage;
+            ErrorMessage = errorMessage;
         }
 
         public enum BackupState
