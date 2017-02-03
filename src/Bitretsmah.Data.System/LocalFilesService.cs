@@ -65,12 +65,18 @@ namespace Bitretsmah.Data.System
         public Stream ReadFileStream(string filePath)
         {
             var fileInfo = new SystemFileInfo(filePath);
-            return fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            return fileInfo.OpenRead();
         }
 
         public void WriteFileStream(string filePath, Stream stream)
         {
-            throw new NotImplementedException();
+            var fileInfo = new SystemFileInfo(filePath);
+            using (var writeStream = fileInfo.OpenWrite())
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.CopyTo(writeStream);
+                writeStream.Close();
+            }
         }
 
         public bool Exists(string path)

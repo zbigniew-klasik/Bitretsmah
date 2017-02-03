@@ -9,6 +9,8 @@ namespace Bitretsmah.Core.Interfaces
 
         Stream ReadFileStream(string filePath);
 
+        void WriteFileStream(string filePath, Stream stream);
+
         bool Exists(string path);
     }
 }

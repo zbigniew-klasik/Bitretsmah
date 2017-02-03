@@ -126,6 +126,44 @@ namespace Bitretsmah.Tests.Integration.Data.System
             Assert.Throws<FileNotFoundException>(() => service.ReadFileStream(fileName));
         }
 
+        [Test]
+        public void WriteFileStreamToNewFile()
+        {
+            var fileName = Guid.NewGuid().ToString();
+            var expectedFileContent = Guid.NewGuid().ToString();
+            ILocalFilesService service = new LocalFilesService();
+
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(expectedFileContent);
+                writer.Flush();
+                service.WriteFileStream(fileName, stream);
+            }
+
+            var actualFileContent = SystemFile.ReadAllText(fileName);
+            actualFileContent.Should().Be(expectedFileContent);
+            SystemFile.Delete(fileName);
+        }
+
+        [Test]
+        public void WriteFileStreamToExistingFile()
+        {
+            var expectedFileContent = Guid.NewGuid().ToString();
+            ILocalFilesService service = new LocalFilesService();
+
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(expectedFileContent);
+                writer.Flush();
+                service.WriteFileStream(_f2Path, stream);
+            }
+
+            var actualFileContent = SystemFile.ReadAllText(_f2Path);
+            actualFileContent.Should().Be(expectedFileContent);
+        }
+
         [TearDown]
         public void TearDown()
         {
