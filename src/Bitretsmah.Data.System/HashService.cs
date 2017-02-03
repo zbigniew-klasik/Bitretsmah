@@ -9,13 +9,7 @@ namespace Bitretsmah.Data.System
     {
         public string ComputeFileHash(string filePath)
         {
-            var file = new FileInfo(filePath);
-            if (file.Exists) return ComputeFileHash(file);
-            throw new FileNotFoundException();
-        }
-
-        internal string ComputeFileHash(FileInfo fileInfo)
-        {
+            var fileInfo = new FileInfo(filePath);
             using (var stream = fileInfo.Open(FileMode.Open))
             {
                 stream.Position = 0;

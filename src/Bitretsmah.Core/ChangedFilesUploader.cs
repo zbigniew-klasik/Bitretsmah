@@ -66,15 +66,16 @@ namespace Bitretsmah.Core
                                 new BackupProgress(
                                     new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, 0, file)));
 
-                            var stream = _localFilesService.ReadFileStream(file.AbsolutePath);
+                            using (var stream = _localFilesService.ReadFileStream(file.AbsolutePath))
+                            {
+                                var uploadProgress = new Progress<double>(uploadPercenteg =>
+                                    progress.Report(
+                                        new BackupProgress(
+                                            new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, uploadPercenteg, file)))
+                                    );
 
-                            var uploadProgress = new Progress<double>(uploadPercenteg =>
-                                progress.Report(
-                                    new BackupProgress(
-                                        new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, uploadPercenteg, file)))
-                                );
-
-                            file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress); // TODO: save the uploaded ID !!!
+                                file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress); // TODO: save the uploaded ID !!!
+                            }
                         }
 
                         processedFilesNumber++;

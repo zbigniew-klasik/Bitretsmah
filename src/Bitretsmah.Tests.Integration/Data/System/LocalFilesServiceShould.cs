@@ -5,6 +5,9 @@ using Bitretsmah.Tests.Unit;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.IO;
+using Directory = Bitretsmah.Core.Models.Directory;
+using File = Bitretsmah.Core.Models.File;
 using SystemDirectory = System.IO.Directory;
 using SystemFile = System.IO.File;
 using SystemPath = System.IO.Path;
@@ -100,6 +103,27 @@ namespace Bitretsmah.Tests.Integration.Data.System
 
             actualNodeStructure.ShouldBeEquivalentTo(d0);
             actualNodeStructure.ShouldSerializeSameAs(d0);
+        }
+
+        [Test]
+        public void ReadFileStream()
+        {
+            ILocalFilesService service = new LocalFilesService();
+
+            using (var stream = service.ReadFileStream(_f1Path))
+            using (var reader = new StreamReader(stream))
+            {
+                var content = reader.ReadToEnd();
+                content.Should().Be("text");
+            }
+        }
+
+        [Test]
+        public void ThrowExceptionForReadingNotExistingFile()
+        {
+            var fileName = Guid.NewGuid().ToString();
+            ILocalFilesService service = new LocalFilesService();
+            Assert.Throws<FileNotFoundException>(() => service.ReadFileStream(fileName));
         }
 
         [TearDown]

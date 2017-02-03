@@ -21,7 +21,16 @@ namespace Bitretsmah.Tests.Integration.Data.System
             File.WriteAllText(fileName, fileContent);
             IHashService service = new HashService();
             var actualHash = service.ComputeFileHash(fileName);
+            File.Delete(fileName);
             actualHash.Should().Be(expectedHash);
+        }
+
+        [Test]
+        public void ThrowExceptionForNotExistingFile()
+        {
+            var fileName = Guid.NewGuid().ToString();
+            IHashService service = new HashService();
+            Assert.Throws<FileNotFoundException>(() => service.ComputeFileHash(fileName));
         }
     }
 }

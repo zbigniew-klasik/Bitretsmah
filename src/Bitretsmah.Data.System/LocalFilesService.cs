@@ -64,6 +64,12 @@ namespace Bitretsmah.Data.System
 
         public Stream ReadFileStream(string filePath)
         {
+            var fileInfo = new SystemFileInfo(filePath);
+            return fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+        }
+
+        public void WriteFileStream(string filePath, Stream stream)
+        {
             throw new NotImplementedException();
         }
 
