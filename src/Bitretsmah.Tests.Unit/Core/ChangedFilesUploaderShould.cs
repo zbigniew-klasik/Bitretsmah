@@ -109,5 +109,23 @@ namespace Bitretsmah.Tests.Unit.Core
             _remoteFileWarehouseMock.Verify(x => x.UploadFile(fileStream, "[F7031B995F0F2E9CED6D62156F3DEB756ADB7E1E]_file_not_yet_uploaded.txt", It.IsAny<Progress<double>>()), Times.Once);
             fileNotYetUploaded.RemoteId.ShouldSerializeSameAs(remoteId);
         }
+
+        [Test]
+        public async Task ComputeMissingHashAndUseItInUploadedFileName()
+        {
+            var fileStream = new MemoryStream();
+            _localFilesServiceMock.Setup(x => x.ReadFileStream(@"C:\Temp\file.txt")).Returns(fileStream);
+
+            _hashServiceMock.Setup(x => x.ComputeFileHash(@"C:\Temp\file.txt")).Returns("F7031B995F0F2E9CED6D62156F3DEB756ADB7E1E");
+
+            _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(new List<RemoteFile>());
+
+            var fileWithEmptyHash = CreateFile("file.txt", NodeState.Modified, null);
+            var filesStructureChange = CreateDirectory("root", NodeState.Modified, fileWithEmptyHash);
+
+            await _changedFilesUploader.Upload(filesStructureChange, new Progress<BackupProgress>());
+
+            _remoteFileWarehouseMock.Verify(x => x.UploadFile(fileStream, "[F7031B995F0F2E9CED6D62156F3DEB756ADB7E1E]_file.txt", It.IsAny<Progress<double>>()), Times.Once);
+        }
     }
 }

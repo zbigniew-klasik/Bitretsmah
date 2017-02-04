@@ -55,7 +55,7 @@ namespace Bitretsmah.Core
                                 new BackupProgress(
                                     new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, file)));
 
-                            _hashService.ComputeFileHash(file.AbsolutePath);
+                            file.Hash = _hashService.ComputeFileHash(file.AbsolutePath);
                         }
 
                         if (uploadedFilesHashes.All(x => x != file.Hash))
@@ -72,7 +72,6 @@ namespace Bitretsmah.Core
                                             new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, uploadPercenteg, file)))
                                     );
 
-                                // TODO: validate file.Hash is not null // AND IT IS NOW !!!
                                 file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);
                             }
                         }
