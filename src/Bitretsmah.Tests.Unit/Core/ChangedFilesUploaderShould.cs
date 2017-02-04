@@ -31,7 +31,7 @@ namespace Bitretsmah.Tests.Unit.Core
             _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(new List<RemoteFile>());
 
             _remoteFileWarehouseFactoryMock = new Mock<IRemoteFileWarehouseFactory>();
-            _remoteFileWarehouseFactoryMock.Setup(x => x.Create()).Returns(_remoteFileWarehouseMock.Object);
+            _remoteFileWarehouseFactoryMock.Setup(x => x.Create()).ReturnsAsync(_remoteFileWarehouseMock.Object);
 
             _changedFilesUploader = new ChangedFilesUploader(_hashServiceMock.Object, _localFilesServiceMock.Object, _remoteFileWarehouseFactoryMock.Object);
         }

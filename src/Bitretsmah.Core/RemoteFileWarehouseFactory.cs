@@ -1,11 +1,11 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.Core
 {
     public interface IRemoteFileWarehouseFactory
     {
-        IRemoteFileWarehouse Create();
+        Task<IRemoteFileWarehouse> Create();
     }
 
     public class RemoteFileWarehouseFactory : IRemoteFileWarehouseFactory
@@ -17,13 +17,10 @@ namespace Bitretsmah.Core
             _remoteFileStoreFactory = remoteFileStoreFactory;
         }
 
-        public IRemoteFileWarehouse Create()
+        public async Task<IRemoteFileWarehouse> Create()
         {
-            // TODO: make it async
-            // TODO: unit tests load stores
-
             var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactory);
-            warehouse.LoadStores().Wait();
+            await warehouse.LoadStores();
             return warehouse;
         }
     }

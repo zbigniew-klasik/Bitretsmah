@@ -34,14 +34,12 @@ namespace Bitretsmah.Core
 
             var createdAndModifiedFiles =
                 filesStructureChange.StructureToList()
-                    .Where(x => x.State == NodeState.Created || x.State == NodeState.Modified)
-                    .Where(x => x is File)
-                    .Select(x => (File)x)
+                    .Where(x => x.State == NodeState.Created || x.State == NodeState.Modified).OfType<File>()
                     .ToList();
 
             if (!createdAndModifiedFiles.Any()) return;
 
-            using (var warehouse = _remoteFileWarehouseFactory.Create())
+            using (var warehouse = await _remoteFileWarehouseFactory.Create())
             {
                 var uploadedFilesHashes = await GetUploadedFilesHashes(warehouse);
 
