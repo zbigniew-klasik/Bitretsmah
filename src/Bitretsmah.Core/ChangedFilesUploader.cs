@@ -18,12 +18,14 @@ namespace Bitretsmah.Core
     {
         private readonly IHashService _hashService;
         private readonly ILocalFilesService _localFilesService;
+        private readonly ILogger _logger;
         private readonly IRemoteFileWarehouseFactory _remoteFileWarehouseFactory;
 
-        public ChangedFilesUploader(IHashService hashService, ILocalFilesService localFilesService, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
+        public ChangedFilesUploader(IHashService hashService, ILocalFilesService localFilesService, ILogger logger, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
         {
             _hashService = hashService;
             _localFilesService = localFilesService;
+            _logger = logger;
             _remoteFileWarehouseFactory = remoteFileWarehouseFactory;
         }
 
@@ -80,8 +82,8 @@ namespace Bitretsmah.Core
                     }
                     catch (Exception ex)
                     {
-                        // TODO: proper error handling and logging
-                        progress.Report(new BackupProgress(ex.Message));
+                        _logger.Error(ex, "Could not upload file: '{0}'.", file.AbsolutePath);
+                        progress.Report(new BackupProgress($"Could not upload file: '{file.Name}'."));
                     }
                 }
             }

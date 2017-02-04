@@ -16,6 +16,7 @@ namespace Bitretsmah.Tests.Unit.Core
     {
         private Mock<IHashService> _hashServiceMock;
         private Mock<ILocalFilesService> _localFilesServiceMock;
+        private Mock<ILogger> _loggerMock;
         private Mock<IRemoteFileWarehouse> _remoteFileWarehouseMock;
         private Mock<IRemoteFileWarehouseFactory> _remoteFileWarehouseFactoryMock;
         private IChangedFilesUploader _changedFilesUploader;
@@ -27,13 +28,15 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _localFilesServiceMock = new Mock<ILocalFilesService>();
 
+            _loggerMock = new Mock<ILogger>();
+
             _remoteFileWarehouseMock = new Mock<IRemoteFileWarehouse>();
             _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(new List<RemoteFile>());
 
             _remoteFileWarehouseFactoryMock = new Mock<IRemoteFileWarehouseFactory>();
             _remoteFileWarehouseFactoryMock.Setup(x => x.Create()).ReturnsAsync(_remoteFileWarehouseMock.Object);
 
-            _changedFilesUploader = new ChangedFilesUploader(_hashServiceMock.Object, _localFilesServiceMock.Object, _remoteFileWarehouseFactoryMock.Object);
+            _changedFilesUploader = new ChangedFilesUploader(_hashServiceMock.Object, _localFilesServiceMock.Object, _loggerMock.Object, _remoteFileWarehouseFactoryMock.Object);
         }
 
         [Test]
