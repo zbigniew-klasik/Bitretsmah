@@ -8,6 +8,13 @@ namespace Bitretsmah.UI.ConsoleApp
     {
         private static void Main(string[] args)
         {
+#if DEBUG
+            Console.WriteLine("BITRETSMAH DEBUG MODE");
+            Console.Write("provide start arguments: ");
+            var argsLine = Console.ReadLine();
+            args = !string.IsNullOrWhiteSpace(argsLine) ? argsLine.Split(' ') : new string[] { };
+#endif
+
             try
             {
                 var container = new Container(new AppRegistry());
@@ -33,6 +40,11 @@ namespace Bitretsmah.UI.ConsoleApp
             {
                 Console.WriteLine("FATAL EXCEPTION: {0}.", ex);
             }
+
+#if DEBUG
+            Console.WriteLine("BITRETSMAH FINISHED");
+            Console.ReadKey();
+#endif
         }
     }
 }

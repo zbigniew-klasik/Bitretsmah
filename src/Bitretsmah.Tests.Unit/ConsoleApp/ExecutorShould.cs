@@ -17,6 +17,7 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
     public class ExecutorShould
     {
         private Mock<IAccountService> _accountServiceMock;
+        private Mock<IBackupService> _backupServiceMock;
         private Mock<IConsoleService> _consoleServiceMock;
         private Mock<ILogger> _loggerMock;
         private Mock<ITargetService> _targetServiceMock;
@@ -26,10 +27,11 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         public void SetUp()
         {
             _accountServiceMock = new Mock<IAccountService>();
+            _backupServiceMock = new Mock<IBackupService>();
             _consoleServiceMock = new Mock<IConsoleService>();
             _loggerMock = new Mock<ILogger>();
             _targetServiceMock = new Mock<ITargetService>();
-            _executor = new Executor(_accountServiceMock.Object, _consoleServiceMock.Object, _loggerMock.Object, _targetServiceMock.Object);
+            _executor = new Executor(_accountServiceMock.Object, _backupServiceMock.Object, _consoleServiceMock.Object, _loggerMock.Object, _targetServiceMock.Object);
         }
 
         #region Help & Version
@@ -60,7 +62,7 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _consoleServiceMock.Verify(x => x.WriteVersion());
         }
 
-        #endregion
+        #endregion Help & Version
 
         #region Accounts
 

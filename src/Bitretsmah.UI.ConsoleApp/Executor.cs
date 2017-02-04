@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Bitretsmah.Core.Interfaces;
+using Bitretsmah.Core.Models;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
@@ -15,13 +16,15 @@ namespace Bitretsmah.UI.ConsoleApp
     internal class Executor : IExecutor
     {
         private readonly IAccountService _accountService;
+        private readonly IBackupService _backupService;
         private readonly IConsoleService _consoleService;
         private readonly ILogger _logger;
         private readonly ITargetService _targetService;
 
-        public Executor(IAccountService accountService, IConsoleService consoleService, ILogger logger, ITargetService targetService)
+        public Executor(IAccountService accountService, IBackupService backupService, IConsoleService consoleService, ILogger logger, ITargetService targetService)
         {
             _accountService = accountService;
+            _backupService = backupService;
             _consoleService = consoleService;
             _logger = logger;
             _targetService = targetService;
@@ -66,6 +69,14 @@ namespace Bitretsmah.UI.ConsoleApp
                     await ListAllTargets();
                     return;
                 }
+
+                if (arguments.Backup != null)
+                {
+                    await Backup(arguments.Backup); //TODO: unit test
+                    return;
+                }
+
+                _consoleService.WriteHelp(); //TODO: unit test
             }
             catch (BitretsmahException ex)
             {
@@ -77,6 +88,21 @@ namespace Bitretsmah.UI.ConsoleApp
                 _logger.Error(ex);
                 _consoleService.WriteUnexpectedException(ex);
             }
+        }
+
+        private async Task Backup(string targetName)
+        {
+            //TODO: handle progress in proper way
+            //TODO: unit test all of it
+
+            var request = new BackupRequest
+            {
+                TargetName = targetName,
+                ComputeHashForEachFile = false,
+                Progress = new Progress<BackupProgress>()
+            };
+
+            await _backupService.Backup(request);
         }
 
         private async Task SetAccount(string username, string password)

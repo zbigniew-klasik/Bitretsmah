@@ -19,7 +19,12 @@ namespace Bitretsmah.Core
 
         public IRemoteFileWarehouse Create()
         {
-            return new RemoteFileWarehouse(_remoteFileStoreFactory);
+            // TODO: make it async
+            // TODO: unit tests load stores
+
+            var warehouse = new RemoteFileWarehouse(_remoteFileStoreFactory);
+            warehouse.LoadStores().Wait();
+            return warehouse;
         }
     }
 }

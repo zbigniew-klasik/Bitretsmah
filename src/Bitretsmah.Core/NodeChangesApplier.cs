@@ -31,9 +31,8 @@ namespace Bitretsmah.Core
         public Node Apply(Node initialNode, ICollection<Node> changes)
         {
             EnsureArg.IsNotNull(initialNode);
-            EnsureArg.HasItems(changes, nameof(changes));
 
-            var finalNode = initialNode;
+            var finalNode = initialNode.DeepCopy();
 
             foreach (var change in changes)
             {

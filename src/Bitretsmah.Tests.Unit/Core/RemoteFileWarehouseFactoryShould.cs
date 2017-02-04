@@ -9,7 +9,7 @@ namespace Bitretsmah.Tests.Unit.Core
     [TestFixture]
     public class RemoteFileWarehouseFactoryShould
     {
-        [Test]
+        [Test] //TODO: fix the test
         public void Create()
         {
             var remoteFileStoreFactoryMock = new Mock<IRemoteFileStoreFactory>();

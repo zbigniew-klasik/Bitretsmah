@@ -15,8 +15,16 @@ namespace Bitretsmah.Core
     {
         public Node Find(Node initialNode, Node finalNode)
         {
-            Ensure.That(initialNode).IsNotNull();
             Ensure.That(finalNode).IsNotNull();
+
+            // TODO: is that right? refactor!
+            // TODO: unit test it
+            if (initialNode == null)
+            {
+                var result = finalNode.DeepCopy();
+                result.SetAllStates(NodeState.Created);
+                return result;
+            }
 
             var initialNodeCopy = initialNode.DeepCopy();
             var finalNodeCopy = finalNode.DeepCopy();
