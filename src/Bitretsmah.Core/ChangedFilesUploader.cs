@@ -53,37 +53,34 @@ namespace Bitretsmah.Core
                     {
                         if (string.IsNullOrWhiteSpace(file.Hash))
                         {
-                            progress.Report(
-                                new BackupProgress(
-                                    new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, file)));
-
+                            progress.Report(BackupProgress.CreateHashStartReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
                             file.Hash = _hashService.ComputeFileHash(file.AbsolutePath);
+                            progress.Report(BackupProgress.CreateHashFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
                         }
 
                         if (uploadedFilesHashes.All(x => x != file.Hash))
                         {
-                            progress.Report(
-                                new BackupProgress(
-                                    new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, 0, file)));
+                            progress.Report(BackupProgress.CreateUploadStartReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
 
                             using (var stream = _localFilesService.ReadFileStream(file.AbsolutePath))
                             {
-                                var uploadProgress = new Progress<double>(uploadPercenteg =>
-                                    progress.Report(
-                                        new BackupProgress(
-                                            new BackupProgress.UploadInfo(createdAndModifiedFiles.Count, processedFilesNumber, uploadPercenteg, file)))
-                                    );
+                                var uploadProgress = new Progress<double>(uploadPercentage => 
+                                    progress.Report(BackupProgress.CreateUploadProgressReport(createdAndModifiedFiles.Count, processedFilesNumber, file, uploadPercentage)));
+
+                                
 
                                 file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);
                             }
+
+                            progress.Report(BackupProgress.CreateUploadFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
                         }
 
                         processedFilesNumber++;
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex, "Could not upload file: '{0}'.", file.AbsolutePath);
-                        progress.Report(new BackupProgress($"Could not upload file: '{file.Name}'."));
+                        _logger.Error(ex, "Could not process file: '{0}'.", file.AbsolutePath);
+                        progress.Report(BackupProgress.CreateErrorReport($"Could not process file: '{file.Name}'."));
                     }
                 }
             }

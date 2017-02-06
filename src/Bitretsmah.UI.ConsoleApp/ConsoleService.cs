@@ -28,6 +28,8 @@ namespace Bitretsmah.UI.ConsoleApp
         void WriteErrorMessage(string message);
 
         void WriteUnexpectedException(Exception exception);
+
+        void WriteProgress(BackupProgress progress);
     }
 
     internal class ConsoleService : IConsoleService
@@ -153,6 +155,10 @@ namespace Bitretsmah.UI.ConsoleApp
             Console.WriteLine($"SEE PROGRAM LOG FOR DETAILS:");
             Console.WriteLine(); // todo: WRITE LOG PATH
             Console.ResetColor();
+        }
+
+        public void WriteProgress(BackupProgress progress)
+        {
         }
     }
 }

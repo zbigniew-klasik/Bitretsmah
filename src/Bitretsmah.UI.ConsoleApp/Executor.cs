@@ -95,11 +95,14 @@ namespace Bitretsmah.UI.ConsoleApp
             //TODO: handle progress in proper way
             //TODO: unit test all of it
 
+            var progress = new Progress<BackupProgress>();
+            progress.ProgressChanged += (sender, backupProgress) => { _consoleService.WriteProgress(backupProgress); };
+
             var request = new BackupRequest
             {
                 TargetName = targetName,
                 ComputeHashForEachFile = false,
-                Progress = new Progress<BackupProgress>()
+                Progress = progress
             };
 
             await _backupService.Backup(request);
