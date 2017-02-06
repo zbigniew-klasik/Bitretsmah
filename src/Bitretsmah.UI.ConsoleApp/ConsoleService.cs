@@ -1,11 +1,10 @@
-﻿using Bitretsmah.Core.Exceptions;
-using Bitretsmah.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security;
+using Bitretsmah.Core.Models;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
@@ -56,9 +55,7 @@ namespace Bitretsmah.UI.ConsoleApp
 
             var location = Assembly.GetExecutingAssembly().Location;
             if (!string.IsNullOrWhiteSpace(location))
-            {
                 version = FileVersionInfo.GetVersionInfo(location).FileVersion;
-            }
 
             Console.WriteLine($"{ProgramName} version: {version}");
         }
@@ -70,11 +67,9 @@ namespace Bitretsmah.UI.ConsoleApp
             var pwd = new SecureString();
             while (true)
             {
-                ConsoleKeyInfo i = Console.ReadKey(true);
+                var i = Console.ReadKey(true);
                 if (i.Key == ConsoleKey.Enter)
-                {
                     break;
-                }
 
                 if (i.Key == ConsoleKey.Backspace)
                 {
@@ -105,9 +100,9 @@ namespace Bitretsmah.UI.ConsoleApp
 
             if (accountsList.Any())
             {
-                decimal totalQuota = accountsList.Sum(x => x.Quota.Total);
-                decimal usedQuota = accountsList.Sum(x => x.Quota.Used);
-                decimal freeQuota = accountsList.Sum(x => x.Quota.Free);
+                var totalQuota = accountsList.Sum(x => x.Quota.Total);
+                var usedQuota = accountsList.Sum(x => x.Quota.Used);
+                var freeQuota = accountsList.Sum(x => x.Quota.Free);
 
                 Console.WriteLine("Accounts:");
                 accountsList.ForEach(x => Console.WriteLine($"\t{x.Credential.UserName}\t{x.Quota.Free}"));
@@ -159,6 +154,41 @@ namespace Bitretsmah.UI.ConsoleApp
 
         public void WriteProgress(BackupProgress progress)
         {
+            switch (progress.State)
+            {
+                case BackupProgress.BackupState.HashStart:
+                    Console.WriteLine("aaa");
+                    break;
+
+                case BackupProgress.BackupState.HashFinished:
+                    Console.WriteLine("aaa");
+                    break;
+
+                case BackupProgress.BackupState.UploadStart:
+                    Console.WriteLine("aaa");
+                    break;
+
+                case BackupProgress.BackupState.UploadProgress:
+                    Console.WriteLine("aaa");
+                    break;
+
+                case BackupProgress.BackupState.UploadFinished:
+                    Console.WriteLine("aaa");
+                    break;
+
+                case BackupProgress.BackupState.DownloadStart:
+                    throw new NotImplementedException();
+
+                case BackupProgress.BackupState.DownloadProgress:
+                    throw new NotImplementedException();
+                    
+                case BackupProgress.BackupState.DownloadFinished:
+                    throw new NotImplementedException();
+                    
+                case BackupProgress.BackupState.Error:
+                    Console.WriteLine("aaa");
+                    break;
+            }
         }
     }
 }
