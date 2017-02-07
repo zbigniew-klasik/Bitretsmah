@@ -157,23 +157,23 @@ namespace Bitretsmah.UI.ConsoleApp
             switch (progress.State)
             {
                 case BackupProgress.BackupState.HashStart:
-                    Console.WriteLine("aaa");
+                    Console.WriteLine(progress.CurrentFile.AbsolutePath + " computing...");
                     break;
 
                 case BackupProgress.BackupState.HashFinished:
-                    Console.WriteLine("aaa");
+                    Console.WriteLine("SHA1: " + progress.CurrentFile.Hash);
                     break;
 
                 case BackupProgress.BackupState.UploadStart:
-                    Console.WriteLine("aaa");
+                    Console.WriteLine(progress.CurrentFile.AbsolutePath + " uploading...");
                     break;
 
                 case BackupProgress.BackupState.UploadProgress:
-                    Console.WriteLine("aaa");
+                    Console.Write(string.Format("\r\t{0:0.00}%", progress.CurrentFileProgress));
                     break;
 
                 case BackupProgress.BackupState.UploadFinished:
-                    Console.WriteLine("aaa");
+                    Console.WriteLine(" done.");
                     break;
 
                 case BackupProgress.BackupState.DownloadStart:
@@ -181,14 +181,17 @@ namespace Bitretsmah.UI.ConsoleApp
 
                 case BackupProgress.BackupState.DownloadProgress:
                     throw new NotImplementedException();
-                    
+
                 case BackupProgress.BackupState.DownloadFinished:
                     throw new NotImplementedException();
-                    
+
                 case BackupProgress.BackupState.Error:
-                    Console.WriteLine("aaa");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("ERROR: " + progress.Error);
+                    Console.ResetColor();
                     break;
             }
+            Console.Out.Flush();
         }
     }
 }
