@@ -15,7 +15,7 @@ namespace Bitretsmah.UI.ConsoleApp
 
             var target = new FileTarget
             {
-                FileName = @"${basedir}/logs/log-${date:format=yyyyMMdd_HHmmss}.txt"
+                FileName = @"${basedir}/logs/" + DateTime.UtcNow.Ticks + ".log"
             };
 
             config.AddTarget("target", target);

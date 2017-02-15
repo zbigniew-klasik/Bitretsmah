@@ -57,7 +57,7 @@ namespace Bitretsmah.UI.ConsoleApp
             if (!string.IsNullOrWhiteSpace(location))
                 version = FileVersionInfo.GetVersionInfo(location).FileVersion;
 
-            Console.WriteLine($"{ProgramName} version: {version}");
+            Console.WriteLine(version);
         }
 
         public SecureString ReadPassword()
@@ -146,9 +146,7 @@ namespace Bitretsmah.UI.ConsoleApp
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"UNEXPECTED EXCEPTION:");
             Console.WriteLine($"{exception.GetType()}:\t{exception.Message}");
-            Console.WriteLine();
-            Console.WriteLine($"SEE PROGRAM LOG FOR DETAILS:");
-            Console.WriteLine(); // todo: WRITE LOG PATH
+            Console.WriteLine($"SEE PROGRAM LOG FOR DETAILS.");
             Console.ResetColor();
         }
 
