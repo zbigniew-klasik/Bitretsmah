@@ -1,6 +1,7 @@
 ﻿using Fclp;
 using System;
 using System.Linq;
+using Bitretsmah.Core.Interfaces;
 
 namespace Bitretsmah.UI.ConsoleApp
 {
@@ -11,6 +12,13 @@ namespace Bitretsmah.UI.ConsoleApp
 
     internal class ConsoleArgumentsParser : IConsoleArgumentsParser
     {
+        private ILogger _logger;
+
+        public ConsoleArgumentsParser(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public ConsoleArguments Parse(string[] args)
         {
             var parser = new FluentCommandLineParser<ConsoleArguments>();
@@ -39,7 +47,21 @@ namespace Bitretsmah.UI.ConsoleApp
                 throw new ArgumentException($"Unknown argument: {result.AdditionalOptionsFound.First().Key}.");
             }
 
+            LogArguments(args, parser.Object);
+
             return parser.Object;
+        }
+
+        private void LogArguments(string[] inputArguments, ConsoleArguments parsedArguments)
+        {
+            var joinedArguments = string.Join(" ", inputArguments);
+
+            if (parsedArguments.Password != null)
+            {
+                joinedArguments = joinedArguments.Replace(parsedArguments.Password, "**********");
+            }
+
+            _logger.Info("Run with arguments: {0}.", joinedArguments);
         }
     }
 }
