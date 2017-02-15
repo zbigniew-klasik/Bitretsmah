@@ -169,7 +169,7 @@ namespace Bitretsmah.UI.ConsoleApp
                     break;
 
                 case BackupProgress.BackupState.UploadProgress:
-                    Console.Write(string.Format("\r\t{0:0.00}%", progress.CurrentFileProgress));
+                    Console.Write($"\r\t{progress.CurrentFileProgress:0.00}%");
                     break;
 
                 case BackupProgress.BackupState.UploadFinished:
@@ -177,13 +177,16 @@ namespace Bitretsmah.UI.ConsoleApp
                     break;
 
                 case BackupProgress.BackupState.DownloadStart:
-                    throw new NotImplementedException();
+                    Console.WriteLine(progress.CurrentFile.AbsolutePath + " downloading...");
+                    break;
 
                 case BackupProgress.BackupState.DownloadProgress:
-                    throw new NotImplementedException();
+                    Console.Write($"\r\t{progress.CurrentFileProgress:0.00}%");
+                    break;
 
                 case BackupProgress.BackupState.DownloadFinished:
-                    throw new NotImplementedException();
+                    Console.WriteLine(" done.");
+                    break;
 
                 case BackupProgress.BackupState.Error:
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
