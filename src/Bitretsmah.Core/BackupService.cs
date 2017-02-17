@@ -49,6 +49,7 @@ namespace Bitretsmah.Core
             //targetStructure
             //structureChange
             //downloadChanges
+            throw new NotImplementedException();
         }
 
         private async Task<Node> GetCurrentStructure(string targetName, bool computeHashForEachFile, IProgress<BackupProgress> progress)
@@ -66,6 +67,8 @@ namespace Bitretsmah.Core
 
         private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
         {
+            // TODO: use HashService
+
             // todo: foreach
             _hashService.ComputeFileHash(change.AbsolutePath);
 

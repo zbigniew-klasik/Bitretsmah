@@ -53,6 +53,7 @@ namespace Bitretsmah.Core
                     {
                         if (string.IsNullOrWhiteSpace(file.Hash))
                         {
+                            // TODO: use HashService instead
                             progress.Report(BackupProgress.CreateHashStartReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
                             file.Hash = _hashService.ComputeFileHash(file.AbsolutePath);
                             progress.Report(BackupProgress.CreateHashFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
@@ -66,8 +67,6 @@ namespace Bitretsmah.Core
                             {
                                 var uploadProgress = new Progress<double>(uploadPercentage => 
                                     progress.Report(BackupProgress.CreateUploadProgressReport(createdAndModifiedFiles.Count, processedFilesNumber, file, uploadPercentage)));
-
-                                
 
                                 file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);
                             }
