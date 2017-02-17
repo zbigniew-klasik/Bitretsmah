@@ -33,7 +33,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             public TestStore(string storeId, Quota quota)
             {
-                TestId = Guid.NewGuid();
+                TestId = Guid.Empty;
                 StoreId = storeId;
                 _quota = quota;
             }
@@ -46,25 +46,13 @@ namespace Bitretsmah.Tests.Unit.Core
                 return Task.FromResult(_quota);
             }
 
-            public Task<ICollection<RemoteFile>> GetFilesList()
-            {
-                throw new NotImplementedException();
-            }
+            public Task<ICollection<RemoteFile>> GetFilesList() => null;
 
-            public Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress)
-            {
-                throw new NotImplementedException();
-            }
+            public Task<RemoteId> UploadFile(Stream stream, string remoteFileName, IProgress<double> progress) => null;
 
-            public Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress)
-            {
-                throw new NotImplementedException();
-            }
+            public Task<Stream> DownloadFile(RemoteId remoteId, IProgress<double> progress) => null;
 
-            public void Dispose()
-            {
-                throw new NotImplementedException();
-            }
+            public void Dispose() => Console.WriteLine("dispose");
         }
 
         #endregion PRIVATE TESTING CLASSES
@@ -91,31 +79,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var remoteFileWarehouse = new RemoteFileWarehouseWrapper(_remoteFileStoreFactoryMock.Object);
             await remoteFileWarehouse.LoadStores();
-            remoteFileWarehouse.RemoteFileStores.ShouldAllBeEquivalentTo(stores);
-        }
-
-        [Test]
-        public async Task DisposeAllStores()
-        {
-            var mocks = new List<Mock<IRemoteFileStore>>();
-            var stores = new List<IRemoteFileStore>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                var mock = new Mock<IRemoteFileStore>();
-                mock.Setup(x => x.StoreId).Returns(i.ToString());
-                mocks.Add(mock);
-                stores.Add(mock.Object);
-            }
-
-            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
-
-            using (var remoteFileWarehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object))
-            {
-                await remoteFileWarehouse.LoadStores();
-            }
-
-            mocks.ForEach(x => x.Verify(y => y.Dispose()));
+            remoteFileWarehouse.RemoteFileStores.ShouldSerializeSameAs(stores);
         }
 
         [Test]
@@ -155,7 +119,31 @@ namespace Bitretsmah.Tests.Unit.Core
 
             var actualIds = actualStoreList.Select(x => (x as TestStore).TestId).ToList();
 
-            actualIds.ShouldBeEquivalentTo(expectedIds);
+            actualIds.ShouldSerializeSameAs(expectedIds);
+        }
+
+        [Test]
+        public async Task DisposeAllStores()
+        {
+            var mocks = new List<Mock<IRemoteFileStore>>();
+            var stores = new List<IRemoteFileStore>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var mock = new Mock<IRemoteFileStore>();
+                mock.Setup(x => x.StoreId).Returns(i.ToString());
+                mocks.Add(mock);
+                stores.Add(mock.Object);
+            }
+
+            _remoteFileStoreFactoryMock.Setup(x => x.GetAll()).ReturnsAsync(stores);
+
+            using (var remoteFileWarehouse = new RemoteFileWarehouse(_remoteFileStoreFactoryMock.Object))
+            {
+                await remoteFileWarehouse.LoadStores();
+            }
+
+            mocks.ForEach(x => x.Verify(y => y.Dispose()));
         }
 
         [TestCase(StoreSelectionMethod.WithLessFreeSpace, "store_9")]
