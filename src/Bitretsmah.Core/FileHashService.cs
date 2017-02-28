@@ -26,7 +26,6 @@ namespace Bitretsmah.Core
 
         public async Task TryEnsureEachFileHasComputedHash(Node node, IProgress<BackupProgress> progress)
         {
-            // TODO: unit tests
             var filesList = node.StructureToList().OfType<Core.Models.File>().ToList();
             var processedFilesNumber = 0;
 
@@ -39,7 +38,6 @@ namespace Bitretsmah.Core
 
         public async Task TryEnsureFileHasComputedHash(Core.Models.File file, IProgress<BackupProgress> progress)
         {
-            // TODO: unit tests
             await TryEnsureFileHasComputedHash(file, progress, 1, 0);
         }
 
