@@ -21,7 +21,7 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
         [SetUp]
         public void SetUp()
         {
-            CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());
+            TestCleanUpHelper.CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());
         }
 
         [Test]
@@ -83,18 +83,7 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());
-        }
-
-        public void CleanUpMegaAccount(NetworkCredential credential)
-        {
-            Console.WriteLine("Cleaning...");
-            var megaApiClient = new MegaApiClient();
-            megaApiClient.Login(credential.UserName, credential.Password);
-            var nodes = megaApiClient.GetNodes().ToList();
-            nodes.Where(n => n.Type == NodeType.File).ToList().ForEach(n => megaApiClient.Delete(n, false));
-            nodes.Where(n => n.Type == NodeType.Directory).ToList().ForEach(n => megaApiClient.Delete(n, false));
-            megaApiClient.Logout();
+            TestCleanUpHelper.CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());
         }
     }
 }

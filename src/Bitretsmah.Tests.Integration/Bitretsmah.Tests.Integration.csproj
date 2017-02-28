@@ -99,6 +99,7 @@
     <Compile Include="Data\Mega\MegaStoreShould.cs" />
     <Compile Include="Data\System\FileHashProviderShould.cs" />
     <Compile Include="Data\System\LocalFilesServiceShould.cs" />
+    <Compile Include="TestCleanUpHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ConsoleApp\ContainerShould.cs" />
   </ItemGroup>

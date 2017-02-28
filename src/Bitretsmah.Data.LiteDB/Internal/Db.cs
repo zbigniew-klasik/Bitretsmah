@@ -1,6 +1,7 @@
 ﻿using Bitretsmah.Core.Models;
 using LiteDB;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace Bitretsmah.Data.LiteDB.Internal
 {
@@ -34,5 +35,7 @@ namespace Bitretsmah.Data.LiteDB.Internal
                 .Ignore(x => x.SecurePassword)
                 .Ignore(x => x.Domain);
         }
+
+        // TODO: Creat drop database feature, and use it in the TestCleanUpHelper
     }
 }
