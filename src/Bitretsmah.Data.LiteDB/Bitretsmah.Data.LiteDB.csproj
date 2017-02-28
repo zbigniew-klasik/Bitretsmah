@@ -35,6 +35,10 @@
       <HintPath>..\packages\LiteDB.2.0.4\lib\net35\LiteDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="StructureMap, Version=4.4.3.564, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.4.3\lib\net45\StructureMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AccountRepository.cs" />
     <Compile Include="BackupRepository.cs" />
+    <Compile Include="ContainerRegistry.cs" />
     <Compile Include="Internal\Db.cs" />
     <Compile Include="Internal\DbFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -67,6 +67,10 @@
       <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="StructureMap, Version=4.4.3.564, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.4.3\lib\net45\StructureMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
@@ -86,6 +90,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AppConfigHelper.cs" />
+    <Compile Include="Core\BackupServiceShould.cs" />
     <Compile Include="Data\LiteDB\AccountRepositoryShould.cs" />
     <Compile Include="Data\LiteDB\BackupRepositoryShould.cs" />
     <Compile Include="Data\LiteDB\TargetRepositoryShould.cs" />
@@ -95,6 +100,7 @@
     <Compile Include="Data\System\FileHashProviderShould.cs" />
     <Compile Include="Data\System\LocalFilesServiceShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\ConsoleApp\ContainerShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -128,6 +134,7 @@
       <Name>Bitretsmah.UI.ConsoleApp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

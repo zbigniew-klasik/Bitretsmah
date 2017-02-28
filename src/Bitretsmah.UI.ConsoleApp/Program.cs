@@ -17,7 +17,7 @@ namespace Bitretsmah.UI.ConsoleApp
 
             try
             {
-                var container = new Container(new AppRegistry());
+                var container = new Container(new ContainerRegistry());
                 var logger = container.GetInstance<ILogger>();
                 logger.Info("Bitretsmah START");
 
