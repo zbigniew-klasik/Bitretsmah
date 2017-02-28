@@ -8,7 +8,7 @@ using System.IO;
 namespace Bitretsmah.Tests.Integration.Data.System
 {
     [TestFixture]
-    public class HashServiceShould
+    public class FileHashProviderShould
     {
         [TestCase("ABC", "3C01BDBB26F358BAB27F267924AA2C9A03FCFDB8")]
         [TestCase("aq2*sh&2uA^IBo%t4$fK#Z@H5!f", "A8499F0A32485CB682D5AB7050F967CFBA504D84")]
@@ -19,8 +19,8 @@ namespace Bitretsmah.Tests.Integration.Data.System
         {
             var fileName = Guid.NewGuid().ToString();
             File.WriteAllText(fileName, fileContent);
-            IHashService service = new HashService();
-            var actualHash = service.ComputeFileHash(fileName);
+            IFileHashProvider provider = new FileHashProvider();
+            var actualHash = provider.ComputeFileHash(fileName);
             File.Delete(fileName);
             actualHash.Should().Be(expectedHash);
         }
@@ -29,8 +29,8 @@ namespace Bitretsmah.Tests.Integration.Data.System
         public void ThrowExceptionForNotExistingFile()
         {
             var fileName = Guid.NewGuid().ToString();
-            IHashService service = new HashService();
-            Assert.Throws<FileNotFoundException>(() => service.ComputeFileHash(fileName));
+            IFileHashProvider provider = new FileHashProvider();
+            Assert.Throws<FileNotFoundException>(() => provider.ComputeFileHash(fileName));
         }
     }
 }

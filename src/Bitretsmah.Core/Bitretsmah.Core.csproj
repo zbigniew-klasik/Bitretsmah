@@ -62,10 +62,11 @@
     <Compile Include="Exceptions\UnknownStoreException.cs" />
     <Compile Include="Exceptions\UnknownTargetException.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FileHashService.cs" />
     <Compile Include="HistoryService.cs" />
     <Compile Include="Interfaces\IBackupRepository.cs" />
     <Compile Include="Interfaces\ICredentialVerifier.cs" />
-    <Compile Include="Interfaces\IHashService.cs" />
+    <Compile Include="Interfaces\IFileHashProvider.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IRemoteFileStoreFactory.cs" />
     <Compile Include="Interfaces\ITargetRepository.cs" />

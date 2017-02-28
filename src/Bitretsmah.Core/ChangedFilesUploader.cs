@@ -16,14 +16,14 @@ namespace Bitretsmah.Core
 
     public class ChangedFilesUploader : IChangedFilesUploader
     {
-        private readonly IHashService _hashService;
+        private readonly IFileHashService _fileHashService;
         private readonly ILocalFilesService _localFilesService;
         private readonly ILogger _logger;
         private readonly IRemoteFileWarehouseFactory _remoteFileWarehouseFactory;
 
-        public ChangedFilesUploader(IHashService hashService, ILocalFilesService localFilesService, ILogger logger, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
+        public ChangedFilesUploader(IFileHashService fileHashService, ILocalFilesService localFilesService, ILogger logger, IRemoteFileWarehouseFactory remoteFileWarehouseFactory)
         {
-            _hashService = hashService;
+            _fileHashService = fileHashService;
             _localFilesService = localFilesService;
             _logger = logger;
             _remoteFileWarehouseFactory = remoteFileWarehouseFactory;
@@ -54,7 +54,7 @@ namespace Bitretsmah.Core
                         if (string.IsNullOrWhiteSpace(file.Hash))
                         {
                             // TODO: unit tests
-                            await _hashService.TryEnsureFileHasComputedHash(file, progress);
+                            await _fileHashService.TryEnsureFileHasComputedHash(file, progress);
                         }
 
                         if (uploadedFilesHashes.All(x => x != file.Hash))

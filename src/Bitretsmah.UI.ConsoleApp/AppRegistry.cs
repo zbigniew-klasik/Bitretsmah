@@ -21,6 +21,7 @@ namespace Bitretsmah.UI.ConsoleApp
             For<IAccountService>().Use<AccountService>();
             For<IBackupService>().Use<BackupService>();
             For<IChangedFilesUploader>().Use<ChangedFilesUploader>();
+            For<IFileHashService>().Use<FileHashService>();
             For<IHistoryService>().Use<HistoryService>();
             For<INodeChangesApplier>().Use<NodeChangesApplier>();
             For<INodeChangesFinder>().Use<NodeChangesFinder>();
@@ -40,7 +41,7 @@ namespace Bitretsmah.UI.ConsoleApp
 
             // Bitretsmah.Data.System
             For<IDateTimeService>().Use<DateTimeService>();
-            For<IHashService>().Use<HashService>();
+            For<IFileHashProvider>().Use<FileHashProvider>();
             For<ILocalFilesService>().Use<LocalFilesService>();
         }
     }

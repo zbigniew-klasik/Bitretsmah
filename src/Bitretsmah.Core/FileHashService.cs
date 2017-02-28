@@ -1,27 +1,27 @@
-﻿using Bitretsmah.Core.Interfaces;
-using System;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 
-namespace Bitretsmah.Data.System
+namespace Bitretsmah.Core
 {
-    public class HashService : IHashService
+    public interface IFileHashService
     {
+        Task TryEnsureEachFileHasComputedHash(Node node, IProgress<BackupProgress> progress);
+
+        Task TryEnsureFileHasComputedHash(Core.Models.File file, IProgress<BackupProgress> progress);
+    }
+
+    public class FileHashService : IFileHashService
+    {
+        private readonly IFileHashProvider _fileHashProvider;
         private readonly ILogger _logger;
 
-        public string ComputeFileHash(string filePath)
+        public FileHashService(IFileHashProvider fileHashProvider, ILogger logger)
         {
-            var fileInfo = new FileInfo(filePath);
-            using (var stream = fileInfo.Open(FileMode.Open))
-            {
-                stream.Position = 0;
-                var sha1 = new SHA1Managed();
-                var hash = sha1.ComputeHash(stream);
-                return BitConverter.ToString(hash).Replace("-", "");
-            }
+            _fileHashProvider = fileHashProvider;
+            _logger = logger;
         }
 
         public async Task TryEnsureEachFileHasComputedHash(Node node, IProgress<BackupProgress> progress)
@@ -50,7 +50,7 @@ namespace Bitretsmah.Data.System
                 try
                 {
                     progress.Report(BackupProgress.CreateHashStartReport(allFilesNumber, processedFilesNumber, file));
-                    file.Hash = ComputeFileHash(file.AbsolutePath);
+                    file.Hash = _fileHashProvider.ComputeFileHash(file.AbsolutePath);
                     progress.Report(BackupProgress.CreateHashFinishedReport(allFilesNumber, processedFilesNumber, file));
                 }
                 catch (Exception ex)

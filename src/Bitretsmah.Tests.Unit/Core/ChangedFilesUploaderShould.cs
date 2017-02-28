@@ -14,7 +14,7 @@ namespace Bitretsmah.Tests.Unit.Core
 {
     public class ChangedFilesUploaderShould
     {
-        private Mock<IHashService> _hashServiceMock;
+        private Mock<IFileHashService> _fileHashServiceMock;
         private Mock<ILocalFilesService> _localFilesServiceMock;
         private Mock<ILogger> _loggerMock;
         private Mock<IRemoteFileWarehouse> _remoteFileWarehouseMock;
@@ -24,7 +24,7 @@ namespace Bitretsmah.Tests.Unit.Core
         [SetUp]
         public void Setup()
         {
-            _hashServiceMock = new Mock<IHashService>();
+            _fileHashServiceMock = new Mock<IFileHashService>();
 
             _localFilesServiceMock = new Mock<ILocalFilesService>();
 
@@ -36,7 +36,7 @@ namespace Bitretsmah.Tests.Unit.Core
             _remoteFileWarehouseFactoryMock = new Mock<IRemoteFileWarehouseFactory>();
             _remoteFileWarehouseFactoryMock.Setup(x => x.Create()).ReturnsAsync(_remoteFileWarehouseMock.Object);
 
-            _changedFilesUploader = new ChangedFilesUploader(_hashServiceMock.Object, _localFilesServiceMock.Object, _loggerMock.Object, _remoteFileWarehouseFactoryMock.Object);
+            _changedFilesUploader = new ChangedFilesUploader(_fileHashServiceMock.Object, _localFilesServiceMock.Object, _loggerMock.Object, _remoteFileWarehouseFactoryMock.Object);
         }
 
         [Test]
@@ -82,9 +82,9 @@ namespace Bitretsmah.Tests.Unit.Core
 
             await _changedFilesUploader.Upload(filesStructureChange, progress);
 
-            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(It.IsAny<Bitretsmah.Core.Models.File>(), progress), Times.Exactly(2));
-            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(emptyHashFile, progress), Times.Once);
-            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(nullHashFile, progress), Times.Once);
+            _fileHashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(It.IsAny<Bitretsmah.Core.Models.File>(), progress), Times.Exactly(2));
+            _fileHashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(emptyHashFile, progress), Times.Once);
+            _fileHashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(nullHashFile, progress), Times.Once);
         }
 
         [Test]
@@ -125,12 +125,12 @@ namespace Bitretsmah.Tests.Unit.Core
             var filesStructureChange = CreateDirectory("root", NodeState.Modified, fileWithEmptyHash);
 
             _localFilesServiceMock.Setup(x => x.ReadFileStream(It.IsAny<string>())).Returns(new MemoryStream());
-            _hashServiceMock.Setup(x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, new Progress<BackupProgress>())).Returns(Task.CompletedTask);
+            _fileHashServiceMock.Setup(x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, new Progress<BackupProgress>())).Returns(Task.CompletedTask);
             _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(new List<RemoteFile>());
 
             await _changedFilesUploader.Upload(filesStructureChange, new Progress<BackupProgress>());
 
-            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, It.IsAny<Progress<BackupProgress>>()), Times.Once);
+            _fileHashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, It.IsAny<Progress<BackupProgress>>()), Times.Once);
         }
     }
 }

@@ -16,18 +16,18 @@ namespace Bitretsmah.Core
         private readonly IBackupRepository _backupRepository;
         private readonly IChangedFilesUploader _changedFilesUploader;
         private readonly IDateTimeService _dateTimeService;
-        private readonly IHashService _hashService;
+        private readonly IFileHashService _fileHashService;
         private readonly IHistoryService _historyService;
         private readonly ILocalFilesService _localFilesService;
         private readonly INodeChangesFinder _nodeChangesFinder;
         private readonly ITargetService _targetService;
 
-        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IHashService hashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, ITargetService targetService)
+        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IFileHashService fileHashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, ITargetService targetService)
         {
             _backupRepository = backupRepository;
             _changedFilesUploader = changedFilesUploader;
             _dateTimeService = dateTimeService;
-            _hashService = hashService;
+            _fileHashService = fileHashService;
             _historyService = historyService;
             _localFilesService = localFilesService;
             _nodeChangesFinder = nodeChangesFinder;
@@ -60,7 +60,7 @@ namespace Bitretsmah.Core
             if (computeHashForEachFile)
             {
                 // TODO: unit tests
-                await _hashService.TryEnsureEachFileHasComputedHash(currentStructure, progress);
+                await _fileHashService.TryEnsureEachFileHasComputedHash(currentStructure, progress);
             }
 
             return currentStructure;

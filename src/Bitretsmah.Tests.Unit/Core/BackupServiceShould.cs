@@ -37,7 +37,7 @@ namespace Bitretsmah.Tests.Unit.Core
             var dateTimeServiceMock = new Mock<IDateTimeService>();
             dateTimeServiceMock.SetupGet(x => x.Now).Returns(now);
 
-            var hashServiceMock = new Mock<IHashService>();
+            var fileHashServiceMock = new Mock<IFileHashService>();
             var changedFilesUploaderMock = new Mock<IChangedFilesUploader>();
 
             Backup savedBackup = null;
@@ -51,7 +51,7 @@ namespace Bitretsmah.Tests.Unit.Core
                 backupRepositoryMock.Object,
                 changedFilesUploaderMock.Object,
                 dateTimeServiceMock.Object,
-                hashServiceMock.Object,
+                fileHashServiceMock.Object,
                 historyServiceMock.Object,
                 localFilesServiceMock.Object,
                 nodeChangesFinderMock.Object,

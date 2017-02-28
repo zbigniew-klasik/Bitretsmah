@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeService.cs" />
-    <Compile Include="HashService.cs" />
+    <Compile Include="FileHashProvider.cs" />
     <Compile Include="LocalFilesService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
