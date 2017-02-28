@@ -16,7 +16,7 @@ namespace Bitretsmah.Tests.Integration.Core
         private IAccountService _accountService;
         private IBackupRepository _backupRepository;
         private IBackupService _backupService;
-        private IRemoteFileWarehouse _remoteFileWarehouse;
+        private IRemoteFileWarehouseFactory _remoteFileWarehouseFactory;
         private ITargetService _targetService;
 
         [SetUp]
@@ -33,7 +33,7 @@ namespace Bitretsmah.Tests.Integration.Core
             _accountService = container.GetInstance<IAccountService>();
             _backupService = container.GetInstance<IBackupService>();
             _backupRepository = container.GetInstance<IBackupRepository>();
-            _remoteFileWarehouse = container.GetInstance<IRemoteFileWarehouse>();
+            _remoteFileWarehouseFactory = container.GetInstance<IRemoteFileWarehouseFactory>();
             _targetService = container.GetInstance<ITargetService>();
 
             TestCleanUpHelper.CleanUpDatabase();
@@ -65,12 +65,15 @@ namespace Bitretsmah.Tests.Integration.Core
             await _backupService.Backup(backupRequest);
 
             Console.WriteLine("Verifying remote file...");
-            var remoteFilesList = await _remoteFileWarehouse.GetFilesList();
-            remoteFilesList.Count().Should().Be(1);
-            var remoteFile = remoteFilesList.Single();
-            remoteFile.Id.StoreId.Should().Be(AppConfigHelper.GetTestMegaCredential().UserName);
-            remoteFile.Name.Should().Be("[3C01BDBB26F358BAB27F267924AA2C9A03FCFDB8]_foobar.txt");
-            remoteFile.Size.Should().Be(3);
+            using (var remoteFileWarehouse = await _remoteFileWarehouseFactory.Create())
+            {
+                var remoteFilesList = await remoteFileWarehouse.GetFilesList();
+                remoteFilesList.Count().Should().Be(1);
+                var remoteFile = remoteFilesList.Single();
+                remoteFile.Id.StoreId.Should().Be(AppConfigHelper.GetTestMegaCredential().UserName);
+                remoteFile.Name.Should().Be("[3C01BDBB26F358BAB27F267924AA2C9A03FCFDB8]_foobar.txt");
+                remoteFile.Size.Should().Be(3);
+            }
 
             Console.WriteLine("Verifying local database...");
             var allBackups = await _backupRepository.GetAllForTarget("Test Target");
@@ -86,10 +89,11 @@ namespace Bitretsmah.Tests.Integration.Core
             // TODO: Verify remote data record
 
             targetDirectory.Delete(true);
+            Console.WriteLine("OK!");
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             TestCleanUpHelper.CleanUpDatabase();
             TestCleanUpHelper.CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());

@@ -80,8 +80,8 @@ namespace Bitretsmah.Tests.Integration.Data.Mega
             File.Delete(fileName2);
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             TestCleanUpHelper.CleanUpMegaAccount(AppConfigHelper.GetTestMegaCredential());
         }

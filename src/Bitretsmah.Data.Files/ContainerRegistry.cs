@@ -7,9 +7,9 @@ namespace Bitretsmah.Data.Mega
     {
         public ContainerRegistry()
         {
-            For<ICredentialVerifier>().Use<MegaCredentialVerifier>();
-            For<IRemoteFileStore>().Use<MegaStore>();
-            For<IRemoteFileStoreFactory>().Use<MegaStoreFactory>();
+            For<ICredentialVerifier>().Use<MegaCredentialVerifier>().Singleton();
+            For<IRemoteFileStore>().Use<MegaStore>().Singleton();
+            For<IRemoteFileStoreFactory>().Use<MegaStoreFactory>().Singleton();
         }
     }
 }

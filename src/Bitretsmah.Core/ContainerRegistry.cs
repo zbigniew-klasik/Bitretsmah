@@ -6,16 +6,16 @@ namespace Bitretsmah.Core
     {
         public ContainerRegistry()
         {
-            For<IAccountService>().Use<AccountService>();
-            For<IBackupService>().Use<BackupService>();
-            For<IChangedFilesUploader>().Use<ChangedFilesUploader>();
-            For<IFileHashService>().Use<FileHashService>();
-            For<IHistoryService>().Use<HistoryService>();
-            For<INodeChangesApplier>().Use<NodeChangesApplier>();
-            For<INodeChangesFinder>().Use<NodeChangesFinder>();
-            For<IRemoteFileWarehouse>().Use<RemoteFileWarehouse>();
-            For<IRemoteFileWarehouseFactory>().Use<RemoteFileWarehouseFactory>();
-            For<ITargetService>().Use<TargetService>();
+            For<IAccountService>().Use<AccountService>().Singleton(); ;
+            For<IBackupService>().Use<BackupService>().Singleton();
+            For<IChangedFilesUploader>().Use<ChangedFilesUploader>().Singleton();
+            For<IFileHashService>().Use<FileHashService>().Singleton();
+            For<IHistoryService>().Use<HistoryService>().Singleton();
+            For<INodeChangesApplier>().Use<NodeChangesApplier>().Singleton();
+            For<INodeChangesFinder>().Use<NodeChangesFinder>().Singleton();
+            For<IRemoteFileWarehouse>().Use<RemoteFileWarehouse>().Singleton();
+            For<IRemoteFileWarehouseFactory>().Use<RemoteFileWarehouseFactory>().Singleton();
+            For<ITargetService>().Use<TargetService>().Singleton();
         }
     }
 }

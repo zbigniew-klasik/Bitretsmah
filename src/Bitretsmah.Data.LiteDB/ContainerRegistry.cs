@@ -7,9 +7,9 @@ namespace Bitretsmah.Data.LiteDB
     {
         public ContainerRegistry()
         {
-            For<IAccountRepository>().Use<AccountRepository>();
-            For<ITargetRepository>().Use<TargetRepository>();
-            For<IBackupRepository>().Use<BackupRepository>();
+            For<IAccountRepository>().Use<AccountRepository>().Singleton();
+            For<ITargetRepository>().Use<TargetRepository>().Singleton();
+            For<IBackupRepository>().Use<BackupRepository>().Singleton();
         }
     }
 }

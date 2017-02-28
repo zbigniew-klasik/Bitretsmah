@@ -18,10 +18,10 @@ namespace Bitretsmah.UI.ConsoleApp
 
         public ContainerRegistry()
         {
-            For<IConsoleArgumentsParser>().Use<ConsoleArgumentsParser>();
-            For<IConsoleService>().Use<ConsoleService>();
-            For<IExecutor>().Use<Executor>();
-            For<ILogger>().Use<Logger>();
+            For<IConsoleArgumentsParser>().Use<ConsoleArgumentsParser>().Singleton();
+            For<IConsoleService>().Use<ConsoleService>().Singleton();
+            For<IExecutor>().Use<Executor>().Singleton();
+            For<ILogger>().Use<Logger>().Singleton();
         }
     }
 }

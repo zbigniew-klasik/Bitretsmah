@@ -7,9 +7,9 @@ namespace Bitretsmah.Data.System
     {
         public ContainerRegistry()
         {
-            For<IDateTimeService>().Use<DateTimeService>();
-            For<IFileHashProvider>().Use<FileHashProvider>();
-            For<ILocalFilesService>().Use<LocalFilesService>();
+            For<IDateTimeService>().Use<DateTimeService>().Singleton();
+            For<IFileHashProvider>().Use<FileHashProvider>().Singleton();
+            For<ILocalFilesService>().Use<LocalFilesService>().Singleton();
         }
     }
 }
