@@ -59,7 +59,6 @@ namespace Bitretsmah.Core
 
             if (computeHashForEachFile)
             {
-                // TODO: unit tests
                 await _fileHashService.TryEnsureEachFileHasComputedHash(currentStructure, progress);
             }
 

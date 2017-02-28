@@ -60,13 +60,14 @@ namespace Bitretsmah.Tests.Unit.Core
             var request = new BackupRequest
             {
                 TargetName = targetName,
-                ComputeHashForEachFile = false,
+                ComputeHashForEachFile = true,
                 Progress = new Progress<BackupProgress>()
             };
 
             await backupService.Backup(request);
 
             localFilesServiceMock.Verify(x => x.GetNodeStructure(localPath), Times.Once);
+            fileHashServiceMock.Verify(x => x.TryEnsureEachFileHasComputedHash(currentStructure, request.Progress), Times.Once);
             historyServiceMock.Verify(x => x.GetLastStructure(targetName), Times.Once);
             nodeChangesFinderMock.Verify(x => x.Find(previousStructure, currentStructure), Times.Once);
             changedFilesUploaderMock.Verify(x => x.Upload(structureChange, request.Progress), Times.Once);

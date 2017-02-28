@@ -93,6 +93,7 @@ namespace Bitretsmah.UI.ConsoleApp
         private async Task Backup(string targetName)
         {
             //TODO: handle progress in proper way
+            //TODO: use ComputeHashForEachFile (add command line flag)
             //TODO: unit test all of it
 
             var progress = new Progress<BackupProgress>();
