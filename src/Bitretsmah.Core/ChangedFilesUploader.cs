@@ -53,10 +53,8 @@ namespace Bitretsmah.Core
                     {
                         if (string.IsNullOrWhiteSpace(file.Hash))
                         {
-                            // TODO: use HashService instead
-                            progress.Report(BackupProgress.CreateHashStartReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
-                            file.Hash = _hashService.ComputeFileHash(file.AbsolutePath);
-                            progress.Report(BackupProgress.CreateHashFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
+                            // TODO: unit tests
+                            await _hashService.TryEnsureFileHasComputedHash(file, progress);
                         }
 
                         if (uploadedFilesHashes.All(x => x != file.Hash))
@@ -65,7 +63,7 @@ namespace Bitretsmah.Core
 
                             using (var stream = _localFilesService.ReadFileStream(file.AbsolutePath))
                             {
-                                var uploadProgress = new Progress<double>(uploadPercentage => 
+                                var uploadProgress = new Progress<double>(uploadPercentage =>
                                     progress.Report(BackupProgress.CreateUploadProgressReport(createdAndModifiedFiles.Count, processedFilesNumber, file, uploadPercentage)));
 
                                 file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);

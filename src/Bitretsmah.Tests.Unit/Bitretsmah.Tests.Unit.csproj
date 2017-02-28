@@ -90,7 +90,7 @@
     <Compile Include="Core\RemoteFileWarehouseFactoryShould.cs" />
     <Compile Include="Core\RemoteFileWarehouseShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TargetServiceShould.cs" />
+    <Compile Include="Core\TargetServiceShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

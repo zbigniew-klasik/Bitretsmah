@@ -66,20 +66,25 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public async Task ComputeHashForEachFileWithEmptyHash()
         {
+            var emptyHashFile = CreateFile("file2.txt", NodeState.Modified, string.Empty);
+            var nullHashFile = CreateFile("file4.txt", NodeState.Created, null);
+
             var filesStructureChange = CreateDirectory("directory1", NodeState.Modified,
                                             CreateFile("file1.txt", NodeState.Created, "any hash"),
-                                            CreateFile("file2.txt", NodeState.Modified, string.Empty),
+                                            emptyHashFile,
                                             CreateFile("file3.txt", NodeState.Deleted, null),
                                             CreateDirectory("directory2", NodeState.Modified,
-                                                CreateFile("file4.txt", NodeState.Created, null),
+                                                nullHashFile,
                                                 CreateFile("file5.txt", NodeState.Modified, "any hash"),
                                                 CreateFile("file6.txt", NodeState.Deleted, string.Empty)));
 
-            await _changedFilesUploader.Upload(filesStructureChange, new Progress<BackupProgress>());
+            var progress = new Progress<BackupProgress>();
 
-            _hashServiceMock.Verify(x => x.ComputeFileHash(It.IsAny<string>()), Times.Exactly(2));
-            _hashServiceMock.Verify(x => x.ComputeFileHash(@"C:\Temp\file2.txt"), Times.Once);
-            _hashServiceMock.Verify(x => x.ComputeFileHash(@"C:\Temp\file4.txt"), Times.Once);
+            await _changedFilesUploader.Upload(filesStructureChange, progress);
+
+            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(It.IsAny<Bitretsmah.Core.Models.File>(), progress), Times.Exactly(2));
+            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(emptyHashFile, progress), Times.Once);
+            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(nullHashFile, progress), Times.Once);
         }
 
         [Test]
@@ -116,19 +121,16 @@ namespace Bitretsmah.Tests.Unit.Core
         [Test]
         public async Task ComputeMissingHashAndUseItInUploadedFileName()
         {
-            var fileStream = new MemoryStream();
-            _localFilesServiceMock.Setup(x => x.ReadFileStream(@"C:\Temp\file.txt")).Returns(fileStream);
-
-            _hashServiceMock.Setup(x => x.ComputeFileHash(@"C:\Temp\file.txt")).Returns("F7031B995F0F2E9CED6D62156F3DEB756ADB7E1E");
-
-            _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(new List<RemoteFile>());
-
             var fileWithEmptyHash = CreateFile("file.txt", NodeState.Modified, null);
             var filesStructureChange = CreateDirectory("root", NodeState.Modified, fileWithEmptyHash);
 
+            _localFilesServiceMock.Setup(x => x.ReadFileStream(It.IsAny<string>())).Returns(new MemoryStream());
+            _hashServiceMock.Setup(x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, new Progress<BackupProgress>())).Returns(Task.CompletedTask);
+            _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(new List<RemoteFile>());
+
             await _changedFilesUploader.Upload(filesStructureChange, new Progress<BackupProgress>());
 
-            _remoteFileWarehouseMock.Verify(x => x.UploadFile(fileStream, "[F7031B995F0F2E9CED6D62156F3DEB756ADB7E1E]_file.txt", It.IsAny<Progress<double>>()), Times.Once);
+            _hashServiceMock.Verify(x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, It.IsAny<Progress<BackupProgress>>()), Times.Once);
         }
     }
 }

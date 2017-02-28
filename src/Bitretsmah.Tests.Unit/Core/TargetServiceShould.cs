@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Bitretsmah.Tests.Unit
+namespace Bitretsmah.Tests.Unit.Core
 {
     [TestFixture]
     public class TargetServiceShould

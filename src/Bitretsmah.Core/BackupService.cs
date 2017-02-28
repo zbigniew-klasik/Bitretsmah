@@ -59,23 +59,11 @@ namespace Bitretsmah.Core
 
             if (computeHashForEachFile)
             {
-                await ComputeHashesForAllFiles(currentStructure, progress);
+                // TODO: unit tests
+                await _hashService.TryEnsureEachFileHasComputedHash(currentStructure, progress);
             }
 
             return currentStructure;
-        }
-
-        private Task ComputeHashesForAllFiles(Node change, IProgress<BackupProgress> progress)
-        {
-            // TODO: use HashService
-
-            // todo: foreach
-            _hashService.ComputeFileHash(change.AbsolutePath);
-
-            // update progress
-            // progress.Report(new BackupProgress());
-
-            return Task.Run(() => _hashService.ComputeFileHash(change.AbsolutePath));
         }
 
         private async Task SaveBackup(BackupRequest request, Node change)
