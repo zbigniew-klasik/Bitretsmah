@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AccountService.cs" />
     <Compile Include="BackupService.cs" />
+    <Compile Include="ChangedFilesDownloader.cs" />
     <Compile Include="ChangedFilesUploader.cs" />
     <Compile Include="ContainerRegistry.cs" />
     <Compile Include="Exceptions\BitretsmahException.cs" />

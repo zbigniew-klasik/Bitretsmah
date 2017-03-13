@@ -10,7 +10,9 @@ namespace Bitretsmah.Core
     {
         Task TryEnsureEachFileHasComputedHash(Node node, IProgress<BackupProgress> progress);
 
-        Task TryEnsureFileHasComputedHash(Core.Models.File file, IProgress<BackupProgress> progress);
+        Task TryEnsureFileHasComputedHash(File file, IProgress<BackupProgress> progress);
+
+        Task VerifyFileHash(File file, IProgress<BackupProgress> progress);
     }
 
     public class FileHashService : IFileHashService
@@ -26,7 +28,7 @@ namespace Bitretsmah.Core
 
         public async Task TryEnsureEachFileHasComputedHash(Node node, IProgress<BackupProgress> progress)
         {
-            var filesList = node.StructureToList().OfType<Core.Models.File>().ToList();
+            var filesList = node.StructureToList().OfType<File>().ToList();
             var processedFilesNumber = 0;
 
             foreach (var file in filesList)
@@ -36,12 +38,19 @@ namespace Bitretsmah.Core
             }
         }
 
-        public async Task TryEnsureFileHasComputedHash(Core.Models.File file, IProgress<BackupProgress> progress)
+        public async Task TryEnsureFileHasComputedHash(File file, IProgress<BackupProgress> progress)
         {
             await TryEnsureFileHasComputedHash(file, progress, 1, 0);
         }
 
-        private Task TryEnsureFileHasComputedHash(Core.Models.File file, IProgress<BackupProgress> progress, int allFilesNumber, int processedFilesNumber)
+        public async Task VerifyFileHash(File file, IProgress<BackupProgress> progress)
+        {
+            await Task.FromResult(0);
+            throw new NotImplementedException();
+        }
+
+        private Task TryEnsureFileHasComputedHash(File file, IProgress<BackupProgress> progress, int allFilesNumber,
+            int processedFilesNumber)
         {
             return Task.Run(() =>
             {

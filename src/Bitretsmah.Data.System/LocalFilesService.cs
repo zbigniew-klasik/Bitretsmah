@@ -70,6 +70,8 @@ namespace Bitretsmah.Data.System
 
         public void WriteFileStream(string filePath, Stream stream)
         {
+            // TODO: it should save file in a temp location and replace when finished
+
             var fileInfo = new SystemFileInfo(filePath);
             using (var writeStream = fileInfo.OpenWrite())
             {

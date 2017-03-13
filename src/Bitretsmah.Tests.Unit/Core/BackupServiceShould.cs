@@ -38,6 +38,7 @@ namespace Bitretsmah.Tests.Unit.Core
             dateTimeServiceMock.SetupGet(x => x.Now).Returns(now);
 
             var fileHashServiceMock = new Mock<IFileHashService>();
+            var changedFilesDownloaderMock = new Mock<IChangedFilesDownloader>();
             var changedFilesUploaderMock = new Mock<IChangedFilesUploader>();
 
             Backup savedBackup = null;
@@ -49,6 +50,7 @@ namespace Bitretsmah.Tests.Unit.Core
 
             IBackupService backupService = new BackupService(
                 backupRepositoryMock.Object,
+                changedFilesDownloaderMock.Object,
                 changedFilesUploaderMock.Object,
                 dateTimeServiceMock.Object,
                 fileHashServiceMock.Object,

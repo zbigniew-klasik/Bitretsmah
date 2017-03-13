@@ -14,6 +14,7 @@ namespace Bitretsmah.Core
     public class BackupService : IBackupService
     {
         private readonly IBackupRepository _backupRepository;
+        private readonly IChangedFilesDownloader _changedFilesDownloader;
         private readonly IChangedFilesUploader _changedFilesUploader;
         private readonly IDateTimeService _dateTimeService;
         private readonly IFileHashService _fileHashService;
@@ -22,9 +23,10 @@ namespace Bitretsmah.Core
         private readonly INodeChangesFinder _nodeChangesFinder;
         private readonly ITargetService _targetService;
 
-        public BackupService(IBackupRepository backupRepository, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IFileHashService fileHashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, ITargetService targetService)
+        public BackupService(IBackupRepository backupRepository, IChangedFilesDownloader changedFilesDownloader, IChangedFilesUploader changedFilesUploader, IDateTimeService dateTimeService, IFileHashService fileHashService, IHistoryService historyService, ILocalFilesService localFilesService, INodeChangesFinder nodeChangesFinder, ITargetService targetService)
         {
             _backupRepository = backupRepository;
+            _changedFilesDownloader = changedFilesDownloader;
             _changedFilesUploader = changedFilesUploader;
             _dateTimeService = dateTimeService;
             _fileHashService = fileHashService;
@@ -45,11 +47,11 @@ namespace Bitretsmah.Core
 
         public async Task Restore(RestoreRequest request)
         {
+            // TODO: unit test all of it !!!!!!!!!!!!
             var currentStructure = await GetCurrentStructure(request.TargetName, request.ComputeHashForEachFile, request.Progress);
-            //targetStructure
-            //structureChange
-            //downloadChanges
-            throw new NotImplementedException();
+            var destinationStructure = await _historyService.GetLastStructure(request.TargetName);
+            var structureChange = _nodeChangesFinder.Find(currentStructure, destinationStructure);
+            await _changedFilesDownloader.Download(structureChange, request.Progress);
         }
 
         private async Task<Node> GetCurrentStructure(string targetName, bool computeHashForEachFile, IProgress<BackupProgress> progress)

@@ -54,6 +54,21 @@ namespace Bitretsmah.Core.Models
             return new BackupProgress { State = BackupState.UploadFinished, AllFilesCount = allFilesCount, CurrentFileNumber = currentFileNumber, CurrentFile = currentFile };
         }
 
+        public static BackupProgress CreateDownloadStartReport(int allFilesCount, int currentFileNumber, File currentFile)
+        {
+            return new BackupProgress { State = BackupState.DownloadStart, AllFilesCount = allFilesCount, CurrentFileNumber = currentFileNumber, CurrentFile = currentFile };
+        }
+
+        public static BackupProgress CreateDownloadProgressReport(int allFilesCount, int currentFileNumber, File currentFile, double progress)
+        {
+            return new BackupProgress { State = BackupState.DownloadProgress, AllFilesCount = allFilesCount, CurrentFileNumber = currentFileNumber, CurrentFile = currentFile, CurrentFileProgress = progress };
+        }
+
+        public static BackupProgress CreateDownloadFinishedReport(int allFilesCount, int currentFileNumber, File currentFile)
+        {
+            return new BackupProgress { State = BackupState.DownloadFinished, AllFilesCount = allFilesCount, CurrentFileNumber = currentFileNumber, CurrentFile = currentFile };
+        }
+
         public static BackupProgress CreateErrorReport(string error)
         {
             return new BackupProgress { State = BackupState.Error, Error = error };
