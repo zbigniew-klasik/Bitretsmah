@@ -12,5 +12,7 @@ namespace Bitretsmah.Core.Interfaces
         void WriteFileStream(string filePath, Stream stream);
 
         bool Exists(string path);
+
+        void DeleteFileOrDirectory(string path);
     }
 }

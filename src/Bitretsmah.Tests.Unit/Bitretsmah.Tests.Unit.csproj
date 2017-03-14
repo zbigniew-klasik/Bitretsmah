@@ -85,6 +85,7 @@
     <Compile Include="ConsoleApp\ExecutorShould.cs" />
     <Compile Include="Core\AccountServiceShould.cs" />
     <Compile Include="Core\BackupServiceShould.cs" />
+    <Compile Include="Core\ChangedFilesDownloaderShould.cs" />
     <Compile Include="Core\ChangedFilesUploaderShould.cs" />
     <Compile Include="Core\ExtensionsShould.cs" />
     <Compile Include="Core\FileHashServiceShould.cs" />

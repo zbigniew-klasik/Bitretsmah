@@ -71,6 +71,7 @@ namespace Bitretsmah.Data.System
         public void WriteFileStream(string filePath, Stream stream)
         {
             // TODO: it should save file in a temp location and replace when finished
+            // TODO: it should create missing directories on path
 
             var fileInfo = new SystemFileInfo(filePath);
             using (var writeStream = fileInfo.OpenWrite())
@@ -84,6 +85,12 @@ namespace Bitretsmah.Data.System
         public bool Exists(string path)
         {
             return new SystemDirectoryInfo(path).Exists || new SystemFileInfo(path).Exists;
+        }
+
+        public void DeleteFileOrDirectory(string path)
+        {
+            // TODO: should ignore if file does not exist
+            throw new NotFiniteNumberException();
         }
     }
 }

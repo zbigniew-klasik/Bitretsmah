@@ -16,7 +16,8 @@ namespace Bitretsmah.Tests.Unit.Core
                 Size = 1234,
                 CreationTime = new DateTimeOffset(2016, 10, 11, 18, 33, 14, new TimeSpan(0)),
                 ModificationTime = new DateTimeOffset(2016, 11, 12, 19, 34, 15, new TimeSpan(0)),
-                AbsolutePath = @"C:\Temp\" + name
+                AbsolutePath = @"C:\Temp\" + name,
+                RemoteId = new RemoteId("test_store_id", "test_node_id_" + name)
             };
         }
 
@@ -31,7 +32,8 @@ namespace Bitretsmah.Tests.Unit.Core
             {
                 Name = name,
                 State = state,
-                InnerNodes = new List<Node>(nodes)
+                InnerNodes = new List<Node>(nodes),
+                AbsolutePath = @"C:\Temp\" + name
             };
         }
 

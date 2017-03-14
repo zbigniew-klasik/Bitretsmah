@@ -30,11 +30,15 @@ namespace Bitretsmah.Core
 
         public async Task Download(Node filesStructureChange, IProgress<BackupProgress> progress)
         {
-            // TODO: unit test all of it!!!!!!
-
             EnsureArg.IsNotNull(filesStructureChange);
             EnsureArg.IsNotNull(progress);
 
+            await HandleCreatedAndModifiedFiles(filesStructureChange, progress);
+            HandleDeletedNodes(filesStructureChange, progress);
+        }
+
+        private async Task HandleCreatedAndModifiedFiles(Node filesStructureChange, IProgress<BackupProgress> progress)
+        {
             var createdAndModifiedFiles =
                 filesStructureChange.StructureToList()
                     .Where(x => x.State == NodeState.Created || x.State == NodeState.Modified).OfType<File>()
@@ -57,7 +61,7 @@ namespace Bitretsmah.Core
 
                         using (var stream = await warehouse.DownloadFile(file.RemoteId, downloadProgress))
                         {
-                            _localFilesService.WriteFileStream("path", stream);
+                            _localFilesService.WriteFileStream(file.AbsolutePath, stream);
                         }
 
                         await _fileHashService.VerifyFileHash(file, progress);
@@ -71,6 +75,33 @@ namespace Bitretsmah.Core
                         _logger.Error(ex, "Could not process file: '{0}'.", file.AbsolutePath);
                         progress.Report(BackupProgress.CreateErrorReport($"Could not process file: '{file.Name}'."));
                     }
+                }
+            }
+        }
+
+        private void HandleDeletedNodes(Node filesStructureChange, IProgress<BackupProgress> progress)
+        {
+            var deletedNodes =
+                filesStructureChange.StructureToList()
+                    .Where(x => x.State == NodeState.Deleted)
+                    .OrderByDescending(x => x.AbsolutePath.Length)
+                    .ToList();
+
+            int processedNodesNumber = 0;
+
+            foreach (var node in deletedNodes)
+            {
+                try
+                {
+                    progress.Report(BackupProgress.CreateDeleteStartReport(deletedNodes.Count, processedNodesNumber, node.AbsolutePath));
+                    _localFilesService.DeleteFileOrDirectory(node.AbsolutePath);
+                    progress.Report(BackupProgress.CreateDeleteFinishedReport(deletedNodes.Count, processedNodesNumber, node.AbsolutePath));
+                    processedNodesNumber++;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Could not delete: '{0}'.", node.AbsolutePath);
+                    progress.Report(BackupProgress.CreateErrorReport($"Could not delete: '{node.Name}'."));
                 }
             }
         }
