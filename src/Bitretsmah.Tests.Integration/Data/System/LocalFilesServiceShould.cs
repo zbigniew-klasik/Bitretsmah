@@ -129,7 +129,7 @@ namespace Bitretsmah.Tests.Integration.Data.System
         [Test]
         public void WriteFileStreamToNewFile()
         {
-            var fileName = Guid.NewGuid().ToString();
+            var filePath = SystemPath.Combine(Environment.CurrentDirectory, Guid.NewGuid() + ".txt");
             var expectedFileContent = Guid.NewGuid().ToString();
             ILocalFilesService service = new LocalFilesService();
 
@@ -138,12 +138,37 @@ namespace Bitretsmah.Tests.Integration.Data.System
             {
                 writer.Write(expectedFileContent);
                 writer.Flush();
-                service.WriteFileStream(fileName, stream);
+                service.WriteFileStream(filePath, stream);
             }
 
-            var actualFileContent = SystemFile.ReadAllText(fileName);
+            var actualFileContent = SystemFile.ReadAllText(filePath);
             actualFileContent.Should().Be(expectedFileContent);
-            SystemFile.Delete(fileName);
+            SystemFile.Delete(filePath);
+        }
+
+        [Test]
+        public void WriteFileStreamToNewFileAndCreateRequiredDirectories()
+        {
+            var firstNewDirectoryPath = SystemPath.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
+            var secondNewDirectoryPath = SystemPath.Combine(firstNewDirectoryPath, "newDir");
+            var newFilePath = SystemPath.Combine(secondNewDirectoryPath, "newFile.txt");
+            var expectedFileContent = Guid.NewGuid().ToString();
+
+            ILocalFilesService service = new LocalFilesService();
+
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(expectedFileContent);
+                writer.Flush();
+                service.WriteFileStream(newFilePath, stream);
+            }
+
+            Assert.IsTrue(SystemDirectory.Exists(firstNewDirectoryPath));
+            Assert.IsTrue(SystemDirectory.Exists(secondNewDirectoryPath));
+            Assert.IsTrue(SystemFile.Exists(newFilePath));
+
+            SystemDirectory.Delete(firstNewDirectoryPath, true);
         }
 
         [Test]
@@ -165,7 +190,7 @@ namespace Bitretsmah.Tests.Integration.Data.System
         }
 
         [Test]
-        public void EsistsShouldReturnCorrectValues()
+        public void ExsistsShouldReturnCorrectValues()
         {
             ILocalFilesService service = new LocalFilesService();
 
@@ -176,6 +201,42 @@ namespace Bitretsmah.Tests.Integration.Data.System
             service.Exists(_f2Path).Should().BeTrue();
 
             service.Exists(Guid.NewGuid().ToString()).Should().BeFalse();
+        }
+
+        [Test]
+        public void DeleteFile()
+        {
+            Assert.IsTrue(SystemFile.Exists(_f1Path));
+            ILocalFilesService service = new LocalFilesService();
+            service.DeleteFileOrDirectory(_f1Path);
+            Assert.IsFalse(SystemFile.Exists(_f1Path));
+        }
+
+        [Test]
+        public void DeleteDirectory()
+        {
+            Assert.IsTrue(SystemDirectory.Exists(_d2Path));
+            ILocalFilesService service = new LocalFilesService();
+            service.DeleteFileOrDirectory(_d2Path);
+            Assert.IsFalse(SystemDirectory.Exists(_d2Path));
+        }
+
+        [Test]
+        public void DeleteDirectoryWithContent()
+        {
+            Assert.IsTrue(SystemDirectory.Exists(_d1Path));
+            ILocalFilesService service = new LocalFilesService();
+            service.DeleteFileOrDirectory(_d1Path);
+            Assert.IsFalse(SystemDirectory.Exists(_d1Path));
+        }
+
+        [Test]
+        public void IgnoreNotExistingPathWhenDeletingWithoutException()
+        {
+            var notExistingPath = SystemPath.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
+            Assert.IsFalse(SystemDirectory.Exists(notExistingPath));
+            ILocalFilesService service = new LocalFilesService();
+            service.DeleteFileOrDirectory(_d1Path);
         }
 
         [TearDown]
