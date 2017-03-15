@@ -126,5 +126,35 @@ namespace Bitretsmah.Tests.Unit.Core
             Assert.That(() => _targetService.SetTarget(name, path), Throws.TypeOf<InvalidTargetPathException>());
             _targetRepositoryMock.Verify(x => x.AddOrUpdate(It.IsAny<Target>()), Times.Never);
         }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void RemoveTarget_WithEmptyName_ThrowsException(string name)
+        {
+            Assert.ThrowsAsync<EmptyTargetNameException>(() => _targetService.RemoveTarget(name));
+            _targetRepositoryMock.Verify(x => x.Remove(It.IsAny<Target>()), Times.Never);
+        }
+
+        [Test]
+        public void RemoveUnknownTarget_ThrowsException()
+        {
+            var target = new Target { Name = "Best Target" };
+            _targetRepositoryMock.Setup(x => x.GetByName(target.Name)).ReturnsAsync(target);
+
+            var name = "Unknown Target Name";
+            Assert.ThrowsAsync<UnknownTargetException>(() => _targetService.RemoveTarget(name));
+            _targetRepositoryMock.Verify(x => x.Remove(It.IsAny<Target>()), Times.Never);
+        }
+
+        [Test]
+        public async Task RemoveTarget()
+        {
+            var target = new Target {Name = "Best Target"};
+            _targetRepositoryMock.Setup(x => x.GetByName(target.Name)).ReturnsAsync(target);
+
+            await _targetService.RemoveTarget(target.Name);
+            _targetRepositoryMock.Verify(x => x.Remove(target), Times.Once);
+        }
     }
 }

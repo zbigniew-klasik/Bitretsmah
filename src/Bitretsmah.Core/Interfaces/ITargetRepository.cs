@@ -11,5 +11,7 @@ namespace Bitretsmah.Core.Interfaces
         Task<Target> GetByName(string name);
 
         Task AddOrUpdate(Target target);
+
+        Task Remove(Target target);
     }
 }

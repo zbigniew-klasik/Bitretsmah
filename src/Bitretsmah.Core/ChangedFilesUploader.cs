@@ -53,7 +53,6 @@ namespace Bitretsmah.Core
                     {
                         if (string.IsNullOrWhiteSpace(file.Hash))
                         {
-                            // TODO: unit tests
                             await _fileHashService.TryEnsureFileHasComputedHash(file, progress);
                         }
 

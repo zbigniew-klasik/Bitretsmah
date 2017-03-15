@@ -14,6 +14,8 @@ namespace Bitretsmah.Core
         Task<Target> GetByName(string name);
 
         Task SetTarget(string name, string path);
+
+        Task RemoveTarget(string name);
     }
 
     public class TargetService : ITargetService
@@ -69,6 +71,21 @@ namespace Bitretsmah.Core
             await _targetRepository.AddOrUpdate(new Target { Name = name, LocalPath = path });
         }
 
-        // TODO: remove target
+        public async Task RemoveTarget(string name) //TODO: use it in the console app
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new EmptyTargetNameException();
+            }
+
+            var target = await _targetRepository.GetByName(name);
+
+            if (target == null)
+            {
+                throw new UnknownTargetException(name);
+            }
+
+            await _targetRepository.Remove(target);
+        }
     }
 }

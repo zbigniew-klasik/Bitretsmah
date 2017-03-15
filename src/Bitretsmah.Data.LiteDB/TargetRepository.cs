@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core.Interfaces;
+﻿using System;
+using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
 using Bitretsmah.Data.LiteDB.Internal;
 using System.Collections.Generic;
@@ -50,6 +51,11 @@ namespace Bitretsmah.Data.LiteDB
                     }
                 }
             });
+        }
+
+        public Task Remove(Target target)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Bitretsmah.Core
                     return storesQuota.OrderBy(x => x.QuotaTask.Result.Free).Last().Store;
 
                 default:
-                    throw new NotImplementedException($"The store selection method: '{StoreSelectionMethod}' is not implemnted.");
+                    throw new InvalidOperationException($"Unknowns store selection method: '{StoreSelectionMethod}'.");
             }
         }
 
