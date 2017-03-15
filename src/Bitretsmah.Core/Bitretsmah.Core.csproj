@@ -63,6 +63,7 @@
     <Compile Include="Exceptions\EmptyTargetPathException.cs" />
     <Compile Include="Exceptions\EmptyUserNameException.cs" />
     <Compile Include="Exceptions\InvalidCredentialException.cs" />
+    <Compile Include="Exceptions\InvalidFileHashException.cs" />
     <Compile Include="Exceptions\InvalidTargetPathException.cs" />
     <Compile Include="Exceptions\EmptyTargetNameException.cs" />
     <Compile Include="Exceptions\UnknownStoreException.cs" />

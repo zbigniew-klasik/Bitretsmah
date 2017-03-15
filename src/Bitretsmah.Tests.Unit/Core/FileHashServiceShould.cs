@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using System;
+using Bitretsmah.Core.Exceptions;
 
 namespace Bitretsmah.Tests.Unit.Core
 {
@@ -67,6 +68,30 @@ namespace Bitretsmah.Tests.Unit.Core
             _fileHashProviderMock.Verify(x => x.ComputeFileHash(@"C:\D1\foo.txt"), Times.Once);
             _fileHashProviderMock.Verify(x => x.ComputeFileHash(@"C:\D1\D2\bar.txt"), Times.Once);
             _progressMock.Verify(x => x.Report(It.IsAny<BackupProgress>()), Times.Exactly(4));
+        }
+
+        [Test]
+        public void VerifyFileHash_ThrowsExceptionForEmptyHash()
+        {
+            _fileHashProviderMock.Setup(x => x.ComputeFileHash(@"C:\D1\foo.txt")).Returns("actual_hash");
+            var file = new File { Name = "foo.txt", AbsolutePath = @"C:\D1\foo.txt", Hash = string.Empty };
+            Assert.ThrowsAsync<ArgumentException>(() => _fileHashService.VerifyFileHash(file, _progressMock.Object));
+        }
+
+        [Test]
+        public void VerifyFileHash_ThrowsExceptionForIncorrectHash()
+        {
+            _fileHashProviderMock.Setup(x => x.ComputeFileHash(@"C:\D1\foo.txt")).Returns("actual_hash");
+            var file = new File { Name = "foo.txt", AbsolutePath = @"C:\D1\foo.txt", Hash = "expected_hash" };
+            Assert.ThrowsAsync<InvalidFileHashException>(() => _fileHashService.VerifyFileHash(file, _progressMock.Object));
+        }
+
+        [Test]
+        public async Task VerifyFileHash_DoNothingForCorrectHash()
+        {
+            _fileHashProviderMock.Setup(x => x.ComputeFileHash(@"C:\D1\foo.txt")).Returns("same_hash");
+            var file = new File { Name = "foo.txt", AbsolutePath = @"C:\D1\foo.txt", Hash = "same_hash" };
+            await _fileHashService.VerifyFileHash(file, _progressMock.Object);
         }
     }
 }

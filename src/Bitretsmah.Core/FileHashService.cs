@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Exceptions;
 using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
+using EnsureThat;
 
 namespace Bitretsmah.Core
 {
@@ -43,10 +45,17 @@ namespace Bitretsmah.Core
             await TryEnsureFileHasComputedHash(file, progress, 1, 0);
         }
 
-        public async Task VerifyFileHash(File file, IProgress<BackupProgress> progress)
+        public Task VerifyFileHash(File file, IProgress<BackupProgress> progress)
         {
-            await Task.FromResult(0);
-            throw new NotImplementedException();
+            EnsureArg.IsNotNull(file);
+            EnsureArg.IsNotNullOrWhiteSpace(file.Hash);
+
+            return Task.Run(() =>
+            {
+                var actualFileHash = _fileHashProvider.ComputeFileHash(file.AbsolutePath);
+                if (!actualFileHash.Equals(file.Hash))
+                    throw new InvalidFileHashException(file.AbsolutePath, file.Hash, actualFileHash);
+            });
         }
 
         private Task TryEnsureFileHasComputedHash(File file, IProgress<BackupProgress> progress, int allFilesNumber,
