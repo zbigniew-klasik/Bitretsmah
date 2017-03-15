@@ -70,17 +70,32 @@ namespace Bitretsmah.Data.System
 
         public void WriteFileStream(string filePath, Stream stream)
         {
-            CreateMissingDirectoriesOnFilePath(filePath);
+            var directoryPath = Path.GetDirectoryName(filePath);
+            var directory = new SystemDirectoryInfo(directoryPath);
 
-            // TODO: it should save file in a temp location and replace when finished
-            //var x = Path.GetRandomFileName();
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
 
-            var fileInfo = new SystemFileInfo(filePath);
-            using (var writeStream = fileInfo.OpenWrite())
+            var tempFilePath = Path.Combine(directoryPath, Path.GetRandomFileName());
+            var tempFile = new SystemFileInfo(tempFilePath);
+
+            using (var writeStream = tempFile.OpenWrite())
             {
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.CopyTo(writeStream);
                 writeStream.Close();
+            }
+            
+            var destinationFile = new FileInfo(filePath);
+            if (destinationFile.Exists)
+            {
+                tempFile.Replace(filePath, null, true);
+            }
+            else
+            {
+                tempFile.MoveTo(filePath);
             }
         }
 
@@ -98,17 +113,6 @@ namespace Bitretsmah.Data.System
             var file = new SystemFileInfo(path);
             if (file.Exists)
                 file.Delete();
-        }
-
-        private void CreateMissingDirectoriesOnFilePath(string filePath)
-        {
-            var directoryPath = Path.GetDirectoryName(filePath);
-            var directory = new SystemDirectoryInfo(directoryPath);
-
-            if (!directory.Exists)
-            {
-                directory.Create();
-            }
         }
     }
 }
