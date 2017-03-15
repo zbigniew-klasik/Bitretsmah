@@ -5,8 +5,9 @@ using System.IO;
 using System.Linq;
 using Directory = Bitretsmah.Core.Models.Directory;
 using File = Bitretsmah.Core.Models.File;
-using SystemDirectoryInfo = System.IO.DirectoryInfo;
-using SystemFileInfo = System.IO.FileInfo;
+using SystemDirectory = System.IO.Directory;
+using SystemFile = System.IO.File;
+using SystemPath = System.IO.Path;
 
 namespace Bitretsmah.Data.System
 {
@@ -14,18 +15,18 @@ namespace Bitretsmah.Data.System
     {
         public Node GetNodeStructure(string nodePath)
         {
-            var file = new SystemFileInfo(nodePath);
+            var file = new FileInfo(nodePath);
             if (file.Exists)
                 return GetFileStructure(file);
 
-            var directory = new SystemDirectoryInfo(nodePath);
+            var directory = new DirectoryInfo(nodePath);
             if (directory.Exists)
                 return GetDirectoryStructure(directory);
 
             throw new DirectoryNotFoundException();
         }
 
-        private File GetFileStructure(SystemFileInfo fileInfo)
+        private File GetFileStructure(FileInfo fileInfo)
         {
             return new File
             {
@@ -39,7 +40,7 @@ namespace Bitretsmah.Data.System
             };
         }
 
-        private Directory GetDirectoryStructure(SystemDirectoryInfo directoryInfo)
+        private Directory GetDirectoryStructure(DirectoryInfo directoryInfo)
         {
             var directory = new Directory
             {
@@ -64,24 +65,21 @@ namespace Bitretsmah.Data.System
 
         public Stream ReadFileStream(string filePath)
         {
-            var fileInfo = new SystemFileInfo(filePath);
-            return fileInfo.OpenRead();
+            return SystemFile.OpenRead(filePath);
         }
 
         public void WriteFileStream(string filePath, Stream stream)
         {
-            var directoryPath = Path.GetDirectoryName(filePath);
-            var directory = new SystemDirectoryInfo(directoryPath);
+            var directoryPath = SystemPath.GetDirectoryName(filePath);
 
-            if (!directory.Exists)
+            if (!SystemDirectory.Exists(directoryPath))
             {
-                directory.Create();
+                SystemDirectory.CreateDirectory(directoryPath);
             }
 
-            var tempFilePath = Path.Combine(directoryPath, Path.GetRandomFileName());
-            var tempFile = new SystemFileInfo(tempFilePath);
+            var tempFilePath = SystemPath.Combine(directoryPath, SystemPath.GetRandomFileName());
 
-            using (var writeStream = tempFile.OpenWrite())
+            using (var writeStream = SystemFile.OpenWrite(tempFilePath))
             {
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.CopyTo(writeStream);
@@ -91,28 +89,26 @@ namespace Bitretsmah.Data.System
             var destinationFile = new FileInfo(filePath);
             if (destinationFile.Exists)
             {
-                tempFile.Replace(filePath, null, true);
+                SystemFile.Replace(tempFilePath, filePath, null, true);
             }
             else
             {
-                tempFile.MoveTo(filePath);
+                SystemFile.Move(tempFilePath, filePath);
             }
         }
 
         public bool Exists(string path)
         {
-            return new SystemDirectoryInfo(path).Exists || new SystemFileInfo(path).Exists;
+            return SystemDirectory.Exists(path) || SystemFile.Exists(path);
         }
 
         public void DeleteFileOrDirectory(string path)
         {
-            var directory = new SystemDirectoryInfo(path);
-            if (directory.Exists)
-                directory.Delete(true);
+            if (SystemDirectory.Exists(path))
+                SystemDirectory.Delete(path, true);
 
-            var file = new SystemFileInfo(path);
-            if (file.Exists)
-                file.Delete();
+            if (SystemFile.Exists(path))
+                SystemFile.Delete(path);
         }
     }
 }
