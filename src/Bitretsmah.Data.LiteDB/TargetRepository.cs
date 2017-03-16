@@ -55,7 +55,13 @@ namespace Bitretsmah.Data.LiteDB
 
         public Task Remove(Target target)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                using (var db = DbFactory.Create())
+                {
+                    db.Targets.Delete(x => x.Name.Equals(target.Name));
+                }
+            });
         }
     }
 }

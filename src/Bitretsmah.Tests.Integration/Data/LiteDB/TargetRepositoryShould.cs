@@ -83,5 +83,17 @@ namespace Bitretsmah.Tests.Integration.Data.LiteDB
                 target.LocalPath.Should().Be(updatedTarget.LocalPath);
             }
         }
+
+        [Test]
+        public async Task RemoveTarget()
+        {
+            await _targetRepository.Remove(_firstTarget);
+
+            using (var db = DbFactory.Create())
+            {
+                var target = db.Targets.FindOne(x => x.Name.Equals("My Target 1"));
+                target.Should().BeNull();
+            }
+        }
     }
 }
