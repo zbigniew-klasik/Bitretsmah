@@ -9,6 +9,7 @@ namespace Bitretsmah.Core
             For<IAccountService>().Use<AccountService>().Singleton(); ;
             For<IBackupService>().Use<BackupService>().Singleton();
             For<IChangedFilesUploader>().Use<ChangedFilesUploader>().Singleton();
+            For<IChangedFilesDownloader>().Use<ChangedFilesDownloader>().Singleton();
             For<IFileHashService>().Use<FileHashService>().Singleton();
             For<IHistoryService>().Use<HistoryService>().Singleton();
             For<INodeChangesApplier>().Use<NodeChangesApplier>().Singleton();

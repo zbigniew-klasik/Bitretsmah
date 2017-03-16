@@ -153,6 +153,20 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [Test]
+        public async Task RemoveTarget()
+        {
+            var arguments = new ConsoleArguments
+            {
+                RemoveTarget = "Target Name"
+            };
+
+            await _executor.Execut(arguments);
+
+            _targetServiceMock.Verify(x => x.RemoveTarget("Target Name"));
+            _consoleServiceMock.Verify(x => x.TargetRemovedSuccessfully());
+        }
+
+        [Test]
         public async Task ListAllTargets()
         {
             var targets = new List<Target>() { new Target(), new Target() };

@@ -64,6 +64,12 @@ namespace Bitretsmah.UI.ConsoleApp
                     return;
                 }
 
+                if (arguments.RemoveTarget != null)
+                {
+                    await RemoveTarget(arguments.RemoveTarget);
+                    return;
+                }
+
                 if (arguments.Targets)
                 {
                     await ListAllTargets();
@@ -129,6 +135,12 @@ namespace Bitretsmah.UI.ConsoleApp
         {
             await _targetService.SetTarget(name, path);
             _consoleService.TargetSetSuccessfully();
+        }
+
+        private async Task RemoveTarget(string name)
+        {
+            await _targetService.RemoveTarget(name);
+            _consoleService.TargetRemovedSuccessfully();
         }
 
         private async Task ListAllTargets()

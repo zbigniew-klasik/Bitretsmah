@@ -94,6 +94,13 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _parser.Parse(arguments.Split(' ')).SetTarget.Should().Be(expectedResult);
         }
 
+        [TestCase(@"", null)]
+        [TestCase(@"--remove-target foo", "foo")]
+        public void ParseRemoveTargetArgument(string arguments, string expectedResult)
+        {
+            _parser.Parse(arguments.Split(' ')).RemoveTarget.Should().Be(expectedResult);
+        }
+
         [TestCase("--accounts", false)]
         [TestCase("--targets", true)]
         [TestCase("--accounts --targets", true)]

@@ -93,6 +93,17 @@
         public string SetTarget { get; set; }
 
         /// <summary>
+        ///     Removes target
+        /// </summary>
+        /// <value>
+        ///     The name of the target.
+        /// </value>
+        /// <remarks>
+        ///     bitretsmah --remove-target name
+        /// </remarks>
+        public string RemoveTarget { get; set; }
+
+        /// <summary>
         ///     List all targets.
         /// </summary>
         /// <remarks>

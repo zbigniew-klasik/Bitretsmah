@@ -22,6 +22,8 @@ namespace Bitretsmah.UI.ConsoleApp
 
         void TargetSetSuccessfully();
 
+        void TargetRemovedSuccessfully();
+
         void ListTargets(IEnumerable<Target> targets);
 
         void WriteErrorMessage(string message);
@@ -33,18 +35,19 @@ namespace Bitretsmah.UI.ConsoleApp
 
     internal class ConsoleService : IConsoleService
     {
-        public const string ProgramName = "Bitretsmah";
-
         public void WriteHelp()
         {
-            Console.WriteLine($"{ProgramName} usage:");
-            Console.WriteLine("--backup target");
-            Console.WriteLine("--restore target");
-            Console.WriteLine("--set-account user [--password password]");
-            Console.WriteLine("--set-target target --path path");
-            Console.WriteLine("--forced");
-            Console.WriteLine("--help");
-            Console.WriteLine("--version");
+            Console.WriteLine("Usage:");
+            Console.WriteLine("\t--backup target");
+            Console.WriteLine("\t--restore target");
+            Console.WriteLine("\t--accounts");
+            Console.WriteLine("\t--set-account user [--password password]");
+            Console.WriteLine("\t--targets");
+            Console.WriteLine("\t--set-target target --path path");
+            Console.WriteLine("\t--remove-target target");
+            Console.WriteLine("\t--forced");
+            Console.WriteLine("\t--help");
+            Console.WriteLine("\t--version");
 
             //TODO
         }
@@ -117,6 +120,11 @@ namespace Bitretsmah.UI.ConsoleApp
         public void TargetSetSuccessfully()
         {
             Console.WriteLine("Target configured successfully.");
+        }
+
+        public void TargetRemovedSuccessfully()
+        {
+            Console.WriteLine("Target removed successfully.");
         }
 
         public void ListTargets(IEnumerable<Target> targets)
