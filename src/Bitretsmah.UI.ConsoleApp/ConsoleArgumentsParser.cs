@@ -35,6 +35,7 @@ namespace Bitretsmah.UI.ConsoleApp
             parser.Setup(x => x.RemoveTarget).As("remove-target");
             parser.Setup(x => x.Targets).As("targets");
             parser.Setup(x => x.Version).As("version");
+            parser.Setup(x => x.Hash).As("hash");
 
             var result = parser.Parse(args);
 

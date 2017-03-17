@@ -40,6 +40,7 @@ namespace Bitretsmah.UI.ConsoleApp
             Console.WriteLine("Usage:");
             Console.WriteLine("\t--backup target");
             Console.WriteLine("\t--restore target");
+            Console.WriteLine("\t--hash");
             Console.WriteLine("\t--accounts");
             Console.WriteLine("\t--set-account user [--password password]");
             Console.WriteLine("\t--targets");
@@ -48,8 +49,6 @@ namespace Bitretsmah.UI.ConsoleApp
             Console.WriteLine("\t--forced");
             Console.WriteLine("\t--help");
             Console.WriteLine("\t--version");
-
-            //TODO
         }
 
         public void WriteVersion()

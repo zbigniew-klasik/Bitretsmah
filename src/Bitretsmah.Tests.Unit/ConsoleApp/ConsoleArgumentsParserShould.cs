@@ -152,5 +152,14 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
             _parser.Parse(inputArguments.Split(' '));
             _loggerMock.Verify(x => x.Info(It.IsAny<string>(), loggedArguments), Times.Once);
         }
+
+        [TestCase("--help", false)]
+        [TestCase("--hash", true)]
+        [TestCase("--forced --hash", true)]
+        [TestCase("--hash --version", true)]
+        public void ParseHashArgument(string arguments, bool expectedResult)
+        {
+            _parser.Parse(arguments.Split(' ')).Hash.Should().Be(expectedResult);
+        }
     }
 }
