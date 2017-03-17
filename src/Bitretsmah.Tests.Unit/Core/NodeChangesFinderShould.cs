@@ -272,5 +272,35 @@ namespace Bitretsmah.Tests.Unit.Core
         }
 
         #endregion NESTED DIRECTORIES
+
+        #region NULL INITIAL NODE
+
+        [Test]
+        public void ForNullInitialNodeReturnsFinalNodeWithCreatedState()
+        {
+            Node initialNode = null;
+
+            var finalNode =
+                CreateDirectory("D_0",
+                    CreateFile("F_1"),
+                    CreateDirectory("D_1",
+                        CreateFile("F_2"),
+                        CreateDirectory("D_2",
+                            CreateFile("F_3"))));
+
+            var expectedResult =
+                CreateDirectory("D_0", NodeState.Created,
+                    CreateFile("F_1", NodeState.Created),
+                    CreateDirectory("D_1", NodeState.Created,
+                        CreateFile("F_2", NodeState.Created),
+                        CreateDirectory("D_2", NodeState.Created,
+                            CreateFile("F_3", NodeState.Created))));
+
+            var actualResult = (Directory)_finder.Find(initialNode, finalNode);
+            actualResult.ShouldBeEquivalentTo(expectedResult);
+            actualResult.ShouldSerializeSameAs(expectedResult);
+        }
+
+        #endregion
     }
 }

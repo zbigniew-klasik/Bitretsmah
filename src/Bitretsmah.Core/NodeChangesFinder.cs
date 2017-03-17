@@ -17,8 +17,6 @@ namespace Bitretsmah.Core
         {
             Ensure.That(finalNode).IsNotNull();
 
-            // TODO: is that right? refactor!
-            // TODO: unit test it
             if (initialNode == null)
             {
                 var result = finalNode.DeepCopy();

@@ -79,8 +79,7 @@ namespace Bitretsmah.Core
 
             await _backupRepository.Add(backup);
 
-            // TODO:
-            // use remote backup repository to upload backup to Mega
+            // TODO: Save backup on remote server
         }
     }
 }
