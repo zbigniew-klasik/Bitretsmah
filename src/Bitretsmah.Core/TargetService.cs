@@ -71,7 +71,7 @@ namespace Bitretsmah.Core
             await _targetRepository.AddOrUpdate(new Target { Name = name, LocalPath = path });
         }
 
-        public async Task RemoveTarget(string name) //TODO: use it in the console app
+        public async Task RemoveTarget(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

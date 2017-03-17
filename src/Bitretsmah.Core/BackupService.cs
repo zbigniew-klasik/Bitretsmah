@@ -9,6 +9,8 @@ namespace Bitretsmah.Core
     public interface IBackupService
     {
         Task Backup(BackupRequest request);
+
+        Task Restore(RestoreRequest request);
     }
 
     public class BackupService : IBackupService
@@ -47,7 +49,6 @@ namespace Bitretsmah.Core
 
         public async Task Restore(RestoreRequest request)
         {
-            // TODO: unit test all of it !!!!!!!!!!!!
             var currentStructure = await GetCurrentStructure(request.TargetName, request.ComputeHashForEachFile, request.Progress);
             var destinationStructure = await _historyService.GetLastStructure(request.TargetName);
             var structureChange = _nodeChangesFinder.Find(currentStructure, destinationStructure);
