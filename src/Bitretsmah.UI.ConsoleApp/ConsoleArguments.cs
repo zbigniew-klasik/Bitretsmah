@@ -30,6 +30,14 @@
         public bool Forced { get; set; }
 
         /// <summary>
+        ///     Computes hash of each file while backup or restore.
+        /// </summary>
+        /// <remarks>
+        ///     bitretsmah --hash --backup name
+        /// </remarks>
+        public bool Hash { get; set; }
+
+        /// <summary>
         ///     Show help.
         /// </summary>
         /// <remarks>
@@ -58,6 +66,17 @@
         ///     bitretsmah --path name
         /// </remarks>
         public string Path { get; set; }
+
+        /// <summary>
+        ///     Removes target
+        /// </summary>
+        /// <value>
+        ///     The name of the target.
+        /// </value>
+        /// <remarks>
+        ///     bitretsmah --remove-target name
+        /// </remarks>
+        public string RemoveTarget { get; set; }
 
         /// <summary>
         ///     Restores backup of a target
@@ -91,17 +110,6 @@
         ///     bitretsmah --set-target name --path path
         /// </remarks>
         public string SetTarget { get; set; }
-
-        /// <summary>
-        ///     Removes target
-        /// </summary>
-        /// <value>
-        ///     The name of the target.
-        /// </value>
-        /// <remarks>
-        ///     bitretsmah --remove-target name
-        /// </remarks>
-        public string RemoveTarget { get; set; }
 
         /// <summary>
         ///     List all targets.

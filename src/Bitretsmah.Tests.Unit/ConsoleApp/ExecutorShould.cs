@@ -50,6 +50,16 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         [Test]
+        public async Task WritesHelpForEmptyArguments()
+        {
+            var arguments = new ConsoleArguments();
+
+            await _executor.Execut(arguments);
+
+            _consoleServiceMock.Verify(x => x.WriteHelp());
+        }
+
+        [Test]
         public async Task WritesVersion()
         {
             var arguments = new ConsoleArguments
@@ -214,5 +224,85 @@ namespace Bitretsmah.Tests.Unit.ConsoleApp
         }
 
         #endregion Exceptions
+
+        #region Backup & Restore
+
+        [Test]
+        public async Task Backup()
+        {
+            BackupRequest request = null;
+            _backupServiceMock.Setup(x => x.Backup(It.IsAny<BackupRequest>())).Callback<BackupRequest>(x => request = x);
+
+            var arguments = new ConsoleArguments
+            {
+                Backup = "Target Name"
+            };
+
+            await _executor.Execut(arguments);
+
+            _backupServiceMock.Verify(x => x.Backup(It.IsAny<BackupRequest>()));
+            request.Should().NotBeNull();
+            request.TargetName.Should().Be("Target Name");
+            request.Progress.Should().NotBeNull();
+            request.ComputeHashForEachFile.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task BackupWithHashAllFiles()
+        {
+            BackupRequest request = null;
+            _backupServiceMock.Setup(x => x.Backup(It.IsAny<BackupRequest>())).Callback<BackupRequest>(x => request = x);
+
+            var arguments = new ConsoleArguments
+            {
+                Backup = "Target Name",
+                Hash = true
+            };
+
+            await _executor.Execut(arguments);
+
+            request.Should().NotBeNull();
+            request.ComputeHashForEachFile.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task Restore()
+        {
+            RestoreRequest request = null;
+            _backupServiceMock.Setup(x => x.Restore(It.IsAny<RestoreRequest>())).Callback<RestoreRequest>(x => request = x);
+
+            var arguments = new ConsoleArguments
+            {
+                Restore = "Target Name"
+            };
+
+            await _executor.Execut(arguments);
+
+            _backupServiceMock.Verify(x => x.Restore(It.IsAny<RestoreRequest>()));
+            request.Should().NotBeNull();
+            request.TargetName.Should().Be("Target Name");
+            request.Progress.Should().NotBeNull();
+            request.ComputeHashForEachFile.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task RestoreWithHashAllFiles()
+        {
+            RestoreRequest request = null;
+            _backupServiceMock.Setup(x => x.Restore(It.IsAny<RestoreRequest>())).Callback<RestoreRequest>(x => request = x);
+
+            var arguments = new ConsoleArguments
+            {
+                Restore = "Target Name",
+                Hash = true
+            };
+
+            await _executor.Execut(arguments);
+
+            request.Should().NotBeNull();
+            request.ComputeHashForEachFile.Should().BeTrue();
+        }
+
+        #endregion
     }
 }

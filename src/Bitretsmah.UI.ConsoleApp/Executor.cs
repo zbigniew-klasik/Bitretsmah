@@ -78,11 +78,17 @@ namespace Bitretsmah.UI.ConsoleApp
 
                 if (arguments.Backup != null)
                 {
-                    await Backup(arguments.Backup); //TODO: unit test
+                    await Backup(arguments.Backup, arguments.Hash);
                     return;
                 }
 
-                _consoleService.WriteHelp(); //TODO: unit test
+                if (arguments.Restore != null)
+                {
+                    await Restore(arguments.Restore, arguments.Hash);
+                    return;
+                }
+
+                _consoleService.WriteHelp();
             }
             catch (BitretsmahException ex)
             {
@@ -96,23 +102,34 @@ namespace Bitretsmah.UI.ConsoleApp
             }
         }
 
-        private async Task Backup(string targetName)
+        private async Task Backup(string targetName, bool computeHashForEachFile)
         {
-            //TODO: handle progress in proper way
-            //TODO: use ComputeHashForEachFile (add command line flag)
-            //TODO: unit test all of it
-
             var progress = new Progress<BackupProgress>();
             progress.ProgressChanged += (sender, backupProgress) => { _consoleService.WriteProgress(backupProgress); };
 
             var request = new BackupRequest
             {
                 TargetName = targetName,
-                ComputeHashForEachFile = false,
+                ComputeHashForEachFile = computeHashForEachFile,
                 Progress = progress
             };
 
             await _backupService.Backup(request);
+        }
+
+        private async Task Restore(string targetName, bool computeHashForEachFile)
+        {
+            var progress = new Progress<BackupProgress>();
+            progress.ProgressChanged += (sender, backupProgress) => { _consoleService.WriteProgress(backupProgress); };
+
+            var request = new RestoreRequest
+            {
+                TargetName = targetName,
+                ComputeHashForEachFile = computeHashForEachFile,
+                Progress = progress
+            };
+
+            await _backupService.Restore(request);
         }
 
         private async Task SetAccount(string username, string password)
