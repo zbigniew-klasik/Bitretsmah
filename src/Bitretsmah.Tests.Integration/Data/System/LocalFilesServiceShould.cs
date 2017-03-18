@@ -24,8 +24,8 @@ namespace Bitretsmah.Tests.Integration.Data.System
         [SetUp]
         public void SetUp()
         {
-            _creationTime = DateTimeOffset.Now.AddMinutes(-5);
-            _writeTime = DateTimeOffset.Now.AddMinutes(-1);
+            _creationTime = new DateTimeOffset(2017, 3, 16, 16, 34, 59, DateTimeOffset.Now.Offset);
+            _writeTime = new DateTimeOffset(2017, 3, 17, 17, 45, 3, DateTimeOffset.Now.Offset);
 
             _d0Path = SystemPath.Combine(Environment.CurrentDirectory, "LocalFilesService Test D0");
             _d1Path = SystemPath.Combine(_d0Path, "LocalFilesService Test D1");

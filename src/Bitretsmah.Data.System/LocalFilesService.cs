@@ -32,12 +32,17 @@ namespace Bitretsmah.Data.System
             {
                 Name = fileInfo.Name,
                 Size = fileInfo.Length,
-                CreationTime = new DateTimeOffset(fileInfo.CreationTime),
-                ModificationTime = new DateTimeOffset(fileInfo.LastWriteTime),
+                CreationTime = IgnoreMilliseconds(new DateTimeOffset(fileInfo.CreationTime)),
+                ModificationTime = IgnoreMilliseconds(new DateTimeOffset(fileInfo.LastWriteTime)),
                 Hash = null,
                 State = NodeState.None,
                 AbsolutePath = fileInfo.FullName
             };
+        }
+
+        private DateTimeOffset IgnoreMilliseconds(DateTimeOffset x)
+        {
+            return new DateTimeOffset(x.Year, x.Month, x.Day, x.Hour, x.Minute, x.Second, 0, x.Offset);
         }
 
         private Directory GetDirectoryStructure(DirectoryInfo directoryInfo)
