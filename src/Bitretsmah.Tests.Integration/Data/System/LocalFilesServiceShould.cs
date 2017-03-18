@@ -138,6 +138,7 @@ namespace Bitretsmah.Tests.Integration.Data.System
             {
                 writer.Write(expectedFileContent);
                 writer.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
                 service.WriteFileStream(filePath, stream);
             }
 
@@ -182,6 +183,7 @@ namespace Bitretsmah.Tests.Integration.Data.System
             {
                 writer.Write(expectedFileContent);
                 writer.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
                 service.WriteFileStream(_f2Path, stream);
             }
 

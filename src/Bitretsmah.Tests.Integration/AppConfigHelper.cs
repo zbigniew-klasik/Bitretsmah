@@ -14,7 +14,7 @@ namespace Bitretsmah.Tests.Integration
 
         static AppConfigHelper()
         {
-            const string secretSettingsPath = @"D:\Projects\Settings\bitretsmah.config";
+            const string secretSettingsPath = @"C:\Projects\Settings\bitretsmah.config";
 
             if (File.Exists(secretSettingsPath))
             {

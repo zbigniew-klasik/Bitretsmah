@@ -81,8 +81,7 @@ namespace Bitretsmah.Data.System
 
             using (var writeStream = SystemFile.OpenWrite(tempFilePath))
             {
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(writeStream);
+                stream.CopyTo(writeStream); // TODO: use CopyToAsync()
                 writeStream.Close();
             }
             

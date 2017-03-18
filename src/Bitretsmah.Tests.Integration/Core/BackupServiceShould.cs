@@ -92,6 +92,53 @@ namespace Bitretsmah.Tests.Integration.Core
             Console.WriteLine("OK!");
         }
 
+        [Test]
+        public async Task CreateBackupAndRestore()
+        {
+            Console.WriteLine("Creating target directory...");
+            var targetDirectory = new DirectoryInfo("Target Directory " + Guid.NewGuid());
+            targetDirectory.Create();
+
+            Console.WriteLine("Creating file...");
+            var filePath = Path.Combine(targetDirectory.FullName, "foobar.txt");
+            System.IO.File.WriteAllText(filePath, "ABCDEF");
+
+            Console.WriteLine("Setting account...");
+            await _accountService.SetCredential(AppConfigHelper.GetTestMegaCredential());
+
+            Console.WriteLine("Setting target...");
+            await _targetService.SetTarget("Test Target", targetDirectory.FullName);
+
+            Console.WriteLine("Creating backup...");
+            var backupRequest = new BackupRequest
+            {
+                TargetName = "Test Target",
+                ComputeHashForEachFile = true,
+                Progress = new Progress<BackupProgress>()
+            };
+            await _backupService.Backup(backupRequest);
+
+            Console.WriteLine("Deleting file...");
+            System.IO.File.Delete(filePath);
+            Assert.IsFalse(System.IO.File.Exists(filePath));
+
+            Console.WriteLine("Restoring backup...");
+            var restoreRequest = new RestoreRequest()
+            {
+                TargetName = "Test Target",
+                ComputeHashForEachFile = true,
+                Progress = new Progress<BackupProgress>()
+            };
+            await _backupService.Restore(restoreRequest);
+
+            Console.WriteLine("Verifying file...");
+            Assert.IsTrue(System.IO.File.Exists(filePath));
+            Assert.AreEqual("ABCDEF", System.IO.File.ReadAllText(filePath));
+
+            targetDirectory.Delete(true);
+            Console.WriteLine("OK!");
+        }
+
         [TearDown]
         public void TearDown()
         {
