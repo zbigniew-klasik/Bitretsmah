@@ -52,5 +52,11 @@ namespace Bitretsmah.Tests.Unit.Core
             rootDirectoryCopy.ShouldBeEquivalentTo(rootDirectory);
             rootDirectoryCopy.ShouldSerializeSameAs(rootDirectory);
         }
+
+        [Test]
+        public void SimpleBrokenTestToCheckTravis()
+        {
+            Assert.IsTrue(false);
+        }
     }
 }
