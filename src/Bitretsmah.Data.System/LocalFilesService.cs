@@ -99,6 +99,8 @@ namespace Bitretsmah.Data.System
             {
                 SystemFile.Move(tempFilePath, filePath);
             }
+
+            //TODO: set also crated date and modified date from backup
         }
 
         public bool Exists(string path)

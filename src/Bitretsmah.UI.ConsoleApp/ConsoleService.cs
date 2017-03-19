@@ -162,41 +162,47 @@ namespace Bitretsmah.UI.ConsoleApp
             switch (progress.State)
             {
                 case BackupProgress.BackupState.HashStart:
-                    Console.WriteLine(progress.CurrentFile.AbsolutePath + " computing...");
+                    Console.Write(progress.CurrentFile.AbsolutePath + " computing...");
                     break;
 
                 case BackupProgress.BackupState.HashFinished:
-                    Console.WriteLine("SHA1: " + progress.CurrentFile.Hash);
+                    Console.WriteLine(" done.");
+                    Console.WriteLine();
                     break;
 
                 case BackupProgress.BackupState.UploadStart:
-                    Console.WriteLine(progress.CurrentFile.AbsolutePath + " uploading...");
+                    Console.WriteLine(progress.CurrentFileNumber + 1 + "/" + progress.AllFilesCount + ": " + progress.CurrentFile.AbsolutePath);
                     break;
 
                 case BackupProgress.BackupState.UploadProgress:
-                    Console.Write($"\r\t{progress.CurrentFileProgress:0.00}%");
+                    Console.Write($"\r uploading... {progress.CurrentFileProgress:0.00}% ");
                     break;
 
                 case BackupProgress.BackupState.UploadFinished:
-                    Console.WriteLine(" done.");
+                    Console.WriteLine("done.");
+                    Console.WriteLine();
                     break;
 
                 case BackupProgress.BackupState.DownloadStart:
-                    Console.WriteLine(progress.CurrentFile.AbsolutePath + " downloading...");
+                    Console.WriteLine(progress.CurrentFileNumber + 1 + "/" + progress.AllFilesCount + ": " + progress.CurrentFile.AbsolutePath);
                     break;
 
                 case BackupProgress.BackupState.DownloadProgress:
-                    Console.Write($"\r\t{progress.CurrentFileProgress:0.00}%");
+                    Console.Write($"\r downloading... {progress.CurrentFileProgress:0.00}% ");
                     break;
 
                 case BackupProgress.BackupState.DownloadFinished:
-                    Console.WriteLine(" done.");
+                    Console.WriteLine("done.");
+                    Console.WriteLine();
                     break;
+
+                //TODO: deleting report
 
                 case BackupProgress.BackupState.Error:
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("ERROR: " + progress.Error);
                     Console.ResetColor();
+                    Console.WriteLine();
                     break;
             }
             Console.Out.Flush();

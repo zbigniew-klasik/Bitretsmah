@@ -57,7 +57,7 @@ namespace Bitretsmah.Core
                         progress.Report(BackupProgress.CreateDownloadStartReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
 
                         var downloadProgress = new Progress<double>(downloadPercentage =>
-                                    progress.Report(BackupProgress.CreateUploadProgressReport(createdAndModifiedFiles.Count, processedFilesNumber, file, downloadPercentage)));
+                                    progress.Report(BackupProgress.CreateDownloadProgressReport(createdAndModifiedFiles.Count, processedFilesNumber, file, downloadPercentage)));
 
                         using (var stream = await warehouse.DownloadFile(file.RemoteId, downloadProgress))
                         {
