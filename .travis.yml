@@ -2,10 +2,10 @@ language: csharp
 solution: src/Bitretsmah.sln
 install:
   - nuget restore src/Bitretsmah.sln
-  - nuget install NUnit.Runners -Version 3.6.1 -OutputDirectory testrunner
+  - nuget install NUnit.Runners -Version 3.5.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release src/Bitretsmah.sln
-  - mono ./testrunner/NUnit.Runners.3.6.1/tools/nunit-console.exe ./src/Bitretsmah.Tests.Unit/bin/Release/Bitretsmah.Tests.Unit.dll
+  - mono ./testrunner/NUnit.Runners.3.5.0/tools/nunit-console.exe ./src/Bitretsmah.Tests.Unit/bin/Release/Bitretsmah.Tests.Unit.dll
 branches:
   only:
     - master
