@@ -1,15 +1,15 @@
 language: csharp
+
 solution: src/Bitretsmah.sln
+
 install:
   - nuget restore src/Bitretsmah.sln
   - nuget install NUnit.Runners -Version 3.6.1 -OutputDirectory testrunner
+
 script:
   - xbuild /p:Configuration=Release src/Bitretsmah.sln
   - mono ./testrunner/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe ./src/Bitretsmah.Tests.Unit/bin/Release/Bitretsmah.Tests.Unit.dll
-branches:
-  only:
-    - master
-    - develop
+
 notifications:
   email:
     on_success: change
