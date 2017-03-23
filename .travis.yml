@@ -13,6 +13,17 @@ script:
   - mono ./testrunner/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe ./src/Bitretsmah.Tests.Unit/bin/Release/Bitretsmah.Tests.Unit.dll
   - ./merge_assemblies.sh
 
+deploy:
+  provider: releases
+  skip_cleanup: true
+  file: bitretsmah.exe
+  api_key:
+    secure: lk3aRUIN7yr2XKIkOhUXuj5kdJblU0cdICGcj2772C+TqRM621oSI0f9dw4gJk8Zigmq1cl8NtAVYldVVcYhgKOqXCEPoHC5Dt+xO7LK5PgL2D1cmmAwT58frfro5go3jgXaE95StUb6id9BsRj1SNWcf7zzUqKElm7TeAR2vVnYYkHs2wLTcJ+LE891JexbUaTaMzKvj13qEzrSQxNTmuTQgaLJngTMWjWENbktv3En6P/pDczfg/JytaHJBwYGw5mvltR+XuzHfqZTkfdZAOZnV0YHfe+uC+GkiFE6hXPDYxZ2z/drwNFrGJxq/5c9FfU5FnbccN5vuarjWFcJfJIPvtIARFYx1gIlYDw3z01emgXZQL6yaU7St+JJqzhvq/akp3ReNUGRy08CnnSIjmX3nT1FP8MvQO4efJ7rpmmR1aOBKZunAzoQwbkerbh0qDYX9xa54DZ+4MiBxYbror97ffw5rw0bAuZlt+SZfLPHH4QVZ++tptMZR68QzMiTGJY07r4UGMGFpN3INALphpbvBxm/ugvUQwBv44ZlCnGEtYtI5PXQO2dqeWGzRt8IXXxeenhpx2J9Oqp1CrLa6Jihf8IXAUC5p85PQq3O+Pq+UluRP/029FT8gDC8yDN99LJ/zMzSQtVDNZC8h6eHJ01uEA2Q7uOX8UvKfXpY6Ck=
+  
+  on:
+    tags: true
+    all_branches: true
+
 notifications:
   email:
     on_success: change
