@@ -3,23 +3,22 @@ language: csharp
 solution: src/Bitretsmah.sln
 
 install:
-  - nuget restore src/Bitretsmah.sln
-  - nuget install NUnit.Runners -Version 3.6.1 -OutputDirectory testrunner
-  - chmod u+x *.sh
+- nuget restore src/Bitretsmah.sln
+- nuget install NUnit.Runners -Version 3.6.1 -OutputDirectory testrunner
+- chmod u+x *.sh
 
 script:
-  - ./set_assembly_version.sh
-  - xbuild /p:Configuration=Release src/Bitretsmah.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe ./src/Bitretsmah.Tests.Unit/bin/Release/Bitretsmah.Tests.Unit.dll
-  - ./merge_assemblies.sh
+- ./set_assembly_version.sh
+- xbuild /p:Configuration=Release src/Bitretsmah.sln
+- mono ./testrunner/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe ./src/Bitretsmah.Tests.Unit/bin/Release/Bitretsmah.Tests.Unit.dll
+- ./merge_assemblies.sh
 
 deploy:
   provider: releases
   skip_cleanup: true
   file: bitretsmah.exe
   api_key:
-    secure: lk3aRUIN7yr2XKIkOhUXuj5kdJblU0cdICGcj2772C+TqRM621oSI0f9dw4gJk8Zigmq1cl8NtAVYldVVcYhgKOqXCEPoHC5Dt+xO7LK5PgL2D1cmmAwT58frfro5go3jgXaE95StUb6id9BsRj1SNWcf7zzUqKElm7TeAR2vVnYYkHs2wLTcJ+LE891JexbUaTaMzKvj13qEzrSQxNTmuTQgaLJngTMWjWENbktv3En6P/pDczfg/JytaHJBwYGw5mvltR+XuzHfqZTkfdZAOZnV0YHfe+uC+GkiFE6hXPDYxZ2z/drwNFrGJxq/5c9FfU5FnbccN5vuarjWFcJfJIPvtIARFYx1gIlYDw3z01emgXZQL6yaU7St+JJqzhvq/akp3ReNUGRy08CnnSIjmX3nT1FP8MvQO4efJ7rpmmR1aOBKZunAzoQwbkerbh0qDYX9xa54DZ+4MiBxYbror97ffw5rw0bAuZlt+SZfLPHH4QVZ++tptMZR68QzMiTGJY07r4UGMGFpN3INALphpbvBxm/ugvUQwBv44ZlCnGEtYtI5PXQO2dqeWGzRt8IXXxeenhpx2J9Oqp1CrLa6Jihf8IXAUC5p85PQq3O+Pq+UluRP/029FT8gDC8yDN99LJ/zMzSQtVDNZC8h6eHJ01uEA2Q7uOX8UvKfXpY6Ck=
-  
+    secure: Zbnrng9IfH6TCojZ1z5UmQainxoI6KWt6mTvxnq0jt0xRlFeUIc1XBAdb7Zcu5bS8HMUGFX93MZrrXp3vy5Oo5yDki0p957U5knGOQvnqG+k1L1mhRR0D1rBoeb9clj7C+RnCP0rRgbdOFFcQ3RJD7ysV0qLcRDzpOK0wwYssUGj0b+/zbj7GviK9djjP1Tk3zesIXQiU/oe51e4keszLi4DYWzs07K7W7Xdvk4T+0mWbdRXO9dZ9yPpHqJDY66hZXzxoCZZOT6Re9oaKVBCMY2PYph+KA++HSK5ZH5Ydrp7Cwa7k0jtRqBXc0oE7yGSaaYIOS428dDoDJOVCiBiOnoOPo7i3zM+DnSZ/HXuj8TgoJpysPuFuB4uHNW36umrrWWDNENrvdXF5vd52MKVmTGCEIyvP4xHfRLKuDgwgQiW01pAme6vnR4DH/8nSynj+FHaNDg65Yy9JEc0OUvDjhfrUy7g8IITuzSj3Td2vu7gazo0gg907uyOW8fNr9/5x66Z4jilGqv95lqwIcdZ+HHgpxhrTRJ2f+uE6ZeWwXBaGUHfzwEkeZ4elx34Mkl5Yj0DSB48QZQ0MY5lnHx40xlrgbnJhhhCeskT4Xqt5dToHC6ZuHpcwzbQjKD+Q04wkawrKBdxh+PZNOgtZVcGddxryr85wb0Vb0rNT7kc/LI=
   on:
     tags: true
     all_branches: true
