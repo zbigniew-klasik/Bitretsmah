@@ -26,7 +26,7 @@ namespace Bitretsmah.Tests.Unit
             }
             finally
             {
-                throw new JsonException($"The actual JSON does not match the expected. Compare files in directory: '{path}'.");
+                throw new JsonException($"See file in the directory: '{path}'. The actual JSON does not match the expected. Compare files to find the differences.");
             }
         }
     }

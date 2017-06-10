@@ -24,8 +24,11 @@ namespace Bitretsmah.Tests.Integration.Data.System
         [SetUp]
         public void SetUp()
         {
-            _creationTime = new DateTimeOffset(2017, 3, 16, 16, 34, 59, DateTimeOffset.Now.Offset);
-            _writeTime = new DateTimeOffset(2017, 3, 17, 17, 45, 3, DateTimeOffset.Now.Offset);
+            var now = DateTimeOffset.Now;
+            var trimmedNow = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Offset);
+
+            _creationTime = trimmedNow.AddDays(-7);
+            _writeTime = trimmedNow.AddMinutes(-4);
 
             _d0Path = SystemPath.Combine(Environment.CurrentDirectory, "LocalFilesService Test D0");
             _d1Path = SystemPath.Combine(_d0Path, "LocalFilesService Test D1");
@@ -40,10 +43,10 @@ namespace Bitretsmah.Tests.Integration.Data.System
             SystemFile.WriteAllText(_f1Path, "text");
             SystemFile.WriteAllText(_f2Path, "longer text");
 
-            SystemFile.SetCreationTime(_f1Path, _creationTime.DateTime);
-            SystemFile.SetCreationTime(_f2Path, _creationTime.DateTime);
-            SystemFile.SetLastWriteTime(_f1Path, _writeTime.DateTime);
-            SystemFile.SetLastWriteTime(_f2Path, _writeTime.DateTime);
+            SystemFile.SetCreationTime(_f1Path, _creationTime.LocalDateTime);
+            SystemFile.SetCreationTime(_f2Path, _creationTime.LocalDateTime);
+            SystemFile.SetLastWriteTime(_f1Path, _writeTime.LocalDateTime);
+            SystemFile.SetLastWriteTime(_f2Path, _writeTime.LocalDateTime);
         }
 
         [Test]
