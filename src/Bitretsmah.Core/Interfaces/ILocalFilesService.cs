@@ -1,4 +1,5 @@
-﻿using Bitretsmah.Core.Models;
+﻿using System;
+using Bitretsmah.Core.Models;
 using System.IO;
 
 namespace Bitretsmah.Core.Interfaces
@@ -14,5 +15,9 @@ namespace Bitretsmah.Core.Interfaces
         bool Exists(string path);
 
         void DeleteFileOrDirectory(string path);
+
+        void SetCreationTime(string filePath, DateTimeOffset time);
+
+        void SetLastWriteTime(string filePath, DateTimeOffset time);
     }
 }

@@ -244,6 +244,24 @@ namespace Bitretsmah.Tests.Integration.Data.System
             service.DeleteFileOrDirectory(_d1Path);
         }
 
+        [Test]
+        public void SetCreationTime()
+        {
+            var newCreationTime = _creationTime.Add(new TimeSpan(1, 3, 5, 7));
+            ILocalFilesService service = new LocalFilesService();
+            service.SetCreationTime(_f1Path, newCreationTime);
+            Assert.AreEqual(SystemFile.GetCreationTime(_f1Path), newCreationTime.LocalDateTime);
+        }
+
+        [Test]
+        public void SetLastWriteTime()
+        {
+            var newLastWriteTime = _writeTime.Add(new TimeSpan(2, 4, 6, 8));
+            ILocalFilesService service = new LocalFilesService();
+            service.SetLastWriteTime(_f2Path, newLastWriteTime);
+            Assert.AreEqual(SystemFile.GetLastWriteTime(_f2Path), newLastWriteTime.LocalDateTime);
+        }
+
         [TearDown]
         public void TearDown()
         {

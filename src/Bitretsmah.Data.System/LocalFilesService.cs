@@ -99,8 +99,6 @@ namespace Bitretsmah.Data.System
             {
                 SystemFile.Move(tempFilePath, filePath);
             }
-
-            //TODO: set also crated date and modified date from backup
         }
 
         public bool Exists(string path)
@@ -116,5 +114,16 @@ namespace Bitretsmah.Data.System
             if (SystemFile.Exists(path))
                 SystemFile.Delete(path);
         }
+
+        public void SetCreationTime(string filePath, DateTimeOffset time)
+        {
+            SystemFile.SetCreationTime(filePath, IgnoreMilliseconds(time).LocalDateTime);
+        }
+
+        public void SetLastWriteTime(string filePath, DateTimeOffset time)
+        {
+            SystemFile.SetLastWriteTime(filePath, IgnoreMilliseconds(time).LocalDateTime);
+        }
+
     }
 }
