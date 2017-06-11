@@ -105,5 +105,20 @@ namespace Bitretsmah.Tests.Unit.Core
             _localFilesServiceMock.Verify(x => x.WriteFileStream(fileC.AbsolutePath, It.IsAny<Stream>()), Times.Once);
             _fileHashServiceMock.Verify(x => x.VerifyFileHash(fileC, progress), Times.Once);
         }
+
+        [Test]
+        public async Task SetProperCreationAndModificationTimes()
+        {
+            var fileA = CreateFile("fileA", NodeState.Created);
+            fileA.CreationTime = new DateTimeOffset(2017, 4, 11, 10, 12, 13, new TimeSpan());
+            fileA.ModificationTime = new DateTimeOffset(2017, 5, 15, 18, 14, 11, new TimeSpan());
+
+            var filesStructureChange = CreateDirectory("root", NodeState.Modified, fileA);
+            var progress = new Progress<BackupProgress>();
+            await _changedFilesDownloader.Download(filesStructureChange, progress);
+
+            _localFilesServiceMock.Verify(x => x.SetCreationTime(fileA.AbsolutePath, fileA.CreationTime), Times.Once);
+            _localFilesServiceMock.Verify(x => x.SetLastWriteTime(fileA.AbsolutePath, fileA.ModificationTime), Times.Once);
+        }
     }
 }

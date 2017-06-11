@@ -62,6 +62,8 @@ namespace Bitretsmah.Core
                         using (var stream = await warehouse.DownloadFile(file.RemoteId, downloadProgress))
                         {
                             _localFilesService.WriteFileStream(file.AbsolutePath, stream);
+                            _localFilesService.SetCreationTime(file.AbsolutePath, file.CreationTime);
+                            _localFilesService.SetLastWriteTime(file.AbsolutePath, file.ModificationTime);
                         }
 
                         await _fileHashService.VerifyFileHash(file, progress);
