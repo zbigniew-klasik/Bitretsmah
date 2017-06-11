@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Bitretsmah.Core.Exceptions;
 
 namespace Bitretsmah.Core
 {
@@ -77,6 +78,7 @@ namespace Bitretsmah.Core
                     {
                         _logger.Error(ex, "Could not process file: '{0}'.", file.AbsolutePath);
                         progress.Report(BackupProgress.CreateErrorReport($"Could not process file: '{file.Name}'."));
+                        throw new UploadFailedException($"Could not process file: '{file.Name}'.");
                     }
                 }
             }

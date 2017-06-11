@@ -18,6 +18,8 @@ namespace Bitretsmah.UI.ConsoleApp
                 FileName = @"${basedir}/logs/" + DateTime.UtcNow.Ticks + ".log"
             };
 
+            target.Layout = "${date} | ${level} | ${message} ${exception:format=toString,Data:maxInnerExceptionLevel=10}";
+
             config.AddTarget("target", target);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, target));
             LogManager.Configuration = config;

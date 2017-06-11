@@ -68,6 +68,7 @@
     <Compile Include="Exceptions\EmptyTargetNameException.cs" />
     <Compile Include="Exceptions\UnknownStoreException.cs" />
     <Compile Include="Exceptions\UnknownTargetException.cs" />
+    <Compile Include="Exceptions\UploadFailedException.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileHashService.cs" />
     <Compile Include="HistoryService.cs" />
