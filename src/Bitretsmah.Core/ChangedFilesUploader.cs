@@ -71,11 +71,13 @@ namespace Bitretsmah.Core
                                 file.RemoteId = await warehouse.UploadFile(stream, $"[{file.Hash}]_{file.Name}", uploadProgress);
                             }
 
+                            _logger.Info($"Uploaded file: '{file.AbsolutePath}' with remote id: '{file.RemoteId}'.");
                             progress.Report(BackupProgress.CreateUploadFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
                         }
                         else
                         {
                             file.RemoteId = matchingRemoteFile.Id;
+                            _logger.Info($"File: '{file.AbsolutePath}' is already on the server with remote id: '{file.RemoteId}'.");
                         }
 
                         processedFilesNumber++;

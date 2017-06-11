@@ -66,8 +66,8 @@ namespace Bitretsmah.Core
 
                         await _fileHashService.VerifyFileHash(file, progress);
 
+                        _logger.Info($"Downloaded file: '{file.AbsolutePath}' with remote id: '{file.RemoteId}'.");
                         progress.Report(BackupProgress.CreateDownloadFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
-
                         processedFilesNumber++;
                     }
                     catch (Exception ex)
@@ -95,6 +95,7 @@ namespace Bitretsmah.Core
                 {
                     progress.Report(BackupProgress.CreateDeleteStartReport(deletedNodes.Count, processedNodesNumber, node.AbsolutePath));
                     _localFilesService.DeleteFileOrDirectory(node.AbsolutePath);
+                    _logger.Info($"Deleted: '{node.AbsolutePath}'.");
                     progress.Report(BackupProgress.CreateDeleteFinishedReport(deletedNodes.Count, processedNodesNumber, node.AbsolutePath));
                     processedNodesNumber++;
                 }
