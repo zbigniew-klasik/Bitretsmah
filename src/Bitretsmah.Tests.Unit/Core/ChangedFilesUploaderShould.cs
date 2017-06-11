@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bitretsmah.Core;
 using Bitretsmah.Core.Interfaces;
 using Bitretsmah.Core.Models;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using static Bitretsmah.Tests.Unit.Core.NodesTestHelper;
@@ -144,6 +145,31 @@ namespace Bitretsmah.Tests.Unit.Core
 
             _fileHashServiceMock.Verify(
                 x => x.TryEnsureFileHasComputedHash(fileWithEmptyHash, It.IsAny<Progress<BackupProgress>>()), Times.Once);
+        }
+
+        [Test]
+        public async Task HandleAlreadyUploadedFile_DoesNotUploadAgain_SetProperRemoteId()
+        {
+            var fileAlreadyUploaded = CreateFile("file.txt", NodeState.Modified, "2E3A4287FFB8C3CFCB440F0262B3A39E936EE822");
+            var filesStructureChange = CreateDirectory("root", NodeState.Modified, fileAlreadyUploaded);
+
+            _localFilesServiceMock.Setup(x => x.ReadFileStream(It.IsAny<string>())).Returns(new MemoryStream());
+
+            _remoteFileWarehouseMock.Setup(x => x.GetFilesList()).ReturnsAsync(
+                new List<RemoteFile>() {
+                    new RemoteFile
+                    {
+                        Id = new RemoteId {StoreId = "store with uploaded files", NodeId = "already uploaded file id"},
+                        Name= "[2E3A4287FFB8C3CFCB440F0262B3A39E936EE822]_file.txt",
+                        Size = 123
+                    }
+                });
+
+            await _changedFilesUploader.Upload(filesStructureChange, new Progress<BackupProgress>());
+
+            _remoteFileWarehouseMock.Verify(x => x.UploadFile(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<Progress<double>>()), Times.Never);
+            fileAlreadyUploaded.RemoteId.StoreId.Should().Be("store with uploaded files");
+            fileAlreadyUploaded.RemoteId.NodeId.Should().Be("already uploaded file id");
         }
     }
 }

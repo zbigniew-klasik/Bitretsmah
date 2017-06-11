@@ -44,7 +44,7 @@ namespace Bitretsmah.Core
 
             using (var warehouse = await _remoteFileWarehouseFactory.Create())
             {
-                var uploadedFilesHashes = await GetUploadedFilesHashes(warehouse);
+                var remoteFiles = await warehouse.GetFilesList();
 
                 int processedFilesNumber = 0;
 
@@ -57,7 +57,9 @@ namespace Bitretsmah.Core
                             await _fileHashService.TryEnsureFileHasComputedHash(file, progress);
                         }
 
-                        if (uploadedFilesHashes.All(x => x != file.Hash))
+                        var matchingRemoteFile = remoteFiles.FirstOrDefault(x => x.Hash == file.Hash);
+
+                        if (matchingRemoteFile == null)
                         {
                             progress.Report(BackupProgress.CreateUploadStartReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
 
@@ -71,6 +73,10 @@ namespace Bitretsmah.Core
 
                             progress.Report(BackupProgress.CreateUploadFinishedReport(createdAndModifiedFiles.Count, processedFilesNumber, file));
                         }
+                        else
+                        {
+                            file.RemoteId = matchingRemoteFile.Id;
+                        }
 
                         processedFilesNumber++;
                     }
@@ -82,17 +88,6 @@ namespace Bitretsmah.Core
                     }
                 }
             }
-        }
-
-        private static async Task<List<string>> GetUploadedFilesHashes(IRemoteFileWarehouse warehouse)
-        {
-            var query =
-                from file in await warehouse.GetFilesList()
-                let match = Regex.Match(file.Name, @"(?<=^\[)[0-9A-F]{40}(?=\]_.*$)", RegexOptions.Singleline | RegexOptions.CultureInvariant)
-                where match.Success
-                select match.Value;
-
-            return query.ToList();
         }
     }
 }
